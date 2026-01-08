@@ -1,4 +1,69 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Handle 3D model iframe loading with cross-browser support
+  const canvas3d = document.getElementById("canvas3d");
+  const iframe = canvas3d?.querySelector("iframe");
+  const fallback = canvas3d?.querySelector(".iframe-fallback");
+  
+  if (iframe && fallback) {
+    let loadTimeout;
+    let hasLoaded = false;
+    
+    // Success handler
+    const handleLoad = () => {
+      hasLoaded = true;
+      if (loadTimeout) clearTimeout(loadTimeout);
+      fallback.style.display = "none";
+      console.log("3D model loaded successfully");
+    };
+    
+    // Error handler
+    const handleError = () => {
+      if (!hasLoaded) {
+        console.warn("3D model iframe failed to load - showing fallback");
+        fallback.style.display = "block";
+        iframe.style.display = "none";
+      }
+    };
+    
+    // Set timeout to detect if iframe doesn't load (cross-browser issue)
+    loadTimeout = setTimeout(() => {
+      if (!hasLoaded) {
+        // Try to detect if iframe actually loaded by checking dimensions
+        try {
+          const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+          if (!iframeDoc) {
+            // Can't access (cross-origin) - assume it might be loading
+            // But if it's been too long, show fallback
+            setTimeout(() => {
+              if (!hasLoaded) {
+                handleError();
+              }
+            }, 2000);
+          }
+        } catch (e) {
+          // Cross-origin - this is expected, iframe might still be loading
+          // Give it more time
+          setTimeout(() => {
+            if (!hasLoaded) {
+              handleError();
+            }
+          }, 3000);
+        }
+      }
+    }, 5000);
+    
+    iframe.addEventListener("load", handleLoad);
+    iframe.addEventListener("error", handleError);
+    
+    // Also check if iframe is blocked by checking if it's still in DOM after a delay
+    setTimeout(() => {
+      if (iframe.offsetHeight === 0 && iframe.offsetWidth === 0 && !hasLoaded) {
+        console.warn("3D model iframe appears to be blocked or hidden");
+        handleError();
+      }
+    }, 3000);
+  }
+
   // lenis smooth scroll
   const lenis = new Lenis();
   lenis.on("scroll", ScrollTrigger.update);
