@@ -21,36 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   gsap.ticker.lagSmoothing(0);
 
-  // time and date
-  updateDateTime();
-  setInterval(updateDateTime, 1000);
-
-  function updateDateTime() {
-    const now = new Date();
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const timeZoneAbbr = timeZone.split("/").pop().replace("_", " ");
-
-    const timeOptions = {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    };
-    const timeStr =
-      now.toLocaleTimeString("en-US", timeOptions) + ` [${timeZoneAbbr}]`;
-    document.getElementById("current-time").textContent = timeStr;
-
-    const dateOptions = {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    };
-    const dateStr = now.toLocaleDateString("en-US", dateOptions);
-    document.getElementById("current-date").textContent = dateStr;
-  }
-
-  updateDateTime();
-  setInterval(updateDateTime, 1000);
-
   // create services
   const serviceswrapper = document.querySelector(".services .wrapper");
   serviceswrapper.innerHTML = "";
