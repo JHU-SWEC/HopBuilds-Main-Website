@@ -15,7 +15,7 @@
   flex-direction: column;
   gap: 1rem;
   flex: 1;
-  max-height: calc(100vh - 12em);
+  min-height: 0;
 }
 
 .footer-col.email {
@@ -90,8 +90,7 @@
 .google-form {
   width: 100%;
   flex: 1;
-  min-height: 200px;
-  max-height: 400px;
+  min-height: 0;
   border: 1px solid var(--border-dark);
   border-radius: 0.5rem;
   overflow: hidden;
@@ -122,8 +121,7 @@
   }
 
   .google-form {
-    min-height: 100px;
-    max-height: 250px;
+    min-height: 0;
   }
 
   .footer-row.bottom {
