@@ -234,8 +234,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const footerHeight = footerElement ? footerElement.offsetHeight : window.innerHeight;
   
   ScrollTrigger.create({
-    trigger: ".carousel",
-    start: `top+=${carouselSectionPinnedHeight} top`,
+    trigger: ".services",
+    start: `top+=${servicesSectionPinnedHeight + carouselSectionPinnedHeight} top`,
     end: `+=${footerHeight}`,
     scrub: true,
     onUpdate: (self) => {
