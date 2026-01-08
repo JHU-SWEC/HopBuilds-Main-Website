@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // scroll driven animations
   gsap.registerPlugin(ScrollTrigger);
-  const heroSectionPinnedHeight = window.innerHeight * 5; // HopBuilds title stays longer
+  const heroSectionPinnedHeight = window.innerHeight * 2; // HopBuilds title - shorter duration
   const finishAboutHeaderClipReveal = window.innerHeight;
   const portraitsSectionPinnedHeight = window.innerHeight * 1;
   const infoSectionPinnedHeight = window.innerHeight * 8; // 4 info slides + slower transitions
