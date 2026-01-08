@@ -409,20 +409,20 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
 
       const sectionId = navItem.id;
-      let scrollTarget = 0;
+      let scrollTarget;
 
       switch (sectionId) {
         case "hero":
           scrollTarget = 0;
           break;
         case "carousel":
-          scrollTarget = infoSectionEnd;
+          scrollTarget = ".carousel";
           break;
         case "upcoming":
-          scrollTarget = projectsSectionEnd;
+          scrollTarget = ".upcoming-carousel";
           break;
         case "footer":
-          scrollTarget = upcomingSectionEnd;
+          scrollTarget = ".footer";
           break;
       }
 
