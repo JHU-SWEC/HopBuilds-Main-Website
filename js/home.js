@@ -181,10 +181,10 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // Work section progress (carousel) - tracks the pinned carousel scroll
+  // Work section progress (carousel) - starts after services pinning ends
   ScrollTrigger.create({
-    trigger: ".carousel",
-    start: "top top",
+    trigger: ".services",
+    start: `top+=${servicesSectionPinnedHeight} top`,
     end: `+=${carouselSectionPinnedHeight}`,
     scrub: true,
     onUpdate: (self) => {
