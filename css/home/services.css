@@ -19,12 +19,6 @@
   will-change: transform, opacity;
 }
 
-/* Ensure base content is visible - JavaScript will handle animations */
-.service .title h3:not(.char),
-.service .copy p:not(.line) {
-  opacity: 1;
-}
-
 .service .index {
   flex: 1;
 }

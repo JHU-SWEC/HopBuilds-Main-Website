@@ -44,11 +44,6 @@
   will-change: transform, opacity;
 }
 
-/* Fallback: ensure title is visible if JavaScript doesn't load */
-.about-header h1:not([style*="opacity"]) {
-  opacity: 1;
-}
-
 @media (max-width: 900px) {
   .hero-copy {
     max-width: 100%;
@@ -61,8 +56,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 0;
-  background-color: var(--bg-dark);
+  z-index: -1;
 }
 
 /* Enlarge and center the embedded Spline scene (donut). Adjust scale by changing width/height */
