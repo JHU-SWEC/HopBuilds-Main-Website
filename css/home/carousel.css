@@ -11,7 +11,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: #8B5A2B !important;
+  background-color: var(--bg-dark) !important;
 }
 
 .project .project-bg img,
