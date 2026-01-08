@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const serviceswrapper = document.querySelector(".services .wrapper");
   serviceswrapper.innerHTML = "";
 
-  services.forEach((service) => {
+  info.forEach((service) => {
     const serviceElement = document.createElement("div");
     serviceElement.className = "service";
 
@@ -453,7 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const progress = self.progress;
       
       // Each service gets 25% of the scroll
-      services.forEach((service, index) => {
+      info.forEach((service, index) => {
         const serviceElement = document.querySelector(`.service:nth-child(${index + 1})`);
         const threshold = index * 0.25;
         

@@ -26,7 +26,7 @@ const upcomingProjects = [
   },
 ];
 
-const services = [
+const info = [
   {
     id: "01",
     title: "Our Mission",
