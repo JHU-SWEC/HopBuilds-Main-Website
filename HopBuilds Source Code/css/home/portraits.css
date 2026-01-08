@@ -1,0 +1,49 @@
+.portrait.p-1 {
+  position: absolute;
+  transform: translateX(35%) translateY(40%);
+  width: 20%;
+  aspect-ratio: 5/3;
+  will-change: transform;
+}
+
+.portrait.p-2 {
+  position: absolute;
+  transform: translateX(75%) translateY(25%);
+  width: 30%;
+  aspect-ratio: 4/5;
+  will-change: transform;
+}
+
+.portrait.p-3 {
+  position: absolute;
+  transform: translateX(500%) translateY(100%);
+  width: 15%;
+  aspect-ratio: 5/4;
+  will-change: transform;
+}
+
+.portrait img {
+  filter: saturate(0);
+}
+
+.portrait {
+  opacity: 1;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 900px) {
+  .portrait.p-1 {
+    width: 25%;
+    transform: translateX(40%) translateY(100%);
+  }
+
+  .portrait.p-2 {
+    width: 45%;
+    transform: translateX(40%) translateY(100%);
+  }
+
+  .portrait.p-3 {
+    width: 30%;
+    transform: translateX(150%) translateY(100%);
+  }
+}

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alex Finley Portfolio | CG MWT OCT 2024 | Codegrid</title>
+    <link rel="icon" href="./site-icon.png" />
+
+    <link rel="stylesheet" href="./css/lenis.css" />
+    <link rel="stylesheet" href="./css/globals.css" />
+    <link rel="stylesheet" href="./css/transition.css" />
+
+    <link rel="stylesheet" href="./css/home/home.css" />
+    <link rel="stylesheet" href="./css/home/hero.css" />
+    <link rel="stylesheet" href="./css/home/portraits.css" />
+    <link rel="stylesheet" href="./css/home/services.css" />
+    <link rel="stylesheet" href="./css/home/carousel.css" />
+    <link rel="stylesheet" href="./css/home/archive.css" />
+    <link rel="stylesheet" href="./css/home/footer.css" />
+  </head>
+  <body>
+    <div class="transition">
+      <div class="transition-row row-1">
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+      </div>
+      <div class="transition-row row-2">
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+        <div class="block"></div>
+      </div>
+    </div>
+
+    <div class="app">
+      <nav class="dark">
+        <div class="nav-item" id="hero">
+          <div class="link">
+            <a href="#"><span>01</span>Info</a>
+          </div>
+          <div class="progress"></div>
+        </div>
+        <div class="nav-item" id="carousel">
+          <div class="link">
+            <a href="#"><span>02</span>Projects</a>
+          </div>
+          <div class="progress"></div>
+        </div>
+        <div class="nav-item" id="footer">
+          <div class="link">
+            <a href="#"><span>03</span>Contact</a>
+          </div>
+          <div class="progress"></div>
+        </div>
+      </nav>
+
+      <div class="site-header">
+        <div class="site-intro">
+          <div class="site-name">
+            <p>HopBuilds</p>
+            <p class="secondary">JHU Web Development Club</p>
+          </div>
+          <div class="site-info">
+            <p id="current-time">00:40 PM [UK]</p>
+            <p id="current-date">October 29, 2024</p>
+          </div>
+        </div>
+      </div>
+
+      <section class="hero">
+        <div id="canvas3d">
+          <iframe
+            src="https://my.spline.design/untitled-2F951PPh8zfVlMbuiAUyJ2zS/"
+            frameborder="0"
+            width="100%"
+            height="100%"
+            class="container__iframe"
+          ></iframe>
+        </div>
+        <div class="wrapper">
+          <div class="hero-footer">
+            <div class="hero-copy">
+              <p>[Scroll to explore]</p>
+            </div>
+          </div>
+          <div class="about-header">
+            <h1>HopBuilds</h1>
+          </div>
+        </div>
+      </section>
+
+      <section class="portraits">
+        <div class="wrapper">
+        </div>
+      </section>
+
+      <section class="services">
+        <div class="wrapper">
+          <!-- services are being created dynamically using js -->
+        </div>
+      </section>
+
+      <section class="carousel" id="projects">
+        <!-- projects are being created dynamically using js -->
+      </section>
+
+      <section class="footer">
+        <div class="wrapper">
+          <div class="footer-row contact">
+            <div class="footer-col email">
+              <h2>Interested?</h2>
+              <p class="footer-subtitle">Fill out the form below</p>
+            </div>
+            <div class="footer-col form-container">
+              <iframe 
+                src="https://docs.google.com/forms/d/e/1FAIpQLSfYourFormId/viewform?embedded=true" 
+                width="100%" 
+                height="600" 
+                frameborder="0" 
+                marginheight="0" 
+                marginwidth="0"
+                class="google-form"
+              >
+                Loading…
+              </iframe>
+            </div>
+          </div>
+          <div class="footer-row bottom">
+            <div class="footer-info">
+              <div class="footer-email">
+                <p>Email</p>
+                <a href="mailto:contact@hopbuilds.org">contact@hopbuilds.org</a>
+              </div>
+              <div class="footer-links">
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+                <a href="#">GitHub</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="./content/data.js"></script>
+    <script src="./js/home.js"></script>
+    <script src="./js/transition.js"></script>
+  </body>
+</html>

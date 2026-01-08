@@ -1,0 +1,181 @@
+html,
+body {
+  width: 100%;
+  height: auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg);
+}
+
+.app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 2em;
+}
+
+section {
+  position: relative;
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.hero {
+  width: 100vw;
+  height: 100vh;
+}
+
+.portraits {
+  width: 100vw;
+  height: 100vh;
+}
+
+.services {
+  width: 100vw;
+  min-height: 100vh;
+  height: auto;
+  position: relative;
+  z-index: 2;
+  background-color: var(--bg-dark);
+}
+
+.carousel {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Single project takes full height */
+.carousel .project {
+  clip-path: polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%);
+}
+
+.archive {
+  width: 100vw;
+  height: 200vh;
+  /* background-color: var(--bg); */
+}
+
+.footer {
+  width: 100vw;
+  min-height: 100vh;
+  /* background-color: var(--bg); */
+}
+
+.site-header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 35%;
+  padding: 2em;
+  z-index: 2;
+}
+
+.site-intro {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.site-intro > div {
+  flex: 1;
+}
+
+.site-intro p {
+  transition: 0.3s all;
+}
+
+.site-intro.dark p {
+  color: var(--text);
+}
+
+.site-intro.dark p.secondary {
+  color: var(--text-secondary);
+}
+
+.site-intro.light p {
+  color: var(--text-light);
+}
+
+nav {
+  position: fixed;
+  top: 2em;
+  left: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  z-index: 100;
+}
+
+.nav-item {
+  position: relative;
+  padding: 0.25rem;
+  border-radius: 0.15rem;
+  overflow: hidden;
+}
+
+.nav-item .progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--accent-darker);
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
+}
+
+.nav-item .link {
+  position: relative;
+  z-index: 100;
+}
+
+nav .link a {
+  transition: color 0.3s;
+}
+
+nav.dark .link a {
+  color: var(--text);
+}
+
+nav.light .link a {
+  color: var(--text-light);
+}
+
+nav .link a span {
+  position: relative;
+  top: -0.15rem;
+  padding-right: 0.4rem;
+  padding-left: 0.2rem;
+  font-size: 0.6rem;
+}
+
+@media (max-width: 900px) {
+  .site-header {
+    width: 100%;
+  }
+
+  .site-intro {
+    gap: 2em;
+    flex-direction: column;
+  }
+
+  .site-intro > div {
+    text-align: right;
+  }
+
+  .portraits {
+    height: 75vh;
+    min-height: 75vh;
+    display: block;
+    background: transparent;
+  }
+
+  .services {
+    padding-bottom: 4em;
+  }
+}

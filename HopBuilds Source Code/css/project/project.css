@@ -1,0 +1,195 @@
+body {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg-dark);
+}
+
+.app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.back-btn {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 0.5rem;
+  z-index: 1000;
+  transition: background-color 0.2s ease;
+}
+
+.back-btn:hover {
+  background-color: rgba(0, 0, 0, 0.95);
+}
+
+.back-btn a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.back-btn svg {
+  width: 18px;
+  height: 12px;
+}
+
+.back-btn span {
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.embedded-site {
+  width: 100vw;
+  height: 100vh;
+}
+
+.embedded-site iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.project-hero {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.project-images {
+  position: sticky;
+  top: 0;
+  padding: 0.5rem;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--bg);
+}
+
+.project-images-inner {
+  border-radius: 0.5rem;
+  flex-flow: column;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: clip;
+}
+
+.images {
+  flex-flow: column;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.project-img {
+  width: 100%;
+  height: calc(100vh);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.outro-copy {
+  position: absolute;
+  bottom: 2em;
+  left: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  z-index: 2;
+}
+
+.outro-copy p,
+.outro-copy h2,
+.outro-copy a {
+  color: var(--bg);
+}
+
+.outro-copy h2 {
+  position: relative;
+  left: -0.05em;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: calc(400px + 50px);
+  transform: translateX(415px);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  z-index: 100;
+  will-change: transform;
+}
+
+.drawer-toggler {
+  width: 40px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  background-color: var(--bg);
+  border-radius: 0.5rem 0 0 0.5rem;
+  cursor: pointer;
+}
+
+.drawer-toggler .bar {
+  width: 1.5px;
+  height: 30px;
+  background-color: var(--text);
+}
+
+.drawer-wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 4rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--bg);
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.project-description h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.project-description p {
+  font-size: 0.7rem;
+}
+
+.project-description p.desc,
+.project-description p.desc {
+  text-transform: none;
+  font-family: "PP Editorial New";
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.project-info {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+@media (max-width: 900px) {
+  .drawer {
+    width: calc(300px + 50px);
+    transform: translateX(315px);
+  }
+}
