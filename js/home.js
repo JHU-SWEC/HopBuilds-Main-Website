@@ -1,33 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Check if 3D model iframe loads (mobile Safari fallback)
-  const canvas3d = document.getElementById("canvas3d");
-  const iframe = canvas3d?.querySelector("iframe");
-  if (iframe) {
-    iframe.addEventListener("load", () => {
-      console.log("3D model iframe loaded");
-    });
-    iframe.addEventListener("error", () => {
-      console.warn("3D model iframe failed to load - this is common on mobile Safari");
-      // Add fallback background or hide iframe
-      if (canvas3d) {
-        canvas3d.style.display = "none";
-      }
-    });
-    
-    // Timeout check for mobile Safari (iframes sometimes don't fire error events)
-    setTimeout(() => {
-      try {
-        // Try to access iframe content - will fail if cross-origin or not loaded
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
-        if (!iframeDoc && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-          console.warn("3D model may not be supported on this device");
-        }
-      } catch (e) {
-        // Cross-origin or not loaded - this is expected
-      }
-    }, 3000);
-  }
-
   // lenis smooth scroll
   const lenis = new Lenis();
   lenis.on("scroll", ScrollTrigger.update);
