@@ -168,144 +168,87 @@ document.addEventListener("DOMContentLoaded", () => {
     transformOrigin: "left",
   });
 
-  // Calculate total pinned heights for progress bar timing
-  const infoSectionEnd = heroSectionPinnedHeight + infoSectionPinnedHeight;
-  const projectsSectionEnd = infoSectionEnd + carouselSectionPinnedHeight;
-  const upcomingSectionEnd = projectsSectionEnd + upcomingSectionPinnedHeight;
-
-  // Info section progress (hero + info carousel pinned scroll)
+  // Info section progress - covers hero and info-carousel
   ScrollTrigger.create({
     trigger: ".hero",
     start: "top top",
-    end: `+=${heroSectionPinnedHeight + infoSectionPinnedHeight}`,
+    end: `+=${heroSectionPinnedHeight}`,
     scrub: true,
     onUpdate: (self) => {
-      if (self.direction > 0) {
-        if (self.progress === 1) {
-          gsap.set(infoProgress, { transformOrigin: "right" });
-          gsap.to(infoProgress, {
-            scaleX: 0,
-            duration: 0.5,
-            ease: "power2.inOut",
-          });
-        } else {
-          gsap.set(infoProgress, { transformOrigin: "left" });
-          gsap.to(infoProgress, {
-            scaleX: self.progress,
-            duration: 0,
-          });
-        }
-      } else if (self.direction < 0) {
-        if (self.progress === 0) {
-          gsap.set(infoProgress, { transformOrigin: "left" });
-          gsap.to(infoProgress, {
-            scaleX: 0,
-            duration: 0.5,
-            ease: "power2.inOut",
-          });
-        } else {
-          gsap.set(infoProgress, { transformOrigin: "left" });
-          gsap.to(infoProgress, {
-            scaleX: self.progress,
-            duration: 0,
-          });
-        }
-      }
+      // First half of info progress during hero
+      gsap.set(infoProgress, { transformOrigin: "left" });
+      gsap.to(infoProgress, { scaleX: self.progress * 0.2, duration: 0 });
     },
   });
 
-  // Work section progress (carousel) - uses carousel as trigger
+  ScrollTrigger.create({
+    trigger: ".info-carousel",
+    start: "top top",
+    end: `+=${infoSectionPinnedHeight}`,
+    scrub: true,
+    onUpdate: (self) => {
+      // Rest of info progress during info-carousel
+      const progress = 0.2 + (self.progress * 0.8);
+      gsap.set(infoProgress, { transformOrigin: "left" });
+      gsap.to(infoProgress, { scaleX: progress, duration: 0 });
+      
+      if (self.progress === 1) {
+        gsap.set(infoProgress, { transformOrigin: "right" });
+        gsap.to(infoProgress, { scaleX: 0, duration: 0.5, ease: "power2.inOut" });
+      }
+    },
+    onLeaveBack: () => {
+      gsap.set(infoProgress, { transformOrigin: "left" });
+      gsap.to(infoProgress, { scaleX: 0.2, duration: 0.3 });
+    },
+  });
+
+  // Work section progress (carousel)
   ScrollTrigger.create({
     trigger: ".carousel",
     start: "top top",
     end: `+=${carouselSectionPinnedHeight}`,
     scrub: true,
     onUpdate: (self) => {
-      if (self.direction > 0) {
-        if (self.progress === 1) {
-          gsap.set(workProgress, { transformOrigin: "right" });
-          gsap.to(workProgress, {
-            scaleX: 0,
-            duration: 0.5,
-            ease: "power2.inOut",
-          });
-        } else {
-          gsap.set(workProgress, { transformOrigin: "left" });
-          gsap.to(workProgress, {
-            scaleX: self.progress,
-            duration: 0,
-          });
-        }
-      } else if (self.direction < 0) {
-        if (self.progress === 0) {
-          gsap.set(workProgress, { transformOrigin: "left" });
-          gsap.to(workProgress, {
-            scaleX: 0,
-            duration: 0.5,
-            ease: "power2.inOut",
-          });
-        } else {
-          gsap.set(workProgress, { transformOrigin: "left" });
-          gsap.to(workProgress, {
-            scaleX: self.progress,
-            duration: 0,
-          });
-        }
+      gsap.set(workProgress, { transformOrigin: "left" });
+      gsap.to(workProgress, { scaleX: self.progress, duration: 0 });
+      
+      if (self.progress === 1) {
+        gsap.set(workProgress, { transformOrigin: "right" });
+        gsap.to(workProgress, { scaleX: 0, duration: 0.5, ease: "power2.inOut" });
       }
+    },
+    onLeaveBack: () => {
+      gsap.set(workProgress, { transformOrigin: "left", scaleX: 0 });
     },
   });
 
-  // Upcoming section progress - uses upcoming-carousel as trigger
+  // Upcoming section progress
   ScrollTrigger.create({
     trigger: ".upcoming-carousel",
     start: "top top",
     end: `+=${upcomingSectionPinnedHeight}`,
     scrub: true,
     onUpdate: (self) => {
-      if (self.direction > 0) {
-        if (self.progress === 1) {
-          gsap.set(upcomingProgress, { transformOrigin: "right" });
-          gsap.to(upcomingProgress, {
-            scaleX: 0,
-            duration: 0.5,
-            ease: "power2.inOut",
-          });
-          // Nav turns dark (black) when entering contact section
-          nav.classList.remove("light");
-          nav.classList.add("dark");
-        } else {
-          gsap.set(upcomingProgress, { transformOrigin: "left" });
-          gsap.to(upcomingProgress, {
-            scaleX: self.progress,
-            duration: 0,
-          });
-        }
-      } else if (self.direction < 0) {
-        if (self.progress === 0) {
-          gsap.set(upcomingProgress, { transformOrigin: "left" });
-          gsap.to(upcomingProgress, {
-            scaleX: 0,
-            duration: 0.5,
-            ease: "power2.inOut",
-          });
-        } else {
-          gsap.set(upcomingProgress, { transformOrigin: "left" });
-          gsap.to(upcomingProgress, {
-            scaleX: self.progress,
-            duration: 0,
-          });
-          // Nav turns light (white) when scrolling back into upcoming section
-          nav.classList.add("light");
-          nav.classList.remove("dark");
-        }
+      gsap.set(upcomingProgress, { transformOrigin: "left" });
+      gsap.to(upcomingProgress, { scaleX: self.progress, duration: 0 });
+      
+      if (self.progress === 1) {
+        gsap.set(upcomingProgress, { transformOrigin: "right" });
+        gsap.to(upcomingProgress, { scaleX: 0, duration: 0.5, ease: "power2.inOut" });
+        // Nav turns dark when entering contact
+        nav.classList.remove("light");
+        nav.classList.add("dark");
       }
+    },
+    onLeaveBack: () => {
+      gsap.set(upcomingProgress, { transformOrigin: "left", scaleX: 0 });
+      nav.classList.add("light");
+      nav.classList.remove("dark");
     },
   });
 
-  // Contact section progress (footer) - uses footer as trigger
-  const footerElement = document.querySelector(".footer");
-  const footerHeight = footerElement ? footerElement.offsetHeight : window.innerHeight;
-  
+  // Contact section progress (footer)
   ScrollTrigger.create({
     trigger: ".footer",
     start: "top bottom",
@@ -313,10 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
     scrub: true,
     onUpdate: (self) => {
       gsap.set(contactProgress, { transformOrigin: "left" });
-      gsap.to(contactProgress, {
-        scaleX: self.progress,
-        duration: 0,
-      });
+      gsap.to(contactProgress, { scaleX: self.progress, duration: 0 });
     },
     onLeaveBack: () => {
       gsap.set(contactProgress, { transformOrigin: "left", scaleX: 0 });
