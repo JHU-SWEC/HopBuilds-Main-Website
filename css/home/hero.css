@@ -1,4 +1,6 @@
 .hero .wrapper {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -56,12 +58,13 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
-}
-
-/* Enlarge and center the embedded Spline scene (donut). Adjust scale by changing width/height */
-#canvas3d {
+  z-index: 0;
   overflow: hidden;
+  /* Force GPU rendering to fix WebGL display issues */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 #canvas3d .container__iframe {
@@ -70,8 +73,13 @@
   left: 50%;
   width: 400%; /* increase to make the donut bigger */
   height: 400%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) translateZ(0);
+  -webkit-transform: translate(-50%, -50%) translateZ(0);
   transform-origin: center;
   border: none;
   pointer-events: none; /* decorative background */
+  /* Force GPU layer for WebGL content */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }

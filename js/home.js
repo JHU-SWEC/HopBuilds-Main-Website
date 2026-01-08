@@ -1,4 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Force repaint of WebGL iframe to fix rendering issues on some browsers
+  const canvas3d = document.getElementById("canvas3d");
+  if (canvas3d) {
+    // Trigger a repaint after a short delay
+    setTimeout(() => {
+      canvas3d.style.opacity = "0.99";
+      requestAnimationFrame(() => {
+        canvas3d.style.opacity = "1";
+      });
+    }, 100);
+  }
+
   // lenis smooth scroll
   const lenis = new Lenis();
   lenis.on("scroll", ScrollTrigger.update);
