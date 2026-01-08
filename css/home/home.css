@@ -34,13 +34,11 @@ section {
   height: 100vh;
 }
 
-.services {
+.info-carousel {
   width: 100vw;
-  min-height: 100vh;
-  height: auto;
+  height: 100vh;
   position: relative;
   z-index: 2;
-  background-color: var(--bg-dark);
 }
 
 .carousel {
@@ -201,9 +199,5 @@ nav .link a span {
     min-height: 75vh;
     display: block;
     background: transparent;
-  }
-
-  .services {
-    padding-bottom: 4em;
   }
 }

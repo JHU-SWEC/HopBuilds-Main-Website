@@ -21,27 +21,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   gsap.ticker.lagSmoothing(0);
 
-  // create services
-  const serviceswrapper = document.querySelector(".services .wrapper");
-  serviceswrapper.innerHTML = "";
+  // create info carousel (full-screen slides)
+  const infoCarouselWrapper = document.querySelector(".info-carousel");
 
-  info.forEach((service) => {
-    const serviceElement = document.createElement("div");
-    serviceElement.className = "service";
+  info.forEach((item) => {
+    const infoElement = document.createElement("div");
+    infoElement.className = "info-slide";
+    infoElement.id = `info-${item.id}`;
 
-    serviceElement.innerHTML = `
-      <div class="index">
-        <p>[${service.id}]</p>
-      </div>
-      <div class="title">
-        <h3>${service.title}</h3>
-      </div>
-      <div class="copy">
-        <p>${service.copy}</p>
+    infoElement.innerHTML = `
+      <div class="info-bg"></div>
+      <div class="info-content">
+        <p class="info-index">[${item.id}]</p>
+        <h2>${item.title}</h2>
+        <p class="info-copy">${item.copy}</p>
       </div>
     `;
 
-    serviceswrapper.appendChild(serviceElement);
+    infoCarouselWrapper.appendChild(infoElement);
   });
 
   // create carousel
@@ -107,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroSectionPinnedHeight = window.innerHeight * 3;
   const finishAboutHeaderClipReveal = window.innerHeight;
   const portraitsSectionPinnedHeight = window.innerHeight * 1;
-  const servicesSectionPinnedHeight = window.innerHeight * 4;
+  const infoSectionPinnedHeight = window.innerHeight * 5; // 4 info slides + transitions
   const carouselSectionPinnedHeight = window.innerHeight * 2;
   const upcomingSectionPinnedHeight = window.innerHeight * 3; // 2 projects + transition
 
@@ -172,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Calculate total pinned heights for progress bar timing
-  const infoSectionEnd = heroSectionPinnedHeight + servicesSectionPinnedHeight;
+  const infoSectionEnd = heroSectionPinnedHeight + infoSectionPinnedHeight;
   const projectsSectionEnd = infoSectionEnd + carouselSectionPinnedHeight;
   const upcomingSectionEnd = projectsSectionEnd + upcomingSectionPinnedHeight;
 
@@ -364,9 +361,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Use different timing for mobile vs desktop
   const isMobile = window.innerWidth <= 900;
   ScrollTrigger.create({
-    trigger: ".services",
+    trigger: ".info-carousel",
     start: isMobile ? "top top" : "top 80%",
-    endTrigger: isMobile ? ".carousel" : ".services",
+    endTrigger: isMobile ? ".carousel" : ".info-carousel",
     end: isMobile ? "top top" : "center center",
     scrub: 1,
     onUpdate: (self) => {
@@ -391,13 +388,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // portraits section removed - no pinning needed
 
-  // Pin services section
+  // Pin info carousel section
   ScrollTrigger.create({
-    trigger: ".services",
+    trigger: ".info-carousel",
     start: "top top",
-    end: `+=${servicesSectionPinnedHeight}`,
+    end: `+=${infoSectionPinnedHeight}`,
     pin: true,
     pinSpacing: true,
+  });
+
+  // First info slide is always visible
+  gsap.set("#info-01", {
+    clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+  });
+
+  // Info slide animations (reveal slides 2, 3, 4)
+  ScrollTrigger.create({
+    trigger: ".info-carousel",
+    start: "top top",
+    end: `+=${infoSectionPinnedHeight * 0.33}`,
+    scrub: 1,
+    onUpdate: (self) => {
+      const clipTop = gsap.utils.interpolate(100, 0, self.progress);
+      gsap.set("#info-02", {
+        clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
+      });
+    },
+  });
+
+  ScrollTrigger.create({
+    trigger: ".info-carousel",
+    start: `top+=${infoSectionPinnedHeight * 0.33} top`,
+    end: `+=${infoSectionPinnedHeight * 0.33}`,
+    scrub: 1,
+    onUpdate: (self) => {
+      const clipTop = gsap.utils.interpolate(100, 0, self.progress);
+      gsap.set("#info-03", {
+        clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
+      });
+    },
+  });
+
+  ScrollTrigger.create({
+    trigger: ".info-carousel",
+    start: `top+=${infoSectionPinnedHeight * 0.66} top`,
+    end: `+=${infoSectionPinnedHeight * 0.33}`,
+    scrub: 1,
+    onUpdate: (self) => {
+      const clipTop = gsap.utils.interpolate(100, 0, self.progress);
+      gsap.set("#info-04", {
+        clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
+      });
+    },
   });
 
   ScrollTrigger.create({
@@ -432,51 +474,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // portraits section removed - no animations needed
-
-  // services section - scroll-driven reveal one by one
-  // Hide all services initially
-  gsap.set(".service", {
-    opacity: 0,
-    y: 30,
-  });
-
-  // Track which services have been revealed
-  let revealedServices = [false, false, false, false];
-
-  // Scroll-driven animation to reveal services one by one during pinned section
-  ScrollTrigger.create({
-    trigger: ".services",
-    start: "top top",
-    end: `+=${servicesSectionPinnedHeight}`,
-    scrub: false,
-    onUpdate: (self) => {
-      const progress = self.progress;
-      
-      // Each service gets 25% of the scroll
-      info.forEach((service, index) => {
-        const serviceElement = document.querySelector(`.service:nth-child(${index + 1})`);
-        const threshold = index * 0.25;
-        
-        if (progress >= threshold && !revealedServices[index]) {
-          revealedServices[index] = true;
-          gsap.to(serviceElement, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power2.out",
-          });
-        } else if (progress < threshold && revealedServices[index]) {
-          revealedServices[index] = false;
-          gsap.to(serviceElement, {
-            opacity: 0,
-            y: 30,
-            duration: 0.3,
-            ease: "power2.in",
-          });
-        }
-      });
-    },
-  });
 
 
 

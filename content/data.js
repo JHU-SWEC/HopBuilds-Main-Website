@@ -35,7 +35,7 @@ const info = [
   {
     id: "02",
     title: "So what would we do?",
-    copy: "You will be put into a team with 3-4 other people, led by someone with previous programming experience. You will then work on your project every week and provide a progress report every weekend, with a final presentation at the end of the summer. ",
+    copy: "You will be put into a team with 3-4 other people, led by someone with previous programming experience. You will then work on your project every week and provide a progress report every weekend, with a final presentation at the end of the semester. ",
   },
   {
     id: "03",
