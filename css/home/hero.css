@@ -18,6 +18,10 @@
   gap: 1rem;
 }
 
+.hero-copy p {
+  font-size: 1rem;
+}
+
 .about-header {
   position: absolute;
   top: 0;

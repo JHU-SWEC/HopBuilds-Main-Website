@@ -85,6 +85,7 @@ section {
 }
 
 .site-intro p {
+  font-size: 1rem;
   transition: 0.3s all;
 }
 
