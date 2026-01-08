@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroSectionPinnedHeight = window.innerHeight * 3;
   const finishAboutHeaderClipReveal = window.innerHeight;
   const portraitsSectionPinnedHeight = window.innerHeight * 1;
+  const servicesSectionPinnedHeight = window.innerHeight * 2;
   const carouselSectionPinnedHeight = window.innerHeight * 2;
 
   // Single project is always visible
@@ -314,6 +315,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // portraits section removed - no pinning needed
+
+  // Pin services section
+  ScrollTrigger.create({
+    trigger: ".services",
+    start: "top top",
+    end: `+=${servicesSectionPinnedHeight}`,
+    pin: true,
+    pinSpacing: true,
+  });
 
   ScrollTrigger.create({
     trigger: ".carousel",
