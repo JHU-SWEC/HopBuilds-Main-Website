@@ -140,6 +140,11 @@ nav {
   padding: 0.25rem;
   border-radius: 0.15rem;
   overflow: hidden;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  opacity: 0.8;
 }
 
 .nav-item .progress {
