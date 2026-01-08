@@ -61,7 +61,8 @@ section {
 
 .footer {
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   /* background-color: var(--bg); */
 }
 

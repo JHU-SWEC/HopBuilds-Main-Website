@@ -123,6 +123,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Nav stays light (white) in project section since background is dark
 
+  // Nav turns dark (black) in contact section since background is white
+  ScrollTrigger.create({
+    trigger: ".footer",
+    start: "top top",
+    onEnter: () => {
+      nav.classList.remove("light");
+      nav.classList.add("dark");
+    },
+    onLeaveBack: () => {
+      nav.classList.add("light");
+      nav.classList.remove("dark");
+    },
+  });
+
   // nav-item scroll progress animations
   const infoProgress = document.querySelector(
     ".nav-item:first-child .progress"
