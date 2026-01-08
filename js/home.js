@@ -121,21 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // Nav stays light (white) in project section since background is dark
-
-  // Nav turns dark (black) in contact section since background is white
-  ScrollTrigger.create({
-    trigger: ".footer",
-    start: "top top",
-    onEnter: () => {
-      nav.classList.remove("light");
-      nav.classList.add("dark");
-    },
-    onLeaveBack: () => {
-      nav.classList.add("light");
-      nav.classList.remove("dark");
-    },
-  });
+  // Nav color change for contact section is handled in the work progress ScrollTrigger below
 
   // nav-item scroll progress animations
   const infoProgress = document.querySelector(
@@ -210,6 +196,9 @@ document.addEventListener("DOMContentLoaded", () => {
             duration: 0.5,
             ease: "power2.inOut",
           });
+          // Nav turns dark (black) when entering contact section
+          nav.classList.remove("light");
+          nav.classList.add("dark");
         } else {
           gsap.set(workProgress, { transformOrigin: "left" });
           gsap.to(workProgress, {
@@ -231,6 +220,9 @@ document.addEventListener("DOMContentLoaded", () => {
             scaleX: self.progress,
             duration: 0,
           });
+          // Nav turns light (white) when scrolling back into project section
+          nav.classList.add("light");
+          nav.classList.remove("dark");
         }
       }
     },
