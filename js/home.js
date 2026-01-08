@@ -361,8 +361,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const isMobile = window.innerWidth <= 900;
   ScrollTrigger.create({
     trigger: ".hero",
-    start: `top+=${heroSectionPinnedHeight * 0.7} top`, // Start fading at 70% of hero section
-    end: `+=${heroSectionPinnedHeight * 0.3}`, // Finish at end of hero section
+    start: `top+=${heroSectionPinnedHeight * 0.9} top`, // Start fading at 90% of hero section
+    end: `+=${heroSectionPinnedHeight * 0.1}`, // Quick fade in last 10%
     scrub: 1,
     onUpdate: (self) => {
       const opacity = gsap.utils.interpolate(1, 0, self.progress);
