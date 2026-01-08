@@ -15,22 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // lenis smooth scroll
   const lenis = new Lenis();
-  
-  // Handle URL hash - scroll to section if #projects is in URL (coming from project page)
-  // Otherwise start at top
-  setTimeout(() => {
-    if (window.location.hash === "#projects") {
-      const projectsSection = document.getElementById("projects");
-      if (projectsSection) {
-        lenis.scrollTo(projectsSection, { immediate: true });
-      }
-      // Clear the hash from URL without triggering reload
-      history.replaceState(null, null, window.location.pathname);
-    } else {
-      // Ensure we start at top
-      lenis.scrollTo(0, { immediate: true });
-    }
-  }, 100);
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((time) => {
     lenis.raf(time * 1000);
