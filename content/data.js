@@ -9,6 +9,21 @@ const carouselItems = [
   },
 ];
 
+const upcomingProjects = [
+  {
+    id: "01",
+    title: "Hopkins Ride Share",
+    tags: ["web development, mobile app, transportation"],
+    description: "A ride-sharing platform designed specifically for the Hopkins community.",
+  },
+  {
+    id: "02",
+    title: "Hopkins Gambling",
+    tags: ["web development, gaming, entertainment"],
+    description: "An entertainment platform for the Hopkins community.",
+  },
+];
+
 const services = [
   {
     id: "01",

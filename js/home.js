@@ -80,6 +80,36 @@ document.addEventListener("DOMContentLoaded", () => {
     carouselwrapper.appendChild(projectElement);
   });
 
+  // create upcoming projects carousel
+  const upcomingCarouselWrapper = document.querySelector(".upcoming-carousel");
+
+  upcomingProjects.forEach((item) => {
+    const projectElement = document.createElement("div");
+    projectElement.className = "upcoming-project";
+    projectElement.id = `upcoming-${item.id}`;
+
+    projectElement.innerHTML = `
+          <div class="project-bg"></div>
+          <div class="project-header">
+              <h2>${item.title}</h2>
+              <div class="project-tags">
+              ${item.tags[0]
+                .split(", ")
+                .map((tag) => `<p>${tag}</p>`)
+                .join("")}
+              </div>
+              <p class="project-description">${item.description}</p>
+          </div>
+          <div class="project-info">
+              <div class="project-url">
+                <span>Recruiting Now</span>
+              </div>
+          </div>
+        `;
+
+    upcomingCarouselWrapper.appendChild(projectElement);
+  });
+
   // About section content is now in HTML, no need to generate dynamically
 
   // scroll driven animations
@@ -89,10 +119,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const portraitsSectionPinnedHeight = window.innerHeight * 1;
   const servicesSectionPinnedHeight = window.innerHeight * 2;
   const carouselSectionPinnedHeight = window.innerHeight * 2;
+  const upcomingSectionPinnedHeight = window.innerHeight * 3; // 2 projects + transition
 
   // Single project is always visible
   if (document.querySelector("#project-01")) {
     gsap.set("#project-01", {
+      clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
+    });
+  }
+
+  // First upcoming project is always visible
+  if (document.querySelector("#upcoming-01")) {
+    gsap.set("#upcoming-01", {
       clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
     });
   }
@@ -131,11 +169,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const workProgress = document.querySelector(
     ".nav-item:nth-child(2) .progress"
   );
-  const contactProgress = document.querySelector(
+  const upcomingProgress = document.querySelector(
     ".nav-item:nth-child(3) .progress"
   );
+  const contactProgress = document.querySelector(
+    ".nav-item:nth-child(4) .progress"
+  );
 
-  gsap.set([infoProgress, workProgress, contactProgress], {
+  gsap.set([infoProgress, workProgress, upcomingProgress, contactProgress], {
     scaleX: 0,
     transformOrigin: "left",
   });
@@ -143,6 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Calculate total pinned heights for progress bar timing
   const infoSectionEnd = heroSectionPinnedHeight + servicesSectionPinnedHeight;
   const projectsSectionEnd = infoSectionEnd + carouselSectionPinnedHeight;
+  const upcomingSectionEnd = projectsSectionEnd + upcomingSectionPinnedHeight;
 
   // Info section progress (hero + services pinned scroll)
   ScrollTrigger.create({
@@ -200,9 +242,6 @@ document.addEventListener("DOMContentLoaded", () => {
             duration: 0.5,
             ease: "power2.inOut",
           });
-          // Nav turns dark (black) when entering contact section
-          nav.classList.remove("light");
-          nav.classList.add("dark");
         } else {
           gsap.set(workProgress, { transformOrigin: "left" });
           gsap.to(workProgress, {
@@ -224,7 +263,51 @@ document.addEventListener("DOMContentLoaded", () => {
             scaleX: self.progress,
             duration: 0,
           });
-          // Nav turns light (white) when scrolling back into project section
+        }
+      }
+    },
+  });
+
+  // Upcoming section progress - starts after projects section ends
+  ScrollTrigger.create({
+    trigger: ".hero",
+    start: `top+=${projectsSectionEnd} top`,
+    end: `+=${upcomingSectionPinnedHeight}`,
+    scrub: true,
+    onUpdate: (self) => {
+      if (self.direction > 0) {
+        if (self.progress === 1) {
+          gsap.set(upcomingProgress, { transformOrigin: "right" });
+          gsap.to(upcomingProgress, {
+            scaleX: 0,
+            duration: 0.5,
+            ease: "power2.inOut",
+          });
+          // Nav turns dark (black) when entering contact section
+          nav.classList.remove("light");
+          nav.classList.add("dark");
+        } else {
+          gsap.set(upcomingProgress, { transformOrigin: "left" });
+          gsap.to(upcomingProgress, {
+            scaleX: self.progress,
+            duration: 0,
+          });
+        }
+      } else if (self.direction < 0) {
+        if (self.progress === 0) {
+          gsap.set(upcomingProgress, { transformOrigin: "left" });
+          gsap.to(upcomingProgress, {
+            scaleX: 0,
+            duration: 0.5,
+            ease: "power2.inOut",
+          });
+        } else {
+          gsap.set(upcomingProgress, { transformOrigin: "left" });
+          gsap.to(upcomingProgress, {
+            scaleX: self.progress,
+            duration: 0,
+          });
+          // Nav turns light (white) when scrolling back into upcoming section
           nav.classList.add("light");
           nav.classList.remove("dark");
         }
@@ -232,13 +315,13 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // Contact section progress (footer) - starts after projects section ends
+  // Contact section progress (footer) - starts after upcoming section ends
   const footerElement = document.querySelector(".footer");
   const footerHeight = footerElement ? footerElement.offsetHeight : window.innerHeight;
   
   ScrollTrigger.create({
     trigger: ".hero",
-    start: `top+=${projectsSectionEnd} top`,
+    start: `top+=${upcomingSectionEnd} top`,
     end: `+=${footerHeight}`,
     scrub: true,
     onUpdate: (self) => {
@@ -333,6 +416,29 @@ document.addEventListener("DOMContentLoaded", () => {
     end: `+=${carouselSectionPinnedHeight}`,
     pin: true,
     pinSpacing: true,
+  });
+
+  // Pin upcoming projects section
+  ScrollTrigger.create({
+    trigger: ".upcoming-carousel",
+    start: "top top",
+    end: `+=${upcomingSectionPinnedHeight}`,
+    pin: true,
+    pinSpacing: true,
+  });
+
+  // Upcoming project slide animation (reveal second project)
+  ScrollTrigger.create({
+    trigger: ".upcoming-carousel",
+    start: "top top",
+    end: `+=${upcomingSectionPinnedHeight * 0.5}`,
+    scrub: 1,
+    onUpdate: (self) => {
+      const clipTop = gsap.utils.interpolate(100, 0, self.progress);
+      gsap.set("#upcoming-02", {
+        clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
+      });
+    },
   });
 
   // portraits section removed - no animations needed
@@ -442,10 +548,13 @@ document.addEventListener("DOMContentLoaded", () => {
           scrollTarget = 0;
           break;
         case "carousel":
-          scrollTarget = window.innerHeight * 4;
+          scrollTarget = infoSectionEnd;
+          break;
+        case "upcoming":
+          scrollTarget = projectsSectionEnd;
           break;
         case "footer":
-          scrollTarget = window.innerHeight * 6;
+          scrollTarget = upcomingSectionEnd;
           break;
       }
 
