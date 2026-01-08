@@ -39,26 +39,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // create services
   const serviceswrapper = document.querySelector(".services .wrapper");
-  serviceswrapper.innerHTML = "";
+  if (!serviceswrapper) {
+    console.error("Services wrapper not found!");
+  } else {
+    serviceswrapper.innerHTML = "";
 
-  services.forEach((service) => {
-    const serviceElement = document.createElement("div");
-    serviceElement.className = "service";
+    services.forEach((service) => {
+      const serviceElement = document.createElement("div");
+      serviceElement.className = "service";
 
-    serviceElement.innerHTML = `
-      <div class="index">
-        <p>[${service.id}]</p>
-      </div>
-      <div class="title">
-        <h3>${service.title}</h3>
-      </div>
-      <div class="copy">
-        <p>${service.copy}</p>
-      </div>
-    `;
+      serviceElement.innerHTML = `
+        <div class="index">
+          <p>[${service.id}]</p>
+        </div>
+        <div class="title">
+          <h3>${service.title}</h3>
+        </div>
+        <div class="copy">
+          <p>${service.copy}</p>
+        </div>
+      `;
 
-    serviceswrapper.appendChild(serviceElement);
-  });
+      serviceswrapper.appendChild(serviceElement);
+    });
+    
+    // Ensure services are visible
+    console.log(`Created ${services.length} services`);
+  }
 
   // create carousel
   const carouselwrapper = document.querySelector(".carousel");
@@ -104,6 +111,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const finishAboutHeaderClipReveal = window.innerHeight;
   const portraitsSectionPinnedHeight = window.innerHeight * 1;
   const carouselSectionPinnedHeight = window.innerHeight * 2;
+  
+  // Set initial title visibility - make it visible on load
+  gsap.set(".about-header h1", {
+    opacity: 0.5,
+    scale: 0.85,
+  });
 
   // Single project is always visible
   if (document.querySelector("#project-01")) {
@@ -301,19 +314,26 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // about header fades in
+  // about header fades in - start immediately for better visibility
   ScrollTrigger.create({
     trigger: ".hero",
-    start: "25% top",
+    start: "top top",
     end: `+=${finishAboutHeaderClipReveal}`,
     scrub: 1,
     onUpdate: (self) => {
       const scale = gsap.utils.interpolate(0.75, 1, self.progress);
-      const opacity = gsap.utils.interpolate(0, 1, self.progress);
+      const opacity = gsap.utils.interpolate(0.3, 1, self.progress); // Start at 0.3 opacity instead of 0
 
       gsap.set(".about-header h1", {
         scale: scale,
         opacity: opacity,
+      });
+    },
+    onEnter: () => {
+      // Ensure title is visible when entering hero section
+      gsap.set(".about-header h1", {
+        opacity: 0.3,
+        scale: 0.75,
       });
     },
   });
@@ -323,11 +343,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const isMobile = window.innerWidth <= 900;
   ScrollTrigger.create({
     trigger: ".services",
-    start: isMobile ? "top top" : "top 80%",
-    endTrigger: isMobile ? ".carousel" : ".services",
-    end: isMobile ? "top top" : "center center",
+    start: isMobile ? "top 60%" : "top 70%",
+    endTrigger: isMobile ? ".carousel" : ".carousel",
+    end: isMobile ? "top top" : "top top",
     scrub: 1,
     onUpdate: (self) => {
+      // Keep title visible longer - only fade out when approaching carousel
       const opacity = gsap.utils.interpolate(1, 0, self.progress);
 
       gsap.set(".about-header h1", {
@@ -364,89 +385,143 @@ document.addEventListener("DOMContentLoaded", () => {
     const serviceElement = document.querySelector(
       `.service:nth-child(${index + 1})`
     );
-    new SplitType(serviceElement.querySelector(".copy p"), {
-      types: "lines",
-      lineClass: "line",
-    });
-    new SplitType(serviceElement.querySelector(".title h3"), {
-      types: "chars",
-      charClass: "char",
-    });
+    if (serviceElement) {
+      const copyElement = serviceElement.querySelector(".copy p");
+      const titleElement = serviceElement.querySelector(".title h3");
+      
+      if (copyElement && typeof SplitType !== 'undefined') {
+        try {
+          new SplitType(copyElement, {
+            types: "lines",
+            lineClass: "line",
+          });
+        } catch (e) {
+          console.warn("SplitType error for copy:", e);
+        }
+      }
+      
+      if (titleElement && typeof SplitType !== 'undefined') {
+        try {
+          new SplitType(titleElement, {
+            types: "chars",
+            charClass: "char",
+          });
+        } catch (e) {
+          console.warn("SplitType error for title:", e);
+        }
+      }
+    }
   });
 
-  gsap.set(".line", {
-    position: "relative",
-    opacity: 0,
-    y: 20,
-    willChange: "transform, opacity",
-  });
+  // Only set initial state if elements exist
+  const lines = document.querySelectorAll(".line");
+  const chars = document.querySelectorAll(".char");
+  
+  if (lines.length > 0) {
+    gsap.set(".line", {
+      position: "relative",
+      opacity: 0,
+      y: 20,
+      willChange: "transform, opacity",
+    });
+  }
 
-  gsap.set(".char", {
-    position: "relative",
-    opacity: 0,
-    willChange: "opacity",
-  });
+  if (chars.length > 0) {
+    gsap.set(".char", {
+      position: "relative",
+      opacity: 0,
+      willChange: "opacity",
+    });
+  }
 
   services.forEach((service, index) => {
     const serviceElement = document.querySelector(
       `.service:nth-child(${index + 1})`
     );
+    
+    if (!serviceElement) {
+      console.warn(`Service element ${index + 1} not found`);
+      return;
+    }
+    
     const index_el = serviceElement.querySelector(".index");
     const chars = serviceElement.querySelectorAll(".char");
     const lines = serviceElement.querySelectorAll(".line");
 
-    ScrollTrigger.create({
-      trigger: serviceElement,
-      start: "top 100%",
-      end: "bottom top",
-      scrub: false,
-      onEnter: () => {
-        gsap.to(index_el, { opacity: 1, duration: 0.5 });
-        gsap.to(chars, {
-          opacity: 1,
-          duration: 0.05,
-          stagger: { amount: 0.3 },
-          delay: 0.1,
-        });
-        gsap.to(lines, {
-          opacity: 1,
-          y: 0,
-          duration: 0.25,
-          stagger: { amount: 0.15 },
-          delay: 0.2,
-        });
-      },
-      onEnterBack: () => {
-        gsap.to(index_el, { opacity: 1, duration: 0.5 });
-        gsap.to(chars, {
-          opacity: 1,
-          duration: 0.05,
-          stagger: { amount: 0.3 },
-          delay: 0.1,
-        });
-        gsap.to(lines, {
-          opacity: 1,
-          y: 0,
-          duration: 0.25,
-          stagger: { amount: 0.15 },
-          delay: 0.2,
-        });
-      },
-      onLeaveBack: (self) => {
-        if (self.direction < 0) {
-          gsap.to(index_el, { opacity: 0, duration: 0.3 });
-          gsap.to(chars, {
-            opacity: 0,
-            duration: 0.25,
-          });
-          gsap.to(lines, {
-            opacity: 0,
-            y: 20,
-            duration: 0.25,
-          });
-        }
-      },
-    });
+    // If SplitType didn't work, make content visible by default
+    if (chars.length === 0 && lines.length === 0) {
+      // Fallback: show content immediately if SplitType failed
+      const titleEl = serviceElement.querySelector(".title h3");
+      const copyEl = serviceElement.querySelector(".copy p");
+      if (titleEl) titleEl.style.opacity = "1";
+      if (copyEl) copyEl.style.opacity = "1";
+      if (index_el) index_el.style.opacity = "1";
+    } else {
+      ScrollTrigger.create({
+        trigger: serviceElement,
+        start: "top 90%",
+        end: "bottom top",
+        scrub: false,
+        onEnter: () => {
+          if (index_el) gsap.to(index_el, { opacity: 1, duration: 0.5 });
+          if (chars.length > 0) {
+            gsap.to(chars, {
+              opacity: 1,
+              duration: 0.05,
+              stagger: { amount: 0.3 },
+              delay: 0.1,
+            });
+          }
+          if (lines.length > 0) {
+            gsap.to(lines, {
+              opacity: 1,
+              y: 0,
+              duration: 0.25,
+              stagger: { amount: 0.15 },
+              delay: 0.2,
+            });
+          }
+        },
+        onEnterBack: () => {
+          if (index_el) gsap.to(index_el, { opacity: 1, duration: 0.5 });
+          if (chars.length > 0) {
+            gsap.to(chars, {
+              opacity: 1,
+              duration: 0.05,
+              stagger: { amount: 0.3 },
+              delay: 0.1,
+            });
+          }
+          if (lines.length > 0) {
+            gsap.to(lines, {
+              opacity: 1,
+              y: 0,
+              duration: 0.25,
+              stagger: { amount: 0.15 },
+              delay: 0.2,
+            });
+          }
+        },
+        onLeaveBack: (self) => {
+          if (self.direction < 0) {
+            if (index_el) gsap.to(index_el, { opacity: 0, duration: 0.3 });
+            if (chars.length > 0) {
+              gsap.to(chars, {
+                opacity: 0,
+                duration: 0.25,
+              });
+            }
+            if (lines.length > 0) {
+              gsap.to(lines, {
+                opacity: 0,
+                y: 20,
+                duration: 0.25,
+              });
+            }
+          }
+        },
+      });
+    }
   });
 
 
