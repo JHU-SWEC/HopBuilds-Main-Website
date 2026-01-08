@@ -30,22 +30,22 @@ const info = [
   {
     id: "01",
     title: "Our Mission",
-    copy: "We noticed that there are a lot of super smart CS people at Hopkins, but not a lot of good software for the Hopkins Community to use. We want to change that. That's why We build software specifically for the Hopkins Community to use.",
+    copy: "We noticed that there are a lot of super smart CS people at Hopkins, but not a lot of good software for the Hopkins Community to use. We want to change that. That's why we build software specifically for the Hopkins Community to use.",
   },
   {
     id: "02",
-    title: "So what would we do?",
+    title: "So What Would I Do?",
     copy: "You will be put into a team with 3-4 other people, led by someone with previous programming experience. You will then work on your project every week and provide a progress report every weekend, with a final presentation at the end of the semester. ",
   },
   {
     id: "03",
     title: "Why Would I Join?",
-    copy: "First of all, You get a ton of super cool experience that can go on the resume, and it's a lot of fun making something that will actually be used by the Hopkins Community. Also, you get SCHOOL CREDIT from Professor Madooie for the projects you work on. Really, it's a win-win.",
+    copy: "First of all, You get a ton of super cool experience that can go on the resume, and it's a lot of fun making something that will actually be used by the Hopkins Community. Also, you get SCHOOL CREDIT from Professor Madooie for the projects you work on. Really, it's a win-win-win.",
   },
   {
     id: "04",
-    title: "Who are you looking for?",
-    copy: "We're looking for 9-12 students who are passionate about technology and design and want to make a difference. You don't need to be a coding wizard, but you should be willing to learn and put in the work to make something great.",
+    title: "Who Are You Looking For?",
+    copy: "We're looking for 9-10 students who are passionate about technology and design and want to make a difference. You don't need to be a coding wizard, but you should be willing to learn and put in the work to make something great.",
   },
 ];
 const archive = [
