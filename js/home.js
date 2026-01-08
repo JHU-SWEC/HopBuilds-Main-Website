@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroSectionPinnedHeight = window.innerHeight * 3;
   const finishAboutHeaderClipReveal = window.innerHeight;
   const portraitsSectionPinnedHeight = window.innerHeight * 1;
-  const infoSectionPinnedHeight = window.innerHeight * 5; // 4 info slides + transitions
+  const infoSectionPinnedHeight = window.innerHeight * 8; // 4 info slides + slower transitions
   const carouselSectionPinnedHeight = window.innerHeight * 2;
   const upcomingSectionPinnedHeight = window.innerHeight * 3; // 2 projects + transition
 
