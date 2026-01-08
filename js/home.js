@@ -140,12 +140,11 @@ document.addEventListener("DOMContentLoaded", () => {
     transformOrigin: "left",
   });
 
-  // Info section progress (hero + portraits + services)
+  // Info section progress (hero + portraits + services including pinned scroll)
   ScrollTrigger.create({
     trigger: ".hero",
     start: "top top",
-    endTrigger: ".carousel",
-    end: "top top",
+    end: `+=${heroSectionPinnedHeight + servicesSectionPinnedHeight}`,
     scrub: true,
     onUpdate: (self) => {
       if (self.direction > 0) {
