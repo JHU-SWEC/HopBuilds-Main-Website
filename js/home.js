@@ -62,16 +62,14 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             <div class="project-header">
                 <h2>${item.title}</h2>
-                <div class="project-tags">
-                ${item.tags[0]
-                  .split(", ")
-                  .map((tag) => `<p>${tag}</p>`)
-                  .join("")}
-                </div>
-            </div>
-            <div class="project-info">
-                <div class="project-url">
-                <a href="${item.url}">View Project</a>
+                <div class="project-tags-row">
+                  <div class="project-tags">
+                  ${item.tags[0]
+                    .split(", ")
+                    .map((tag) => `<p>${tag}</p>`)
+                    .join("")}
+                  </div>
+                  <a href="${item.url}" class="view-project-btn">View Project</a>
                 </div>
             </div>
          </a>
@@ -92,18 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="project-bg"></div>
           <div class="project-header">
               <h2>${item.title}</h2>
-              <div class="project-tags">
-              ${item.tags[0]
-                .split(", ")
-                .map((tag) => `<p>${tag}</p>`)
-                .join("")}
-              </div>
               <p class="project-description">${item.description}</p>
-          </div>
-          <div class="project-info">
-              <div class="project-url">
-                <span>Recruiting Now</span>
-              </div>
           </div>
         `;
 

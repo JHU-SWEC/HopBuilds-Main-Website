@@ -116,8 +116,25 @@ nav {
   transform: translateX(-50%);
   display: flex;
   flex-direction: row;
-  gap: 2em;
+  gap: 1.5em;
   z-index: 100;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  nav {
+    gap: 0.5em;
+  }
+  
+  nav .link a {
+    font-size: 0.75rem;
+  }
+  
+  nav .link a span {
+    font-size: 0.5rem;
+    padding-right: 0.2rem;
+    padding-left: 0.1rem;
+  }
 }
 
 .nav-item {
