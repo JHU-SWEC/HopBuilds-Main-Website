@@ -323,11 +323,11 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // reveal about section inside hero
+  // reveal about section inside hero - quick reveal to full screen
   ScrollTrigger.create({
     trigger: ".hero",
     start: "1% top",
-    end: `+=${finishAboutHeaderClipReveal}`,
+    end: `+=${window.innerHeight * 0.5}`, // Quick reveal in first half viewport
     scrub: 1,
     onUpdate: (self) => {
       const startTop = gsap.utils.interpolate(50, 0, self.progress);
@@ -340,11 +340,11 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // about header fades in
+  // about header fades in quickly
   ScrollTrigger.create({
     trigger: ".hero",
-    start: "25% top",
-    end: `+=${finishAboutHeaderClipReveal}`,
+    start: "1% top",
+    end: `+=${window.innerHeight * 0.5}`,
     scrub: 1,
     onUpdate: (self) => {
       const scale = gsap.utils.interpolate(0.75, 1, self.progress);
@@ -357,14 +357,12 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // about header fades out completely by end of info section
-  // Use different timing for mobile vs desktop
+  // about header fades out only when info carousel starts
   const isMobile = window.innerWidth <= 900;
   ScrollTrigger.create({
     trigger: ".info-carousel",
-    start: isMobile ? "top top" : "top 80%",
-    endTrigger: isMobile ? ".carousel" : ".info-carousel",
-    end: isMobile ? "top top" : "center center",
+    start: "top bottom", // Start fading when info carousel reaches bottom of viewport
+    end: "top top", // Fully faded when info carousel reaches top
     scrub: 1,
     onUpdate: (self) => {
       const opacity = gsap.utils.interpolate(1, 0, self.progress);
