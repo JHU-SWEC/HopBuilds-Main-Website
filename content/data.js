@@ -30,22 +30,22 @@ const info = [
   {
     id: "01",
     title: "Our Mission",
-    copy: "HopBuilds fosters a collaborative environment where students work on real-world projects, develop their skills, and contribute to solutions that make a difference. We empower the next generation of developers and designers through hands-on experience and mentorship.",
+    copy: "We noticed that there are a lot of super smart CS people at Hopkins, but not a lot of good software for the Hopkins Community to use. We want to change that. That's why We build software specifically for the Hopkins Community to use.",
   },
   {
     id: "02",
-    title: "What We Build",
-    copy: "From web applications to mobile platforms, we tackle diverse challenges and deliver professional-grade results. Our projects span across various domains, creating meaningful digital experiences that solve real problems.",
+    title: "So what would we do?",
+    copy: "You will be put into a team with 3-4 other people, led by someone with previous programming experience. You will then work on your project every week and provide a progress report every weekend, with a final presentation at the end of the summer. ",
   },
   {
     id: "03",
-    title: "Collaboration & Learning",
-    copy: "We bring together talented students who are passionate about technology, design, and innovation. Through collaborative projects and peer learning, members grow their technical skills while building impactful solutions.",
+    title: "Why Would I Join?",
+    copy: "First of all, You get a ton of super cool experience that can go on the resume, and it's a lot of fun making something that will actually be used by the Hopkins Community. Also, you get SCHOOL CREDIT from Professor Madooie for the projects you work on. Really, it's a win-win.",
   },
   {
     id: "04",
-    title: "Real-World Impact",
-    copy: "HopBuilds creates technology solutions that have real-world applications. Our projects serve the Johns Hopkins community and beyond, making a tangible difference through thoughtful design and development.",
+    title: "Who are you looking for?",
+    copy: "We're looking for 9-12 students who are passionate about technology and design and want to make a difference. You don't need to be a coding wizard, but you should be willing to learn and put in the work to make something great.",
   },
 ];
 const archive = [
