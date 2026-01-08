@@ -121,18 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  ScrollTrigger.create({
-    trigger: ".carousel",
-    start: `top+=${window.innerHeight * 0}px top`,
-    onEnter: () => {
-      nav.classList.remove("light");
-      nav.classList.add("dark");
-    },
-    onLeaveBack: () => {
-      nav.classList.add("light");
-      nav.classList.remove("dark");
-    },
-  });
+  // Nav stays light (white) in project section since background is dark
 
   // nav-item scroll progress animations
   const infoProgress = document.querySelector(
