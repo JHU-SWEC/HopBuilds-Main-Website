@@ -1,10 +1,9 @@
 .footer .wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  padding-top: 2em;
-  padding-bottom: 2em;
+  justify-content: flex-start;
+  padding-top: 12em;
+  padding-bottom: 4em;
 }
 
 .footer-row.contact {
