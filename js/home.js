@@ -323,11 +323,11 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // reveal about section inside hero - quick reveal to full screen
+  // reveal about section inside hero - reveal during first part of hero pinned section
   ScrollTrigger.create({
     trigger: ".hero",
-    start: "1% top",
-    end: `+=${window.innerHeight * 0.5}`, // Quick reveal in first half viewport
+    start: "top top",
+    end: `+=${heroSectionPinnedHeight * 0.3}`, // Reveal in first 30% of hero section
     scrub: 1,
     onUpdate: (self) => {
       const startTop = gsap.utils.interpolate(50, 0, self.progress);
@@ -340,11 +340,11 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // about header fades in quickly
+  // about header fades in during reveal
   ScrollTrigger.create({
     trigger: ".hero",
-    start: "1% top",
-    end: `+=${window.innerHeight * 0.5}`,
+    start: "top top",
+    end: `+=${heroSectionPinnedHeight * 0.3}`,
     scrub: 1,
     onUpdate: (self) => {
       const scale = gsap.utils.interpolate(0.75, 1, self.progress);
@@ -357,12 +357,12 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // about header fades out only when info carousel starts
+  // about header fades out at end of hero section
   const isMobile = window.innerWidth <= 900;
   ScrollTrigger.create({
-    trigger: ".info-carousel",
-    start: "top bottom", // Start fading when info carousel reaches bottom of viewport
-    end: "top top", // Fully faded when info carousel reaches top
+    trigger: ".hero",
+    start: `top+=${heroSectionPinnedHeight * 0.7} top`, // Start fading at 70% of hero section
+    end: `+=${heroSectionPinnedHeight * 0.3}`, // Finish at end of hero section
     scrub: 1,
     onUpdate: (self) => {
       const opacity = gsap.utils.interpolate(1, 0, self.progress);
@@ -381,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     start: "top top",
     end: `+=${heroSectionPinnedHeight}`,
     pin: true,
-    pinSpacing: false,
+    pinSpacing: true, // Info carousel waits until hero pinning ends
   });
 
   // portraits section removed - no pinning needed
