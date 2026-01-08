@@ -7,36 +7,45 @@
   width: 100%;
   display: flex;
   align-items: flex-start;
-  gap: 0.5em;
+  gap: 1em;
   border-top: 1px solid var(--border);
-  padding-top: 2em;
-  padding-bottom: 4em;
-}
-
-.service .line {
-  position: relative;
-  transform: translateY(20px);
-  will-change: transform, opacity;
+  padding-top: 1em;
+  padding-bottom: 1.5em;
 }
 
 .service .index {
-  flex: 1;
+  flex: 0 0 auto;
+  min-width: 3em;
+}
+
+.service .index p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
 }
 
 .service .title {
-  flex: 8;
+  flex: 1;
+}
+
+.service .title h3 {
+  font-size: 2.5rem;
+  line-height: 1.1;
+  margin-bottom: 0.3em;
 }
 
 .service .copy {
-  flex: 4;
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
 }
 
 .service .copy p {
   text-transform: none;
   color: var(--text-secondary);
   font-family: "PP Editorial New";
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 400;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -51,8 +60,8 @@
 
   .services .wrapper {
     height: 100%;
-    padding: 0.5em;
-    padding-top: 3.5em;
+    padding: 1em;
+    padding-top: 4em;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -62,23 +71,26 @@
     flex-direction: column;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
-    gap: 0.15em;
+    gap: 0.25em;
   }
 
   .service .index {
     display: block;
+    min-width: auto;
   }
 
   .service .index p {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
   }
 
   .service .title h3 {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
+    margin-bottom: 0.2em;
   }
 
   .service .copy p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
   }
 }
