@@ -56,7 +56,9 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -1;
+  z-index: 0;
+  background-color: var(--bg-dark);
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Enlarge and center the embedded Spline scene (donut). Adjust scale by changing width/height */
