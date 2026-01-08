@@ -42,15 +42,27 @@
 }
 
 @media (max-width: 900px) {
+  .services {
+    height: 100vh;
+    min-height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+
   .services .wrapper {
-    padding-bottom: 6em;
+    height: 100%;
+    padding: 1em;
+    padding-top: 4em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .service {
     flex-direction: column;
-    padding-top: 1.5em;
-    padding-bottom: 1.5em;
-    gap: 0.75em;
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
+    gap: 0.25em;
   }
 
   .service .index {
@@ -58,15 +70,15 @@
   }
 
   .service .index p {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: var(--text-secondary);
   }
 
   .service .title h3 {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
 
   .service .copy p {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 }
