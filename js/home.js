@@ -140,11 +140,15 @@ document.addEventListener("DOMContentLoaded", () => {
     transformOrigin: "left",
   });
 
-  // Info section progress (hero + portraits + services including pinned scroll)
+  // Calculate total pinned heights for progress bar timing
+  const infoSectionEnd = heroSectionPinnedHeight + servicesSectionPinnedHeight;
+  const projectsSectionEnd = infoSectionEnd + carouselSectionPinnedHeight;
+
+  // Info section progress (hero + services pinned scroll)
   ScrollTrigger.create({
     trigger: ".hero",
     start: "top top",
-    end: `+=${heroSectionPinnedHeight + servicesSectionPinnedHeight}`,
+    end: `+=${infoSectionEnd}`,
     scrub: true,
     onUpdate: (self) => {
       if (self.direction > 0) {
@@ -181,10 +185,10 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // Work section progress (carousel) - starts after services pinning ends
+  // Work section progress (carousel) - starts after info section ends
   ScrollTrigger.create({
-    trigger: ".services",
-    start: `top+=${servicesSectionPinnedHeight} top`,
+    trigger: ".hero",
+    start: `top+=${infoSectionEnd} top`,
     end: `+=${carouselSectionPinnedHeight}`,
     scrub: true,
     onUpdate: (self) => {
@@ -228,14 +232,13 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // Contact section progress (footer) - starts only after carousel pinning ends
-  // Get footer height for proper scroll tracking
+  // Contact section progress (footer) - starts after projects section ends
   const footerElement = document.querySelector(".footer");
   const footerHeight = footerElement ? footerElement.offsetHeight : window.innerHeight;
   
   ScrollTrigger.create({
-    trigger: ".services",
-    start: `top+=${servicesSectionPinnedHeight + carouselSectionPinnedHeight} top`,
+    trigger: ".hero",
+    start: `top+=${projectsSectionEnd} top`,
     end: `+=${footerHeight}`,
     scrub: true,
     onUpdate: (self) => {
