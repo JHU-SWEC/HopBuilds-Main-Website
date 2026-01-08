@@ -173,11 +173,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const projectsSectionEnd = infoSectionEnd + carouselSectionPinnedHeight;
   const upcomingSectionEnd = projectsSectionEnd + upcomingSectionPinnedHeight;
 
-  // Info section progress (hero + services pinned scroll)
+  // Info section progress (hero + info carousel pinned scroll)
   ScrollTrigger.create({
     trigger: ".hero",
     start: "top top",
-    end: `+=${infoSectionEnd}`,
+    end: `+=${heroSectionPinnedHeight + infoSectionPinnedHeight}`,
     scrub: true,
     onUpdate: (self) => {
       if (self.direction > 0) {
@@ -214,10 +214,10 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // Work section progress (carousel) - starts after info section ends
+  // Work section progress (carousel) - uses carousel as trigger
   ScrollTrigger.create({
-    trigger: ".hero",
-    start: `top+=${infoSectionEnd} top`,
+    trigger: ".carousel",
+    start: "top top",
     end: `+=${carouselSectionPinnedHeight}`,
     scrub: true,
     onUpdate: (self) => {
@@ -255,10 +255,10 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // Upcoming section progress - starts after projects section ends
+  // Upcoming section progress - uses upcoming-carousel as trigger
   ScrollTrigger.create({
-    trigger: ".hero",
-    start: `top+=${projectsSectionEnd} top`,
+    trigger: ".upcoming-carousel",
+    start: "top top",
     end: `+=${upcomingSectionPinnedHeight}`,
     scrub: true,
     onUpdate: (self) => {
@@ -302,14 +302,14 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // Contact section progress (footer) - starts after upcoming section ends
+  // Contact section progress (footer) - uses footer as trigger
   const footerElement = document.querySelector(".footer");
   const footerHeight = footerElement ? footerElement.offsetHeight : window.innerHeight;
   
   ScrollTrigger.create({
-    trigger: ".hero",
-    start: `top+=${upcomingSectionEnd} top`,
-    end: `+=${footerHeight}`,
+    trigger: ".footer",
+    start: "top bottom",
+    end: "top top",
     scrub: true,
     onUpdate: (self) => {
       gsap.set(contactProgress, { transformOrigin: "left" });

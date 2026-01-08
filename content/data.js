@@ -2,7 +2,7 @@ const carouselItems = [
   {
     id: "01",
     title: "JHU Lost and Found",
-    tags: ["so you don't have to ask on sidechat anymore."],
+    tags: ["So you don't have to ask on sidechat anymore."],
     bg: "./assets/project/project3.jpg",
     main: "./assets/project/LostandFoundBlueJay.png",
     url: "./project.html",
