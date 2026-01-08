@@ -69,16 +69,16 @@
 
 #canvas3d .container__iframe {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 400%; /* increase to make the donut bigger */
+  /* Center the 400% sized iframe: offset by (400% - 100%) / 2 = 150% */
+  top: -150%;
+  left: -150%;
+  width: 400%;
   height: 400%;
-  transform: translate(-50%, -50%) translateZ(0);
-  -webkit-transform: translate(-50%, -50%) translateZ(0);
-  transform-origin: center;
   border: none;
   pointer-events: none; /* decorative background */
   /* Force GPU layer for WebGL content */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
