@@ -30,13 +30,14 @@ const info = [
   {
     id: "01",
     title: "Our Mission",
-    copy: "We noticed that there are a lot of super smart CS people at Hopkins, but not a lot of good software for the Hopkins Community to use. We want to change that. That's why we build software specifically for the Hopkins Community to use.",
+    copy: "We noticed that there are a lot of super smart CS people at Hopkins, but not a lot of good software for the Hopkins Community to use. We want to change that. So, we're rebranding JHU's Software Engineering Club to build software specifically for the Hopkins community to use.",
   },
   {
     id: "02",
     title: "So What Would I Do?",
-    copy: "You will be put into a team with 3-4 other people, led by someone with previous programming experience. You will then work on your project every week and provide a progress report every weekend, with a final presentation at the end of the semester. ",
+    copy: "You will be put into a team with 3-4 other people, led by someone with previous programming experience to work on a project in the Upcoming Projects section. You will then work on the project every week and provide a progress report every weekend, with a final presentation at the end of the semester. ",
   },
+
   {
     id: "03",
     title: "Why Would I Join?",
