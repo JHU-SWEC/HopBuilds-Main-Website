@@ -1,4 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Fix spline-viewer positioning by triggering resize
+  const splineViewer = document.querySelector("spline-viewer");
+  if (splineViewer) {
+    // Trigger resize after short delay to initialize properly
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 500);
+    
+    // Also trigger when spline finishes loading
+    splineViewer.addEventListener("load", () => {
+      window.dispatchEvent(new Event("resize"));
+    });
+  }
+
   // lenis smooth scroll
   const lenis = new Lenis();
   lenis.on("scroll", ScrollTrigger.update);
