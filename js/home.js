@@ -433,94 +433,49 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // portraits section removed - no animations needed
 
-  // services section copy reveal animation
-  services.forEach((service, index) => {
-    const serviceElement = document.querySelector(
-      `.service:nth-child(${index + 1})`
-    );
-    new SplitType(serviceElement.querySelector(".copy p"), {
-      types: "lines",
-      lineClass: "line",
-    });
-    new SplitType(serviceElement.querySelector(".title h3"), {
-      types: "chars",
-      charClass: "char",
-    });
-  });
-
-  gsap.set(".line", {
-    position: "relative",
+  // services section - scroll-driven reveal one by one
+  // Hide all services initially
+  gsap.set(".service", {
     opacity: 0,
-    y: 20,
-    willChange: "transform, opacity",
+    y: 30,
   });
 
-  gsap.set(".char", {
-    position: "relative",
-    opacity: 0,
-    willChange: "opacity",
-  });
+  // Track which services have been revealed
+  let revealedServices = [false, false, false, false];
 
-  services.forEach((service, index) => {
-    const serviceElement = document.querySelector(
-      `.service:nth-child(${index + 1})`
-    );
-    const index_el = serviceElement.querySelector(".index");
-    const chars = serviceElement.querySelectorAll(".char");
-    const lines = serviceElement.querySelectorAll(".line");
-
-    ScrollTrigger.create({
-      trigger: serviceElement,
-      start: "top 85%",
-      end: "bottom top",
-      scrub: false,
-      onEnter: () => {
-        gsap.to(index_el, { opacity: 1, duration: 0.8 });
-        gsap.to(chars, {
-          opacity: 1,
-          duration: 0.1,
-          stagger: { amount: 0.6 },
-          delay: 0.2,
-        });
-        gsap.to(lines, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: { amount: 0.4 },
-          delay: 0.4,
-        });
-      },
-      onEnterBack: () => {
-        gsap.to(index_el, { opacity: 1, duration: 0.8 });
-        gsap.to(chars, {
-          opacity: 1,
-          duration: 0.1,
-          stagger: { amount: 0.6 },
-          delay: 0.2,
-        });
-        gsap.to(lines, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: { amount: 0.4 },
-          delay: 0.4,
-        });
-      },
-      onLeaveBack: (self) => {
-        if (self.direction < 0) {
-          gsap.to(index_el, { opacity: 0, duration: 0.3 });
-          gsap.to(chars, {
-            opacity: 0,
-            duration: 0.25,
+  // Scroll-driven animation to reveal services one by one during pinned section
+  ScrollTrigger.create({
+    trigger: ".services",
+    start: "top top",
+    end: `+=${servicesSectionPinnedHeight}`,
+    scrub: false,
+    onUpdate: (self) => {
+      const progress = self.progress;
+      
+      // Each service gets 25% of the scroll
+      services.forEach((service, index) => {
+        const serviceElement = document.querySelector(`.service:nth-child(${index + 1})`);
+        const threshold = index * 0.25;
+        
+        if (progress >= threshold && !revealedServices[index]) {
+          revealedServices[index] = true;
+          gsap.to(serviceElement, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power2.out",
           });
-          gsap.to(lines, {
+        } else if (progress < threshold && revealedServices[index]) {
+          revealedServices[index] = false;
+          gsap.to(serviceElement, {
             opacity: 0,
-            y: 20,
-            duration: 0.25,
+            y: 30,
+            duration: 0.3,
+            ease: "power2.in",
           });
         }
-      },
-    });
+      });
+    },
   });
 
 
