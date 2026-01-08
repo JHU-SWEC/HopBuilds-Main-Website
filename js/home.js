@@ -1,28 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Force WebGL iframe to render by triggering resize event
-  const canvas3d = document.getElementById("canvas3d");
-  const iframe = canvas3d?.querySelector("iframe");
-  
-  if (canvas3d && iframe) {
-    // Trigger resize event to initialize WebGL properly
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-      
-      // Also trigger a repaint
-      canvas3d.style.opacity = "0.99";
-      requestAnimationFrame(() => {
-        canvas3d.style.opacity = "1";
-      });
-    }, 100);
-    
-    // Trigger another resize after iframe loads
-    iframe.addEventListener("load", () => {
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-      }, 200);
-    });
-  }
-
   // lenis smooth scroll
   const lenis = new Lenis();
   lenis.on("scroll", ScrollTrigger.update);
