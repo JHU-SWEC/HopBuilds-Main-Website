@@ -1,14 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Fix spline-viewer positioning by triggering resize
-  const splineViewer = document.querySelector("spline-viewer");
-  if (splineViewer) {
+  // Fix iframe positioning by triggering resize
+  const canvas3d = document.getElementById("canvas3d");
+  const iframe = canvas3d?.querySelector("iframe");
+  if (iframe) {
     // Trigger resize after short delay to initialize properly
     setTimeout(() => {
       window.dispatchEvent(new Event("resize"));
     }, 500);
     
-    // Also trigger when spline finishes loading
-    splineViewer.addEventListener("load", () => {
+    // Also trigger when iframe finishes loading
+    iframe.addEventListener("load", () => {
       window.dispatchEvent(new Event("resize"));
     });
   }
