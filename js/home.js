@@ -88,6 +88,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     projectElement.innerHTML = `
           <div class="project-bg"></div>
+          <div class="project-main">
+              <img src="${item.main}" alt="" />
+          </div>
           <div class="project-header">
               <h2>${item.title}</h2>
               <p class="project-description">${item.description}</p>

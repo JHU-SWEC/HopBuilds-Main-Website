@@ -15,12 +15,14 @@ const upcomingProjects = [
     title: "Hopkins Ride Share",
     tags: ["web development, mobile app, transportation"],
     description: "A ride-sharing platform designed specifically for the Hopkins community.",
+    main: "./assets/project/drivingbluejay.png",
   },
   {
     id: "02",
-    title: "Hopkins Gambling",
+    title: "HopParlays",
     tags: ["web development, gaming, entertainment"],
-    description: "An entertainment platform for the Hopkins community.",
+    description: "Imagine placing bets on the outcome of the next Orgo Midterm.",
+    main: "./assets/project/GamblingBlueJay.png",
   },
 ];
 
