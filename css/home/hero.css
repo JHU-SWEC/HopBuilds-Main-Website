@@ -60,6 +60,18 @@
   overflow: hidden;
 }
 
+#canvas3d .container__spline {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400%;
+  height: 400%;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+/* Fallback for iframe if spline-viewer doesn't work */
 #canvas3d .container__iframe {
   position: absolute;
   top: 50%;
