@@ -168,58 +168,13 @@ document.addEventListener("DOMContentLoaded", () => {
     transformOrigin: "left",
   });
 
-  // Calculate section boundaries based on pinned heights
-  const infoEnd = heroSectionPinnedHeight + infoSectionPinnedHeight;
-  const projectsEnd = infoEnd + carouselSectionPinnedHeight;
-  const upcomingEnd = projectsEnd + upcomingSectionPinnedHeight;
-  const totalScrollHeight = upcomingEnd + window.innerHeight; // + footer
+  // Track current section for progress bars
+  let currentSection = "info";
 
-  // Single scroll listener for all progress bars
-  ScrollTrigger.create({
-    trigger: "body",
-    start: "top top",
-    end: "bottom bottom",
-    onUpdate: () => {
-      const scrollY = window.scrollY;
-      
-      // Info progress (0 to infoEnd)
-      if (scrollY < infoEnd) {
-        const progress = scrollY / infoEnd;
-        gsap.set(infoProgress, { scaleX: progress, transformOrigin: "left" });
-        gsap.set(workProgress, { scaleX: 0 });
-        gsap.set(upcomingProgress, { scaleX: 0 });
-        gsap.set(contactProgress, { scaleX: 0 });
-      } 
-      // Projects progress (infoEnd to projectsEnd)
-      else if (scrollY < projectsEnd) {
-        gsap.set(infoProgress, { scaleX: 0, transformOrigin: "right" });
-        const progress = (scrollY - infoEnd) / carouselSectionPinnedHeight;
-        gsap.set(workProgress, { scaleX: progress, transformOrigin: "left" });
-        gsap.set(upcomingProgress, { scaleX: 0 });
-        gsap.set(contactProgress, { scaleX: 0 });
-      }
-      // Upcoming progress (projectsEnd to upcomingEnd)
-      else if (scrollY < upcomingEnd) {
-        gsap.set(infoProgress, { scaleX: 0 });
-        gsap.set(workProgress, { scaleX: 0, transformOrigin: "right" });
-        const progress = (scrollY - projectsEnd) / upcomingSectionPinnedHeight;
-        gsap.set(upcomingProgress, { scaleX: progress, transformOrigin: "left" });
-        gsap.set(contactProgress, { scaleX: 0 });
-        nav.classList.add("light");
-        nav.classList.remove("dark");
-      }
-      // Contact progress (upcomingEnd onwards)
-      else {
-        gsap.set(infoProgress, { scaleX: 0 });
-        gsap.set(workProgress, { scaleX: 0 });
-        gsap.set(upcomingProgress, { scaleX: 0, transformOrigin: "right" });
-        const progress = Math.min(1, (scrollY - upcomingEnd) / window.innerHeight);
-        gsap.set(contactProgress, { scaleX: progress, transformOrigin: "left" });
-        nav.classList.remove("light");
-        nav.classList.add("dark");
-      }
-    },
-  });
+  // Calculate section scroll positions for navigation
+  const infoSectionEnd = heroSectionPinnedHeight + infoSectionPinnedHeight;
+  const projectsSectionEnd = infoSectionEnd + carouselSectionPinnedHeight;
+  const upcomingSectionEnd = projectsSectionEnd + upcomingSectionPinnedHeight;
 
   // reveal about section inside hero - reveal during first part of hero pinned section
   ScrollTrigger.create({
@@ -279,7 +234,15 @@ document.addEventListener("DOMContentLoaded", () => {
     start: "top top",
     end: `+=${heroSectionPinnedHeight}`,
     pin: true,
-    pinSpacing: true, // Info carousel waits until hero pinning ends
+    pinSpacing: true,
+    onUpdate: (self) => {
+      // Info progress during hero (first 20%)
+      currentSection = "info";
+      gsap.set(infoProgress, { scaleX: self.progress * 0.2, transformOrigin: "left" });
+      gsap.set(workProgress, { scaleX: 0 });
+      gsap.set(upcomingProgress, { scaleX: 0 });
+      gsap.set(contactProgress, { scaleX: 0 });
+    },
   });
 
   // portraits section removed - no pinning needed
@@ -291,6 +254,20 @@ document.addEventListener("DOMContentLoaded", () => {
     end: `+=${infoSectionPinnedHeight}`,
     pin: true,
     pinSpacing: true,
+    onUpdate: (self) => {
+      // Info progress during info-carousel (remaining 80%)
+      currentSection = "info";
+      gsap.set(infoProgress, { scaleX: 0.2 + (self.progress * 0.8), transformOrigin: "left" });
+      gsap.set(workProgress, { scaleX: 0 });
+      gsap.set(upcomingProgress, { scaleX: 0 });
+      gsap.set(contactProgress, { scaleX: 0 });
+    },
+    onLeave: () => {
+      gsap.set(infoProgress, { scaleX: 0, transformOrigin: "right" });
+    },
+    onEnterBack: () => {
+      currentSection = "info";
+    },
   });
 
   // First info slide is always visible
@@ -350,6 +327,19 @@ document.addEventListener("DOMContentLoaded", () => {
     end: `+=${carouselSectionPinnedHeight}`,
     pin: true,
     pinSpacing: true,
+    onUpdate: (self) => {
+      currentSection = "projects";
+      gsap.set(infoProgress, { scaleX: 0 });
+      gsap.set(workProgress, { scaleX: self.progress, transformOrigin: "left" });
+      gsap.set(upcomingProgress, { scaleX: 0 });
+      gsap.set(contactProgress, { scaleX: 0 });
+    },
+    onLeave: () => {
+      gsap.set(workProgress, { scaleX: 0, transformOrigin: "right" });
+    },
+    onEnterBack: () => {
+      currentSection = "projects";
+    },
   });
 
   // Pin upcoming projects section
@@ -359,6 +349,25 @@ document.addEventListener("DOMContentLoaded", () => {
     end: `+=${upcomingSectionPinnedHeight}`,
     pin: true,
     pinSpacing: true,
+    onUpdate: (self) => {
+      currentSection = "upcoming";
+      gsap.set(infoProgress, { scaleX: 0 });
+      gsap.set(workProgress, { scaleX: 0 });
+      gsap.set(upcomingProgress, { scaleX: self.progress, transformOrigin: "left" });
+      gsap.set(contactProgress, { scaleX: 0 });
+      nav.classList.add("light");
+      nav.classList.remove("dark");
+    },
+    onLeave: () => {
+      gsap.set(upcomingProgress, { scaleX: 0, transformOrigin: "right" });
+      nav.classList.remove("light");
+      nav.classList.add("dark");
+    },
+    onEnterBack: () => {
+      currentSection = "upcoming";
+      nav.classList.add("light");
+      nav.classList.remove("dark");
+    },
   });
 
   // Upcoming project slide animation (reveal second project)
@@ -377,7 +386,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // portraits section removed - no animations needed
 
-
+  // Contact section progress
+  ScrollTrigger.create({
+    trigger: ".footer",
+    start: "top bottom",
+    end: "top top",
+    onUpdate: (self) => {
+      currentSection = "contact";
+      gsap.set(infoProgress, { scaleX: 0 });
+      gsap.set(workProgress, { scaleX: 0 });
+      gsap.set(upcomingProgress, { scaleX: 0 });
+      gsap.set(contactProgress, { scaleX: self.progress, transformOrigin: "left" });
+    },
+    onLeaveBack: () => {
+      gsap.set(contactProgress, { scaleX: 0 });
+    },
+  });
 
   // navigation click handling
   document.querySelectorAll(".nav-item").forEach((navItem) => {
