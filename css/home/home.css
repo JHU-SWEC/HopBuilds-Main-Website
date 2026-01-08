@@ -105,10 +105,8 @@ nav {
   position: fixed;
   top: 2em;
   left: 2em;
-  right: 2em;
   display: flex;
   flex-direction: row;
-  justify-content: center;
   gap: 2em;
   z-index: 100;
 }

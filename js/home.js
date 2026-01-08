@@ -96,9 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // handle nav + site info color changes
+  // handle nav color changes
   const nav = document.querySelector("nav");
-  const siteIntro = document.querySelector(".site-intro");
 
   ScrollTrigger.create({
     trigger: ".hero",
@@ -107,26 +106,18 @@ document.addEventListener("DOMContentLoaded", () => {
     onEnter: () => {
       nav.classList.add("dark");
       nav.classList.remove("light");
-      siteIntro.classList.add("dark");
-      siteIntro.classList.remove("light");
     },
     onLeave: () => {
       nav.classList.remove("dark");
       nav.classList.add("light");
-      siteIntro.classList.remove("dark");
-      siteIntro.classList.add("light");
     },
     onEnterBack: () => {
       nav.classList.add("dark");
       nav.classList.remove("light");
-      siteIntro.classList.add("dark");
-      siteIntro.classList.remove("light");
     },
     onLeaveBack: () => {
       nav.classList.remove("dark");
       nav.classList.add("light");
-      siteIntro.classList.remove("dark");
-      siteIntro.classList.add("light");
     },
   });
 
@@ -136,14 +127,10 @@ document.addEventListener("DOMContentLoaded", () => {
     onEnter: () => {
       nav.classList.remove("light");
       nav.classList.add("dark");
-      siteIntro.classList.remove("light");
-      siteIntro.classList.add("dark");
     },
     onLeaveBack: () => {
       nav.classList.add("light");
       nav.classList.remove("dark");
-      siteIntro.classList.add("light");
-      siteIntro.classList.remove("dark");
     },
   });
 
