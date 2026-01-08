@@ -141,10 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Calculate total pinned heights for progress bar timing
-  // On mobile, services section is not pinned
-  const isMobileDevice = window.innerWidth <= 900;
-  const effectiveServicesPinnedHeight = isMobileDevice ? window.innerHeight : servicesSectionPinnedHeight;
-  const infoSectionEnd = heroSectionPinnedHeight + effectiveServicesPinnedHeight;
+  const infoSectionEnd = heroSectionPinnedHeight + servicesSectionPinnedHeight;
   const projectsSectionEnd = infoSectionEnd + carouselSectionPinnedHeight;
 
   // Info section progress (hero + services pinned scroll)
@@ -321,17 +318,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // portraits section removed - no pinning needed
 
-  // Pin services section (only on desktop - mobile has scrollable services)
-  const isMobile = window.innerWidth <= 900;
-  if (!isMobile) {
-    ScrollTrigger.create({
-      trigger: ".services",
-      start: "top top",
-      end: `+=${servicesSectionPinnedHeight}`,
-      pin: true,
-      pinSpacing: true,
-    });
-  }
+  // Pin services section
+  ScrollTrigger.create({
+    trigger: ".services",
+    start: "top top",
+    end: `+=${servicesSectionPinnedHeight}`,
+    pin: true,
+    pinSpacing: true,
+  });
 
   ScrollTrigger.create({
     trigger: ".carousel",

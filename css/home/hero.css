@@ -42,7 +42,7 @@
   font-size: 25vw;
   letter-spacing: -0.02em;
   line-height: 80%;
-  margin-top: -5rem;
+  margin-top: 2rem;
   transform: scale(0.75);
   opacity: 0;
   will-change: transform, opacity;
