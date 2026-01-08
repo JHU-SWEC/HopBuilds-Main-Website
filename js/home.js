@@ -402,43 +402,49 @@ document.addEventListener("DOMContentLoaded", () => {
     clipPath: "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)",
   });
 
-  // Info slide animations (reveal slides 2, 3, 4)
+  // Info slide animations (reveal slides 2, 3, 4) based on scroll progress
   ScrollTrigger.create({
     trigger: ".info-carousel",
     start: "top top",
-    end: `+=${infoSectionPinnedHeight * 0.33}`,
+    end: `+=${infoSectionPinnedHeight}`,
     scrub: 1,
     onUpdate: (self) => {
-      const clipTop = gsap.utils.interpolate(100, 0, self.progress);
-      gsap.set("#info-02", {
-        clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
-      });
-    },
-  });
-
-  ScrollTrigger.create({
-    trigger: ".info-carousel",
-    start: `top+=${infoSectionPinnedHeight * 0.33} top`,
-    end: `+=${infoSectionPinnedHeight * 0.33}`,
-    scrub: 1,
-    onUpdate: (self) => {
-      const clipTop = gsap.utils.interpolate(100, 0, self.progress);
-      gsap.set("#info-03", {
-        clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
-      });
-    },
-  });
-
-  ScrollTrigger.create({
-    trigger: ".info-carousel",
-    start: `top+=${infoSectionPinnedHeight * 0.66} top`,
-    end: `+=${infoSectionPinnedHeight * 0.33}`,
-    scrub: 1,
-    onUpdate: (self) => {
-      const clipTop = gsap.utils.interpolate(100, 0, self.progress);
-      gsap.set("#info-04", {
-        clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
-      });
+      const progress = self.progress;
+      
+      // Slide 2: 0% to 33%
+      if (progress <= 0.33) {
+        const slideProgress = progress / 0.33;
+        const clipTop = gsap.utils.interpolate(100, 0, slideProgress);
+        gsap.set("#info-02", {
+          clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
+        });
+      } else {
+        gsap.set("#info-02", {
+          clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        });
+      }
+      
+      // Slide 3: 33% to 66%
+      if (progress > 0.33 && progress <= 0.66) {
+        const slideProgress = (progress - 0.33) / 0.33;
+        const clipTop = gsap.utils.interpolate(100, 0, slideProgress);
+        gsap.set("#info-03", {
+          clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
+        });
+      } else if (progress > 0.66) {
+        gsap.set("#info-03", {
+          clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        });
+      }
+      
+      // Slide 4: 66% to 100%
+      if (progress > 0.66) {
+        const slideProgress = (progress - 0.66) / 0.34;
+        const clipTop = gsap.utils.interpolate(100, 0, slideProgress);
+        gsap.set("#info-04", {
+          clipPath: `polygon(0% ${clipTop}%, 100% ${clipTop}%, 100% 100%, 0% 100%)`,
+        });
+      }
     },
   });
 
