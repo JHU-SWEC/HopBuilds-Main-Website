@@ -411,39 +411,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     ScrollTrigger.create({
       trigger: serviceElement,
-      start: "top 100%",
+      start: "top 85%",
       end: "bottom top",
       scrub: false,
       onEnter: () => {
-        gsap.to(index_el, { opacity: 1, duration: 0.5 });
+        gsap.to(index_el, { opacity: 1, duration: 0.8 });
         gsap.to(chars, {
           opacity: 1,
-          duration: 0.05,
-          stagger: { amount: 0.3 },
-          delay: 0.1,
+          duration: 0.1,
+          stagger: { amount: 0.6 },
+          delay: 0.2,
         });
         gsap.to(lines, {
           opacity: 1,
           y: 0,
-          duration: 0.25,
-          stagger: { amount: 0.15 },
-          delay: 0.2,
+          duration: 0.5,
+          stagger: { amount: 0.4 },
+          delay: 0.4,
         });
       },
       onEnterBack: () => {
-        gsap.to(index_el, { opacity: 1, duration: 0.5 });
+        gsap.to(index_el, { opacity: 1, duration: 0.8 });
         gsap.to(chars, {
           opacity: 1,
-          duration: 0.05,
-          stagger: { amount: 0.3 },
-          delay: 0.1,
+          duration: 0.1,
+          stagger: { amount: 0.6 },
+          delay: 0.2,
         });
         gsap.to(lines, {
           opacity: 1,
           y: 0,
-          duration: 0.25,
-          stagger: { amount: 0.15 },
-          delay: 0.2,
+          duration: 0.5,
+          stagger: { amount: 0.4 },
+          delay: 0.4,
         });
       },
       onLeaveBack: (self) => {
