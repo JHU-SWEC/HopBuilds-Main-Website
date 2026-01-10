@@ -41,7 +41,7 @@ const info = [
   {
     id: "03",
     title: "Why Would I Join?",
-    copy: "First of all, You get a ton of super cool experience that can go on the resume, and it's a lot of fun making something that will actually be used by the Hopkins Community. Also, you get SCHOOL CREDIT from Professor Madooie for the projects you work on. Really, it's a win-win-win.",
+    copy: "First of all, You get a ton of super cool experience that can go on the resume, and it's a lot of fun making something that will actually be used by the Hopkins Community. Also, you get SCHOOL CREDIT from Professor Madooei for the projects you work on. Really, it's a win-win-win.",
   },
   {
     id: "04",
