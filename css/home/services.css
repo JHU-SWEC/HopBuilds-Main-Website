@@ -1,3 +1,6 @@
+/* Import Chillax font */
+@import url('https://api.fontshare.com/v2/css?f[]=chillax@400,500,600,700&display=swap');
+
 /* Info Carousel Section */
 .info-carousel {
   width: 100vw;
@@ -38,7 +41,9 @@
 }
 
 .info-slide h2 {
+  font-family: 'Chillax', sans-serif;
   font-size: 3.5rem;
+  font-weight: 600;
   line-height: 1.1;
   margin-bottom: 0.5em;
   color: var(--text-light);

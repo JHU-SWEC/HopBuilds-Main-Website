@@ -1,72 +1,207 @@
-.hero .wrapper {
+/* Import Chillax font */
+@import url('https://api.fontshare.com/v2/css?f[]=chillax@400,500,600,700&display=swap');
+/* Import Geist font */
+@import url('https://fonts.cdnfonts.com/css/geist');
+
+.hero {
+  width: 100vw;
+  min-height: auto;
+  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-}
-
-.scroll-hint {
-  position: absolute;
-  top: 8em;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  text-align: center;
-}
-
-.scroll-hint p {
-  font-size: 1rem;
-  color: var(--text);
-  opacity: 0.7;
-}
-
-.about-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  background-color: var(--bg-dark);
-  color: var(--accent);
-  clip-path: polygon(0% 50%, 100% 50%, 100% 50%, 0% 50%);
-  will-change: clip-path;
+  overflow: hidden;
+  background-color: #EFF6FF;
+  padding: 6rem 2rem 4rem;
 }
 
-.about-header h1 {
-  font-family: "Osgard Pro";
-  font-size: 25vw;
-  letter-spacing: -0.02em;
-  line-height: 80%;
-  margin-top: 2rem;
-  transform: scale(0.75);
+.hero-top {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 900px;
+  padding-top: 2rem;
+  padding-bottom: 0;
+  margin-bottom: 0;
   opacity: 0;
-  will-change: transform, opacity;
+  transform: translateY(-20px);
 }
 
-@media (max-width: 900px) {
-  .hero-copy {
-    max-width: 100%;
+.hero-top.animate-in {
+  animation: heroTopFadeIn 1s ease-out forwards;
+}
+
+@keyframes heroTopFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 #canvas3d {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  overflow: hidden;
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 350px;
+  margin-top: -2rem;
+  z-index: 1;
   display: flex;
+  align-items: flex-start;
   justify-content: center;
-  align-items: center;
+  overflow: hidden;
 }
 
 #canvas3d .container__spline {
-  width: 100%;
-  height: 100%;
-  transform: scale(1);
+  width: 120%;
+  height: 120%;
+  margin-top: -5%;
+  transform: scale(1.2);
+  transform-origin: center top;
   pointer-events: none;
+}
+
+.hero-headline {
+  font-family: 'Chillax', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  color: #001C55;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-headline .accent {
+  color: var(--accent);
+}
+
+.hero-subheadline {
+  font-family: 'Geist', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 400;
+  line-height: 1.6;
+  color: #001C55;
+  max-width: 650px;
+  margin: 0 auto;
+  padding-bottom: 0;
+}
+
+/* Why HopBuilds Section */
+.why-section {
+  width: 100%;
+  max-width: 1200px;
+  padding: 4rem 2rem 3rem;
+  margin-top: 2rem;
+  z-index: 2;
+}
+
+.why-title {
+  font-family: 'Chillax', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #001C55;
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.why-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: border-color 0.2s ease;
+}
+
+.why-card:hover {
+  border-color: var(--accent);
+}
+
+.why-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.why-card h3 {
+  font-family: 'Chillax', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #001C55;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.why-card p {
+  font-family: 'Geist', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero {
+    padding: 5rem 1.5rem 1rem;
+  }
+
+  .hero-top {
+    padding-top: 1rem;
+  }
+
+  .hero-headline {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  #canvas3d {
+    min-height: 280px;
+  }
+
+  .hero-subheadline {
+    font-size: 1rem;
+  }
+
+  .why-section {
+    padding: 2rem 1rem 2rem;
+    margin-top: 1rem;
+  }
+
+  .why-title {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .why-grid {
+    gap: 1rem;
+  }
+
+  .why-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  .why-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .why-card h3 {
+    font-size: 1.15rem;
+  }
+
+  .why-card p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .why-grid {
+    grid-template-columns: 1fr;
+  }
 }
