@@ -160,18 +160,20 @@
   }
 
   #canvas3d {
-    min-height: 200px;
-    max-height: 250px;
+    min-height: auto;
+    max-height: none;
     margin-top: 0;
-    overflow: hidden;
+    overflow: visible;
+    aspect-ratio: 1 / 1;
+    width: 80%;
+    flex: none;
   }
 
   #canvas3d .container__spline {
-    width: 80%;
-    height: 80%;
-    margin: 0 auto;
-    transform: scale(0.7);
-    transform-origin: center center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    transform: none;
   }
 
   .hero-subheadline {
@@ -213,12 +215,7 @@
 
 @media (max-width: 480px) {
   #canvas3d {
-    min-height: 150px;
-    max-height: 180px;
-  }
-
-  #canvas3d .container__spline {
-    transform: scale(0.55);
+    width: 90%;
   }
 
   .why-grid {
