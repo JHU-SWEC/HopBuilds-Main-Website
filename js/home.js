@@ -1,15 +1,62 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Fix spline-viewer positioning by triggering resize
-  const splineViewer = document.querySelector("spline-viewer");
-  if (splineViewer) {
-    setTimeout(() => {
-      window.dispatchEvent(new Event("resize"));
-    }, 500);
+  const themeToggle = document.querySelector(".theme-toggle");
+  const storedTheme = localStorage.getItem("hopbuilds-theme");
 
-    splineViewer.addEventListener("load", () => {
-      window.dispatchEvent(new Event("resize"));
+  if (storedTheme === "dark") {
+    document.body.classList.add("dark-theme");
+  }
+
+  const syncThemeToggle = () => {
+    if (!themeToggle) return;
+
+    const isDark = document.body.classList.contains("dark-theme");
+    themeToggle.setAttribute("aria-pressed", String(isDark));
+
+    const label = themeToggle.querySelector(".theme-toggle-label");
+    if (label) {
+      label.textContent = isDark ? "Light" : "Dark";
+    }
+  };
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.body.classList.toggle("dark-theme");
+      localStorage.setItem("hopbuilds-theme", isDark ? "dark" : "light");
+      syncThemeToggle();
     });
   }
+
+  syncThemeToggle();
+
+  const showcaseTabs = document.querySelectorAll(".showcase-tab");
+  const showcasePanels = document.querySelectorAll(".showcase-panel");
+  const showcaseAddressText = document.querySelector(".showcase-address-text");
+  const showcaseUrls = {
+    lost: "lostatjhu.org",
+    hopparlays: "hopparlays.com",
+  };
+
+  showcaseTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.showcaseTarget;
+
+      showcaseTabs.forEach((item) => {
+        const isActive = item === tab;
+        item.classList.toggle("is-active", isActive);
+        item.setAttribute("aria-selected", String(isActive));
+      });
+
+      showcasePanels.forEach((panel) => {
+        const isActive = panel.dataset.showcasePanel === target;
+        panel.classList.toggle("is-active", isActive);
+        panel.hidden = !isActive;
+      });
+
+      if (showcaseAddressText && showcaseUrls[target]) {
+        showcaseAddressText.textContent = showcaseUrls[target];
+      }
+    });
+  });
 
   // Smooth scroll with Lenis
   const lenis = new Lenis({
@@ -34,20 +81,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 100);
   }
 
-  // Navigation blur-on-scroll effect
+  // Navigation floating state after the hero
   const nav = document.querySelector(".main-nav");
 
-  if (nav) {
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        nav.classList.add("scrolled");
-      } else {
-        nav.classList.remove("scrolled");
-      }
-    };
+  if (nav && window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Check initial state
+    gsap.set(nav, { "--nav-progress": 0 });
+
+    gsap.to(nav, {
+      "--nav-progress": 1,
+      ease: "none",
+      scrollTrigger: {
+        trigger: document.body,
+        start: "top top",
+        end: "+=180",
+        scrub: 1.2,
+      },
+    });
   }
 
   // Smooth scroll for anchor links

@@ -8,7 +8,6 @@
 
     <link rel="stylesheet" href="./css/lenis.css" />
     <link rel="stylesheet" href="./css/globals.css" />
-    <link rel="stylesheet" href="./css/transition.css" />
 
     <link rel="stylesheet" href="./css/home/home.css" />
     <link rel="stylesheet" href="./css/home/hero.css" />
@@ -16,161 +15,239 @@
     <link rel="stylesheet" href="./css/home/footer.css" />
   </head>
   <body>
-    <div class="transition">
-      <div class="transition-row row-1">
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
-      </div>
-      <div class="transition-row row-2">
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
-        <div class="block"></div>
-      </div>
-    </div>
-
     <div class="app">
-      <!-- New Navigation -->
       <nav class="main-nav">
         <div class="nav-logo">
           <a href="#">HopBuilds</a>
         </div>
         <div class="nav-links">
           <a href="#about">About</a>
+          <a href="#showcase" class="nav-link-proof">What We Built</a>
           <a href="#projects">Projects</a>
-          <a href="#footer" class="nav-cta">Join Us</a>
+          <button class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+            <span class="theme-toggle-track">
+              <span class="theme-toggle-thumb"></span>
+            </span>
+            <span class="theme-toggle-label">Dark</span>
+          </button>
+          <a href="#footer" class="nav-cta">Join HopBuilds</a>
         </div>
       </nav>
 
-      <!-- Hero Section -->
       <section class="hero">
+        <div class="hero-backdrop"></div>
+        <div class="hero-scrim"></div>
         <div class="hero-top">
           <h1 class="hero-headline">
-            <span class="accent">HopBuilds</span> builds products<br />
-            for students, by students.
+            <span class="gradient-text">HopBuilds</span>
           </h1>
-          <p class="hero-subheadline">
-            We are a student-run organization that codes, designs,
-            markets, and manages products that improve life at Johns Hopkins. We've rebranded from the Software Engineering Club to HopBuilds!
-          </p>
+          <p class="hero-tagline">The #1 place to build software at JHU.</p>
+          <div class="hero-actions">
+            <a href="#footer" class="hero-btn hero-btn-primary">Join HopBuilds</a>
+            <a href="#showcase" class="hero-btn hero-btn-secondary">See Projects</a>
+          </div>
         </div>
-        <div id="canvas3d">
-          <spline-viewer
-            url="https://prod.spline.design/sErTaADG0o3J0F9T/scene.splinecode"
-            class="container__spline"
-            loading="eager"
-            background="transparent"
-          ></spline-viewer>
-        </div>
+      </section>
 
-        <div class="why-section" id="about">
-          <h2 class="why-title">Why HopBuilds?</h2>
-          <div class="why-grid">
-            <div class="why-card">
-              <div class="why-icon">🛠️</div>
-              <h3>Gain Hands-On Experience</h3>
-              <p>Hopkins doesn't have a club that makes software for students to use, so we're stepping in.</p>
-            </div>
-            <div class="why-card">
-              <div class="why-icon">🤝</div>
-              <h3>Make New Friends</h3>
-              <p>Join a community of passionate students who love building and creating together.</p>
-            </div>
-            <div class="why-card">
-              <div class="why-icon">🚀</div>
-              <h3>Grow Your Career</h3>
-              <p>Build your portfolio and gain skills that employers are looking for.</p>
-            </div>
-            <div class="why-card">
-              <div class="why-icon">💡</div>
-              <h3>Make an Impact</h3>
-              <p>Create software that solves real problems for the Hopkins community.</p>
+      <section class="outcomes-strip" aria-label="Companies HopBuilds members are joining">
+        <div class="outcomes-shell">
+          <p class="outcomes-label">Where members are going</p>
+          <div class="outcomes-marquee">
+            <div class="outcomes-track">
+              <div class="outcome-logo-card"><img src="./assets/home/logos/pg-logo.png" alt="Procter & Gamble" /></div>
+              <div class="outcome-logo-card"><img src="./assets/home/logos/medtronic-logo.png" alt="Medtronic" /></div>
+              <div class="outcome-logo-card"><img src="./assets/home/logos/ibm-logo.svg" alt="IBM" /></div>
+              <div class="outcome-logo-card"><img src="./assets/home/logos/amazon-logo.png" alt="Amazon" /></div>
+              <div class="outcome-logo-card"><img src="./assets/home/logos/capital-one-logo.png" alt="Capital One" /></div>
+              <div class="outcome-logo-card"><img src="./assets/home/logos/microsoft-logo.png" alt="Microsoft" /></div>
+              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/pg-logo.png" alt="" /></div>
+              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/medtronic-logo.png" alt="" /></div>
+              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/ibm-logo.svg" alt="" /></div>
+              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/amazon-logo.png" alt="" /></div>
+              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/capital-one-logo.png" alt="" /></div>
+              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/microsoft-logo.png" alt="" /></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Projects Section -->
-      <section class="projects" id="projects">
-        <div class="projects-wrapper">
-          <h2 class="section-title">Previous Project</h2>
-          <div class="project-card">
-            <div class="project-image">
-              <img src="./assets/project/LostandFoundBlueJay.png" alt="JHU Lost and Found" />
-            </div>
-            <div class="project-info">
-              <h3>JHU Lost and Found</h3>
-              <p>So you don't have to ask on sidechat anymore.</p>
-              <a href="./project.html" class="project-link">View Project &rarr;</a>
+      <section class="about-section" id="about">
+        <div class="about-shell">
+          <div class="section-intro about-intro">
+            <div class="section-heading-row">
+              <div>
+                <h2 class="section-title-large"><span class="section-title-brand">HopBuilds</span> builds products for students, by students.</h2>
+              </div>
             </div>
           </div>
+          <div class="team-photo-stage">
+            <div class="team-photo-caption">
+              <p class="team-caption-copy">We are a student product team designing and developing solutions that make student life at JHU more connected and convenient!</p>
+            </div>
+            <div class="team-photo-frame">
+              <div class="team-photo-inner">
+                <div class="team-photo-stats" aria-label="HopBuilds statistics">
+                  <div class="team-photo-stat">
+                    <span class="team-photo-stat-value">500+</span>
+                    <span class="team-photo-stat-label">users</span>
+                  </div>
+                  <div class="team-photo-stat">
+                    <span class="team-photo-stat-value">4+</span>
+                    <span class="team-photo-stat-label">projects</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-          <h2 class="section-title upcoming-title">Upcoming Projects</h2>
+      <section class="showcase-section" id="showcase" aria-label="Project Showcase">
+        <div class="showcase-shell">
+          <div class="section-intro showcase-intro">
+            <div class="showcase-heading-row">
+              <div>
+                <h2 class="section-title-large">Built for Hopkins</h2>
+              </div>
+            </div>
+          </div>
+          <div class="showcase-device">
+            <div class="showcase-device-top">
+              <div class="showcase-toolbar-main">
+                <div class="showcase-window-controls" aria-hidden="true">
+                  <span class="window-control-close"></span>
+                  <span class="window-control-minimize"></span>
+                  <span class="window-control-expand"></span>
+                </div>
+                <div class="showcase-nav-chrome" aria-hidden="true">
+                  <span class="showcase-nav-arrow">&lsaquo;</span>
+                  <span class="showcase-nav-arrow">&rsaquo;</span>
+                  <span class="showcase-nav-divider"></span>
+                  <span class="showcase-nav-refresh">&#8635;</span>
+                </div>
+                <div class="showcase-address-bar">
+                  <span class="showcase-address-text">lostatjhu.org</span>
+                </div>
+                <div class="showcase-toolbar-actions" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+              <div class="showcase-tabs" role="tablist" aria-label="Project tabs">
+                <button class="showcase-tab is-active" type="button" role="tab" aria-selected="true" data-showcase-target="lost">
+                  <span class="showcase-tab-dot"></span>
+                  <span>Lost@JHU</span>
+                </button>
+                <button class="showcase-tab" type="button" role="tab" aria-selected="false" data-showcase-target="hopparlays">
+                  <span class="showcase-tab-dot"></span>
+                  <span>HopParlays</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="showcase-screen">
+              <div class="showcase-panel is-active" data-showcase-panel="lost">
+                <iframe
+                  src="https://www.lostatjhu.org/"
+                  title="Lost@JHU"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
+                ></iframe>
+              </div>
+
+              <div class="showcase-panel showcase-placeholder" data-showcase-panel="hopparlays" hidden>
+                <div class="showcase-placeholder-copy">
+                  <p class="showcase-placeholder-label">In Progress</p>
+                  <h3>HopParlays</h3>
+                  <p>A preview surface for the next product. Final UI still in development.</p>
+                </div>
+                <div class="showcase-placeholder-card">
+                  <span>Coming Soon</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="projects" id="projects">
+        <div class="projects-wrapper">
+          <div class="section-intro projects-intro">
+            <div class="section-heading-row">
+              <div>
+                <h2 class="section-title-large">In progress</h2>
+              </div>
+            </div>
+          </div>
           <div class="upcoming-grid">
             <div class="project-card upcoming-card">
+              <div class="project-info">
+                <h3>JHU Rideshare</h3>
+                <p>Rides for students.</p>
+              </div>
               <div class="project-image">
                 <img src="./assets/project/drivingbluejay.png" alt="JHU Rideshare" />
               </div>
-              <div class="project-info">
-                <h3>JHU Rideshare</h3>
-                <p>A ridesharing platform for Hopkins students.</p>
-              </div>
             </div>
             <div class="project-card upcoming-card">
-              <div class="project-image">
-                <img src="./assets/project/GamblingBlueJay.png" alt="Hop Parlays" />
-              </div>
-              <div class="project-info">
-                <h3>Hop Parlays</h3>
-                <p>Imagine putting the over on the orgo midterm.</p>
-              </div>
-            </div>
-            <div class="project-card upcoming-card">
-              <div class="project-image">
-                <img src="./assets/project/Clubboardbluejay.png" alt="JHU Club Board" />
-              </div>
               <div class="project-info">
                 <h3>JHU Club Board</h3>
-                <p>A central hub for discovering and managing student clubs.</p>
+                <p>Clubs, simplified.</p>
+              </div>
+              <div class="project-image">
+                <img src="./assets/project/Clubboardbluejay.png" alt="JHU Club Board" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Footer Section -->
       <section class="footer" id="footer">
-        <div class="footer-main">
+        <div class="footer-main footer-panel">
           <div class="footer-cta">
-            <h2>Want to grow your skills?<br />Join our team!</h2>
+            <h2>Build with us.</h2>
             <p class="footer-subtext">
-              We are looking for students passionate about software development and technology.
+              Product. Engineering. Design. Growth.
             </p>
             <a href="https://docs.google.com/forms/d/e/1FAIpQLScCDca0vhUvHgQoS_NWhagKkoFUA1jHvasKyQlkR4wZK1cF2w/viewform?usp=dialog" target="_blank" class="apply-btn">
-              Join Now &rarr;
+              Apply &rarr;
             </a>
           </div>
           <div class="footer-roles">
             <div class="role-card">
-              <div class="role-icon">&#128104;&#8205;&#128187;</div>
+              <div class="role-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="4" y="5" width="16" height="11" rx="2.5"></rect>
+                  <path d="M9 19h6"></path>
+                  <path d="M10 9l-2 2 2 2"></path>
+                  <path d="M14 9l2 2-2 2"></path>
+                </svg>
+              </div>
               <div class="role-content">
                 <h4>Developers</h4>
                 <p>Build products used by thousands of students</p>
               </div>
             </div>
             <div class="role-card">
-              <div class="role-icon">&#127912;</div>
+              <div class="role-icon" aria-hidden="true">
+                <img src="./assets/home/footer-designer-icon.webp" alt="" />
+              </div>
               <div class="role-content">
                 <h4>Designers</h4>
                 <p>Craft intuitive user experiences</p>
               </div>
             </div>
             <div class="role-card">
-              <div class="role-icon">&#128202;</div>
+              <div class="role-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M5 18.5h14"></path>
+                  <path d="M7.5 16V11"></path>
+                  <path d="M12 16V8"></path>
+                  <path d="M16.5 16v-3.5"></path>
+                  <path d="M7 8.5 11.2 6l3 2.1 3.8-2.6"></path>
+                </svg>
+              </div>
               <div class="role-content">
                 <h4>Strategists</h4>
                 <p>Drive marketing and product decisions</p>
@@ -191,11 +268,9 @@
       </section>
     </div>
 
-    <script type="module" src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
     <script src="./js/home.js"></script>
-    <script src="./js/transition.js"></script>
   </body>
 </html>
