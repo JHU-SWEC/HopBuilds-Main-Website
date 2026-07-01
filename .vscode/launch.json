@@ -1,0 +1,24 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/slxwa/AppData/Local/Temp/d7b42aa0-02a3-45e6-bc0a-a0c6575dffe8_chess_complete.zip.chess_complete.zip",
+      "program": "c:/Users/slxwa/AppData/Local/Temp/d7b42aa0-02a3-45e6-bc0a-a0c6575dffe8_chess_complete.zip.chess_complete.zip/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}
