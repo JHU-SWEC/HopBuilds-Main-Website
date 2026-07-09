@@ -1,0 +1,954 @@
+/* ============================================================
+   HopBuilds homepage — light editorial, JHU blues, blueprint grid
+   Self-contained: index.html links only this file + lenis.css.
+   ============================================================ */
+
+:root {
+  --paper: #f7f9fc;
+  --ink: #002d72; /* JHU Heritage Blue */
+  --spirit: #68ace5; /* JHU Spirit Blue */
+  --slate: #42536b;
+  --line: #d7e0ec;
+  --live: #ffb700; /* used once: the "Live" badge */
+  --grid-line: rgba(0, 45, 114, 0.055);
+
+  --font-display: "Clash Display", "Avenir Next", sans-serif;
+  --font-body: "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+
+  --gutter: clamp(1.25rem, 5vw, 5rem);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--spirit);
+  color: var(--ink);
+}
+
+/* ---------- blueprint grid backdrop (the signature) ---------- */
+.chapter-grid {
+  position: relative;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+/* ---------- shared primitives ---------- */
+.eyebrow,
+.chapter-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.chapter-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--ink);
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+
+.chapter-label span {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.chapter-label-light,
+.chapter-label-light span {
+  color: #fff;
+  border-color: #fff;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.85rem 1.75rem;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--spirit);
+  outline-offset: 3px;
+}
+
+.btn-primary {
+  background: var(--ink);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #013a8f;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn-ghost:hover {
+  background: rgba(104, 172, 229, 0.16);
+}
+
+.btn-large {
+  font-size: 1.15rem;
+  padding: 1.1rem 2.5rem;
+}
+
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--slate);
+  background: #fff;
+  margin-bottom: 1rem;
+}
+
+.badge-live {
+  border-color: var(--live);
+  background: var(--live);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ---------- progress bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--spirit);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 200;
+}
+
+/* ---------- nav ---------- */
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem var(--gutter);
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.site-nav.is-scrolled {
+  background: rgba(247, 249, 252, 0.88);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.nav-wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.nav-links a:not(.nav-cta):hover {
+  color: var(--spirit);
+}
+
+.nav-cta {
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.55rem 1.25rem;
+  border-radius: 999px;
+  transition: background 0.18s ease;
+}
+
+.nav-cta:hover {
+  background: #013a8f;
+}
+
+@media (max-width: 767px) {
+  .nav-links a:not(.nav-cta) {
+    display: none;
+  }
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(5.5rem, 11vh, 7.5rem) var(--gutter) 0;
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2rem, 4vw, 4.5rem);
+  align-items: center;
+}
+
+.hero-eyebrow {
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(3rem, 7.5vw, 6.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.hero-title-line {
+  display: block;
+}
+
+.hero-title em {
+  font-style: italic;
+  font-weight: 500;
+  color: var(--spirit);
+}
+
+.hero-period {
+  color: var(--spirit);
+}
+
+.hero-tagline {
+  max-width: 34rem;
+  margin-top: 1.75rem;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  color: var(--slate);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2.25rem;
+}
+
+/* ---------- interactive terminal ---------- */
+.hero-terminal {
+  background: #001d4a;
+  border: 1px solid rgba(104, 172, 229, 0.35);
+  border-radius: 14px;
+  box-shadow: 0 32px 80px rgba(0, 29, 74, 0.35);
+  transform: rotate(-1.5deg);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  overflow: hidden;
+  cursor: text;
+}
+
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid rgba(104, 172, 229, 0.22);
+}
+
+.term-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 1px solid rgba(104, 172, 229, 0.55);
+}
+
+.term-dot:first-child {
+  background: var(--spirit);
+  border-color: var(--spirit);
+}
+
+.term-title {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: rgba(104, 172, 229, 0.7);
+}
+
+.term-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 19rem;
+  padding: 1rem 1.1rem;
+  color: #cfe4f7;
+}
+
+.term-line {
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.term-out {
+  color: rgba(207, 228, 247, 0.75);
+}
+
+.term-prompt {
+  color: var(--spirit);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.term-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.2rem;
+}
+
+.term-input-row input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font: inherit;
+  caret-color: var(--spirit);
+}
+
+@media (max-width: 1023px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-terminal {
+    display: none;
+  }
+}
+
+.hero-foot {
+  padding-bottom: 2rem;
+}
+
+.hero-scroll-hint {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+/* logo marquee */
+.outcomes {
+  border-top: 1px solid var(--line);
+  padding-top: 1.25rem;
+}
+
+.outcomes-topline {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.outcomes-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.outcomes-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.outcomes-track {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.outcomes-track img {
+  height: 1.6rem;
+  width: auto;
+  max-width: 8.5rem;
+  object-fit: contain;
+  filter: grayscale(1) opacity(0.55);
+  transition: filter 0.2s ease;
+}
+
+.outcomes-track img:hover {
+  filter: none;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .outcomes-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+}
+
+/* ============================================================
+   01 · OUR STORY  (pinned chapter on desktop)
+   ============================================================ */
+.story {
+  padding: clamp(5rem, 12vh, 8rem) var(--gutter);
+}
+
+.story-pin {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.story-line {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 4.5vw, 3.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 20ch;
+  margin-bottom: 1.25rem;
+}
+
+.story-line em {
+  font-style: italic;
+  color: var(--spirit);
+}
+
+.story-line-final strong {
+  font-weight: 700;
+  border-bottom: 4px solid var(--spirit);
+}
+
+.story-detail {
+  max-width: 42rem;
+  margin-top: 2.5rem;
+  color: var(--slate);
+  font-size: 1.1rem;
+}
+
+/* ============================================================
+   02 · WHAT WE BUILD  (pinned horizontal gallery)
+   ============================================================ */
+.builds {
+  background: var(--ink);
+  color: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  justify-content: space-between;
+}
+
+.builds-head {
+  padding: clamp(3.5rem, 9vh, 5.5rem) var(--gutter) clamp(1.25rem, 3vh, 2rem);
+  --grid-line: rgba(255, 255, 255, 0.05);
+}
+
+.builds-head .chapter-label,
+.builds-head .chapter-label span {
+  color: var(--spirit);
+  border-color: var(--spirit);
+}
+
+.builds-head-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.builds-title {
+  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+}
+
+.builds-stats {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.stat-value {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  color: var(--spirit);
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* the track slides horizontally while the section is pinned */
+.builds-track {
+  display: flex;
+  gap: clamp(1rem, 2.5vw, 2rem);
+  padding: 0 var(--gutter);
+  width: max-content;
+  will-change: transform;
+}
+
+.build-card {
+  position: relative;
+  overflow: hidden;
+  width: min(74vw, 1040px);
+  min-height: 54vh;
+  background: #fff;
+  color: var(--ink);
+  border-radius: 24px;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(1.25rem, 3vw, 3rem);
+  padding: clamp(1.5rem, 3vw, 3rem);
+}
+
+/* oversized index numeral, blueprint-style watermark */
+.build-num {
+  position: absolute;
+  top: -1.5rem;
+  right: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(7rem, 16vw, 13rem);
+  line-height: 1;
+  color: rgba(0, 45, 114, 0.06);
+  user-select: none;
+  pointer-events: none;
+}
+
+.build-copy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.build-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 1rem;
+}
+
+.build-desc {
+  color: var(--slate);
+  font-size: 1.15rem;
+  max-width: 28rem;
+  margin-bottom: 1.75rem;
+}
+
+.build-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.build-art img {
+  width: 100%;
+  max-height: 42vh;
+  object-fit: contain;
+}
+
+.builds-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vh, 2rem) var(--gutter) clamp(2rem, 5vh, 3rem);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--spirit);
+}
+
+.builds-total {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.builds-progress-line {
+  flex: 1;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.builds-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--spirit);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+@media (max-width: 767px) {
+  .builds {
+    min-height: 0;
+    display: block;
+  }
+
+  /* native horizontal swipe instead of the pinned gallery */
+  .builds-track-wrap {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .builds-track {
+    padding-bottom: 0.5rem;
+  }
+
+  .build-card {
+    width: 86vw;
+    min-height: 0;
+    grid-template-columns: 1fr;
+    scroll-snap-align: center;
+  }
+
+  .build-art img {
+    max-height: 32vh;
+  }
+}
+
+/* ============================================================
+   03 · WHAT YOU GAIN  (scroll-fill headlines + pop-out cards)
+   ============================================================ */
+.gains {
+  padding: clamp(5rem, 12vh, 8rem) var(--gutter);
+}
+
+.gain-list {
+  list-style: none;
+  margin-top: clamp(3rem, 8vh, 5rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.gain-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  min-height: 46vh;
+  padding: clamp(2rem, 5vh, 3.5rem) 0;
+  border-top: 1px solid var(--line);
+}
+
+/* headline: stroke-only layer underneath, ink layer clipped on top.
+   JS scrubs the fill layer's clip-path as the row crosses the viewport. */
+.gain-line {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+.gain-line-stroke {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(0, 45, 114, 0.32);
+}
+
+.gain-line-fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  color: var(--ink);
+}
+
+/* blueprint annotation callout — bare text with a leader line, no card */
+.gain-note {
+  position: relative;
+  max-width: 26rem;
+}
+
+/* thin leader line reaching back toward the headline, node dot at its far end */
+.gain-leader {
+  position: absolute;
+  top: 0.5em;
+  right: calc(100% + 0.9rem);
+  width: clamp(1.5rem, 3.5vw, 3.5rem);
+  height: 1.5px;
+  background: var(--ink);
+}
+
+.gain-leader::before {
+  content: "";
+  position: absolute;
+  left: -0.3rem;
+  top: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  background: var(--spirit);
+}
+
+.gain-note-copy {
+  color: var(--slate);
+}
+
+/* marker-highlight instead of a featured card */
+.gain-note strong {
+  font-weight: 700;
+  color: var(--ink);
+  background: linear-gradient(transparent 62%, rgba(104, 172, 229, 0.45) 62%);
+}
+
+.gain-note-featured .gain-note-copy {
+  color: var(--ink);
+  font-size: 1.1rem;
+}
+
+.gain-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-bottom: 0.9rem;
+}
+
+@media (max-width: 767px) {
+  .gain-row {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    gap: 1.5rem;
+  }
+
+  .gain-leader {
+    display: none;
+  }
+}
+
+/* ============================================================
+   04 · THE SOCIAL SIDE
+   ============================================================ */
+.social {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.social-media {
+  position: absolute;
+  inset: 0;
+}
+
+.social-media img {
+  width: 100%;
+  height: 115%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+.social-overlay {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  /* tall padding-top stretches the scrim so it fades in well above the text */
+  padding: 45vh var(--gutter) clamp(3rem, 8vh, 6rem);
+  /* the shorthand also replaces .chapter-grid's blueprint grid image */
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 16, 42, 0.35) 35%, rgba(0, 16, 42, 0.7) 60%, rgba(0, 16, 42, 0.96) 100%);
+  color: #fff;
+}
+
+.social-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 30px rgba(0, 10, 30, 0.65);
+}
+
+.social-copy {
+  max-width: 36rem;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  color: #fff;
+  font-weight: 500;
+  text-shadow: 0 1px 18px rgba(0, 10, 30, 0.75);
+}
+
+/* ============================================================
+   05 · JOIN
+   ============================================================ */
+.join {
+  padding: clamp(5rem, 12vh, 8rem) var(--gutter) clamp(4rem, 10vh, 7rem);
+}
+
+.join-head {
+  max-width: 46rem;
+}
+
+.join-title {
+  font-size: clamp(3rem, 8vw, 6rem);
+}
+
+.join-sub {
+  color: var(--slate);
+  font-size: 1.15rem;
+  margin: 1.5rem 0 2.25rem;
+}
+
+.join-roles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: clamp(3rem, 7vh, 5rem);
+}
+
+.role-card {
+  border-top: 2px solid var(--ink);
+  padding-top: 1.25rem;
+}
+
+.role-card h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.role-card p {
+  color: var(--slate);
+}
+
+@media (max-width: 767px) {
+  .join-roles {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- footer ---------- */
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem var(--gutter) 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.75rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.footer-links a:hover {
+  color: var(--spirit);
+}
+
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--slate);
+}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .build-card {
+    position: static;
+  }
+}

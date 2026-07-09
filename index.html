@@ -3,270 +3,350 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HopBuilds</title>
+    <title>HopBuilds — We build software for Hopkins</title>
+    <meta
+      name="description"
+      content="HopBuilds is JHU's fun, no-pressure software engineering club. Ship real products for the Hopkins community, earn school credit, and learn from Professor Madooei."
+    />
     <link rel="icon" href="./Blue_Jay_Coding_Icon.png" />
 
-    <link rel="stylesheet" href="./css/lenis.css" />
-    <link rel="stylesheet" href="./css/globals.css" />
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=satoshi@400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="stylesheet" href="./css/home/home.css" />
-    <link rel="stylesheet" href="./css/home/hero.css" />
-    <link rel="stylesheet" href="./css/home/projects.css" />
-    <link rel="stylesheet" href="./css/home/footer.css" />
+    <link rel="stylesheet" href="./css/lenis.css" />
+    <link rel="stylesheet" href="./css/home/redesign.css" />
   </head>
   <body>
-    <div class="app">
-      <nav class="main-nav">
-        <div class="nav-logo">
-          <a href="#">HopBuilds</a>
-        </div>
-        <div class="nav-links">
-          <a href="#about">About</a>
-          <a href="#showcase" class="nav-link-proof">What We Built</a>
-          <a href="#projects">Projects</a>
-          <button class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
-            <span class="theme-toggle-track">
-              <span class="theme-toggle-thumb"></span>
-            </span>
-            <span class="theme-toggle-label">Dark</span>
-          </button>
-          <a href="#footer" class="nav-cta">Join HopBuilds</a>
-        </div>
-      </nav>
+    <div class="progress-bar" aria-hidden="true"></div>
 
-      <section class="hero">
-        <div class="hero-backdrop"></div>
-        <div class="hero-scrim"></div>
-        <div class="hero-top">
-          <h1 class="hero-headline">
-            <span class="gradient-text">HopBuilds</span>
-          </h1>
-          <p class="hero-tagline">The #1 place to build software at JHU.</p>
-          <div class="hero-actions">
-            <a href="#footer" class="hero-btn hero-btn-primary">Join HopBuilds</a>
-            <a href="#showcase" class="hero-btn hero-btn-secondary">See Projects</a>
-          </div>
-        </div>
-      </section>
+    <nav class="site-nav">
+      <a class="nav-wordmark" href="#top">HopBuilds</a>
+      <div class="nav-links">
+        <a href="#story">Story</a>
+        <a href="#builds">Projects</a>
+        <a href="#gains">What You Gain</a>
+        <a href="#social">Social</a>
+        <a class="nav-cta" href="#join">Join us</a>
+      </div>
+    </nav>
 
-      <section class="outcomes-strip" aria-label="Companies HopBuilds members are joining">
-        <div class="outcomes-shell">
-          <p class="outcomes-label">Where members are going</p>
-          <div class="outcomes-marquee">
-            <div class="outcomes-track">
-              <div class="outcome-logo-card"><img src="./assets/home/logos/pg-logo.png" alt="Procter & Gamble" /></div>
-              <div class="outcome-logo-card"><img src="./assets/home/logos/medtronic-logo.png" alt="Medtronic" /></div>
-              <div class="outcome-logo-card"><img src="./assets/home/logos/ibm-logo.svg" alt="IBM" /></div>
-              <div class="outcome-logo-card"><img src="./assets/home/logos/amazon-logo.png" alt="Amazon" /></div>
-              <div class="outcome-logo-card"><img src="./assets/home/logos/capital-one-logo.png" alt="Capital One" /></div>
-              <div class="outcome-logo-card"><img src="./assets/home/logos/microsoft-logo.png" alt="Microsoft" /></div>
-              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/pg-logo.png" alt="" /></div>
-              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/medtronic-logo.png" alt="" /></div>
-              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/ibm-logo.svg" alt="" /></div>
-              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/amazon-logo.png" alt="" /></div>
-              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/capital-one-logo.png" alt="" /></div>
-              <div class="outcome-logo-card" aria-hidden="true"><img src="./assets/home/logos/microsoft-logo.png" alt="" /></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="about-section" id="about">
-        <div class="about-shell">
-          <div class="section-intro about-intro">
-            <div class="section-heading-row">
-              <div>
-                <h2 class="section-title-large"><span class="section-title-brand">HopBuilds</span> builds products for students, by students.</h2>
-              </div>
-            </div>
-          </div>
-          <div class="team-photo-stage">
-            <div class="team-photo-caption">
-              <p class="team-caption-copy">We are a student product team designing and developing solutions that make student life at JHU more connected and convenient!</p>
-            </div>
-            <div class="team-photo-frame">
-              <div class="team-photo-inner">
-                <div class="team-photo-stats" aria-label="HopBuilds statistics">
-                  <div class="team-photo-stat">
-                    <span class="team-photo-stat-value">500+</span>
-                    <span class="team-photo-stat-label">users</span>
-                  </div>
-                  <div class="team-photo-stat">
-                    <span class="team-photo-stat-value">4+</span>
-                    <span class="team-photo-stat-label">projects</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="showcase-section" id="showcase" aria-label="Project Showcase">
-        <div class="showcase-shell">
-          <div class="section-intro showcase-intro">
-            <div class="showcase-heading-row">
-              <div>
-                <h2 class="section-title-large">Built for Hopkins</h2>
-              </div>
-            </div>
-          </div>
-          <div class="showcase-device">
-            <div class="showcase-device-top">
-              <div class="showcase-toolbar-main">
-                <div class="showcase-window-controls" aria-hidden="true">
-                  <span class="window-control-close"></span>
-                  <span class="window-control-minimize"></span>
-                  <span class="window-control-expand"></span>
-                </div>
-                <div class="showcase-nav-chrome" aria-hidden="true">
-                  <span class="showcase-nav-arrow">&lsaquo;</span>
-                  <span class="showcase-nav-arrow">&rsaquo;</span>
-                  <span class="showcase-nav-divider"></span>
-                  <span class="showcase-nav-refresh">&#8635;</span>
-                </div>
-                <div class="showcase-address-bar">
-                  <span class="showcase-address-text">lostatjhu.org</span>
-                </div>
-                <div class="showcase-toolbar-actions" aria-hidden="true">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-              <div class="showcase-tabs" role="tablist" aria-label="Project tabs">
-                <button class="showcase-tab is-active" type="button" role="tab" aria-selected="true" data-showcase-target="lost">
-                  <span class="showcase-tab-dot"></span>
-                  <span>Lost@JHU</span>
-                </button>
-                <button class="showcase-tab" type="button" role="tab" aria-selected="false" data-showcase-target="hopparlays">
-                  <span class="showcase-tab-dot"></span>
-                  <span>HopParlays</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="showcase-screen">
-              <div class="showcase-panel is-active" data-showcase-panel="lost">
-                <iframe
-                  src="https://www.lostatjhu.org/"
-                  title="Lost@JHU"
-                  loading="lazy"
-                  referrerpolicy="no-referrer"
-                ></iframe>
-              </div>
-
-              <div class="showcase-panel showcase-placeholder" data-showcase-panel="hopparlays" hidden>
-                <div class="showcase-placeholder-copy">
-                  <p class="showcase-placeholder-label">In Progress</p>
-                  <h3>HopParlays</h3>
-                  <p>A preview surface for the next product. Final UI still in development.</p>
-                </div>
-                <div class="showcase-placeholder-card">
-                  <span>Coming Soon</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="projects" id="projects">
-        <div class="projects-wrapper">
-          <div class="section-intro projects-intro">
-            <div class="section-heading-row">
-              <div>
-                <h2 class="section-title-large">In progress</h2>
-              </div>
-            </div>
-          </div>
-          <div class="upcoming-grid">
-            <div class="project-card upcoming-card">
-              <div class="project-info">
-                <h3>JHU Rideshare</h3>
-                <p>Rides for students.</p>
-              </div>
-              <div class="project-image">
-                <img src="./assets/project/drivingbluejay.png" alt="JHU Rideshare" />
-              </div>
-            </div>
-            <div class="project-card upcoming-card">
-              <div class="project-info">
-                <h3>JHU Club Board</h3>
-                <p>Clubs, simplified.</p>
-              </div>
-              <div class="project-image">
-                <img src="./assets/project/Clubboardbluejay.png" alt="JHU Club Board" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="footer" id="footer">
-        <div class="footer-main footer-panel">
-          <div class="footer-cta">
-            <h2>Build with us.</h2>
-            <p class="footer-subtext">
-              Product. Engineering. Design. Growth.
+    <main id="top">
+      <!-- ================= HERO ================= -->
+      <header class="hero chapter-grid">
+        <div class="hero-inner">
+          <div class="hero-copy">
+            <p class="eyebrow hero-eyebrow">Johns Hopkins University &middot; Software Engineering Club</p>
+            <h1 class="hero-title">
+              <span class="hero-title-line">We build</span>
+              <span class="hero-title-line">software <em>for</em></span>
+              <span class="hero-title-line">Hopkins<span class="hero-period">.</span></span>
+            </h1>
+            <p class="hero-tagline">
+              HopBuilds is the #1 place to build software at JHU &mdash; a fun,
+              no-pressure team shipping real products for real students.
             </p>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScCDca0vhUvHgQoS_NWhagKkoFUA1jHvasKyQlkR4wZK1cF2w/viewform?usp=dialog" target="_blank" class="apply-btn">
-              Apply &rarr;
-            </a>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#join">Join HopBuilds</a>
+              <a class="btn btn-ghost" href="#builds">See what we've built</a>
+            </div>
           </div>
-          <div class="footer-roles">
-            <div class="role-card">
-              <div class="role-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <rect x="4" y="5" width="16" height="11" rx="2.5"></rect>
-                  <path d="M9 19h6"></path>
-                  <path d="M10 9l-2 2 2 2"></path>
-                  <path d="M14 9l2 2-2 2"></path>
-                </svg>
-              </div>
-              <div class="role-content">
-                <h4>Developers</h4>
-                <p>Build products used by thousands of students</p>
-              </div>
+
+          <div class="hero-terminal" role="group" aria-label="Interactive HopBuilds terminal — try typing 'help'">
+            <div class="term-bar">
+              <span class="term-dot"></span>
+              <span class="term-dot"></span>
+              <span class="term-dot"></span>
+              <span class="term-title">hopbuilds &mdash; zsh</span>
             </div>
-            <div class="role-card">
-              <div class="role-icon" aria-hidden="true">
-                <img src="./assets/home/footer-designer-icon.webp" alt="" />
-              </div>
-              <div class="role-content">
-                <h4>Designers</h4>
-                <p>Craft intuitive user experiences</p>
-              </div>
-            </div>
-            <div class="role-card">
-              <div class="role-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M5 18.5h14"></path>
-                  <path d="M7.5 16V11"></path>
-                  <path d="M12 16V8"></path>
-                  <path d="M16.5 16v-3.5"></path>
-                  <path d="M7 8.5 11.2 6l3 2.1 3.8-2.6"></path>
-                </svg>
-              </div>
-              <div class="role-content">
-                <h4>Strategists</h4>
-                <p>Drive marketing and product decisions</p>
+            <div class="term-body">
+              <div class="term-lines" id="term-lines"></div>
+              <div class="term-input-row">
+                <span class="term-prompt">hopbuilds@jhu&nbsp;%</span>
+                <input
+                  id="term-input"
+                  type="text"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  aria-label="Type a terminal command, e.g. help"
+                />
               </div>
             </div>
           </div>
         </div>
-        <div class="footer-bottom">
-          <div class="footer-links">
-            <a href="mailto:dguo10@jh.edu">dguo10@jh.edu</a>
-            <span class="separator">&bull;</span>
-            <a href="https://www.instagram.com/jhuswec/" target="_blank">Instagram</a>
-            <span class="separator">&bull;</span>
-            <a href="https://github.com/JHU-SWEC" target="_blank">GitHub</a>
+
+        <div class="hero-foot">
+          <div class="outcomes" aria-label="Companies HopBuilds members are joining">
+            <div class="outcomes-topline">
+              <p class="outcomes-label">Where our members are headed</p>
+              <p class="hero-scroll-hint" aria-hidden="true">Scroll to explore &darr;</p>
+            </div>
+            <div class="outcomes-marquee">
+              <div class="outcomes-track">
+                <img src="./assets/home/logos/pg-logo.png" alt="Procter &amp; Gamble" />
+                <img src="./assets/home/logos/medtronic-logo.png" alt="Medtronic" />
+                <img src="./assets/home/logos/ibm-logo.svg" alt="IBM" />
+                <img src="./assets/home/logos/amazon-logo.png" alt="Amazon" />
+                <img src="./assets/home/logos/capital-one-logo.png" alt="Capital One" />
+                <img src="./assets/home/logos/microsoft-logo.png" alt="Microsoft" />
+                <img src="./assets/home/logos/pg-logo.png" alt="" aria-hidden="true" />
+                <img src="./assets/home/logos/medtronic-logo.png" alt="" aria-hidden="true" />
+                <img src="./assets/home/logos/ibm-logo.svg" alt="" aria-hidden="true" />
+                <img src="./assets/home/logos/amazon-logo.png" alt="" aria-hidden="true" />
+                <img src="./assets/home/logos/capital-one-logo.png" alt="" aria-hidden="true" />
+                <img src="./assets/home/logos/microsoft-logo.png" alt="" aria-hidden="true" />
+              </div>
+            </div>
           </div>
-          <p class="copyright">&copy; 2025 HopBuilds</p>
+        </div>
+      </header>
+
+      <!-- ================= 01 · OUR STORY ================= -->
+      <section class="story chapter-grid" id="story">
+        <div class="chapter-label"><span>01</span> / OUR STORY</div>
+        <div class="story-pin">
+          <div class="story-lines">
+            <p class="story-line">We wanted a fun, no&#8209;pressure software engineering club&hellip;</p>
+            <p class="story-line">&hellip;where we could build software <em>for Hopkins</em>.</p>
+            <p class="story-line story-line-final">That's when <strong>HopBuilds</strong> was born.</p>
+          </div>
+          <p class="story-detail">
+            Hopkins is full of brilliant CS students &mdash; but not a lot of
+            great software built for the Hopkins community. We're changing
+            that: rebranding JHU's Software Engineering Club into a student
+            product team that designs and ships tools making student life more
+            connected and convenient.
+          </p>
         </div>
       </section>
-    </div>
+
+      <!-- ================= 02 · WHAT WE BUILD (horizontal gallery) ================= -->
+      <section class="builds" id="builds">
+        <div class="builds-head chapter-grid">
+          <div class="chapter-label"><span>02</span> / WHAT WE BUILD</div>
+          <div class="builds-head-row">
+            <h2 class="section-title builds-title">Built for Hopkins,<br />by Hopkins students.</h2>
+            <div class="builds-stats" aria-label="HopBuilds statistics">
+              <div class="stat"><span class="stat-value">500+</span><span class="stat-label">student users</span></div>
+              <div class="stat"><span class="stat-value">4+</span><span class="stat-label">products in flight</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="builds-track-wrap">
+          <div class="builds-track">
+            <article class="build-card">
+              <span class="build-num" aria-hidden="true">01</span>
+              <div class="build-copy">
+                <span class="badge badge-live">Live</span>
+                <h3 class="build-title">Lost@JHU</h3>
+                <p class="build-desc">
+                  Campus lost &amp; found, solved &mdash; so you don't have to
+                  ask on Sidechat anymore.
+                </p>
+                <a class="btn btn-ghost build-link" href="https://www.lostatjhu.org/" target="_blank" rel="noopener">
+                  Visit lostatjhu.org &nearr;
+                </a>
+              </div>
+              <div class="build-art">
+                <img src="./assets/project/LostandFoundBlueJay.png" alt="Lost@JHU blue jay illustration" loading="lazy" />
+              </div>
+            </article>
+
+            <article class="build-card">
+              <span class="build-num" aria-hidden="true">02</span>
+              <div class="build-copy">
+                <span class="badge">In progress</span>
+                <h3 class="build-title">HopParlays</h3>
+                <p class="build-desc">
+                  Imagine placing bets on the outcome of the next Orgo midterm.
+                </p>
+              </div>
+              <div class="build-art">
+                <img src="./assets/project/GamblingBlueJay.png" alt="HopParlays blue jay illustration" loading="lazy" />
+              </div>
+            </article>
+
+            <article class="build-card">
+              <span class="build-num" aria-hidden="true">03</span>
+              <div class="build-copy">
+                <span class="badge">In progress</span>
+                <h3 class="build-title">JHU Rideshare</h3>
+                <p class="build-desc">
+                  A ride-sharing platform designed specifically for the Hopkins
+                  community.
+                </p>
+              </div>
+              <div class="build-art">
+                <img src="./assets/project/drivingbluejay.png" alt="JHU Rideshare blue jay illustration" loading="lazy" />
+              </div>
+            </article>
+
+            <article class="build-card">
+              <span class="build-num" aria-hidden="true">04</span>
+              <div class="build-copy">
+                <span class="badge">In progress</span>
+                <h3 class="build-title">JHU Club Board</h3>
+                <p class="build-desc">Every Hopkins club, one board. Clubs, simplified.</p>
+              </div>
+              <div class="build-art">
+                <img src="./assets/project/Clubboardbluejay.png" alt="JHU Club Board blue jay illustration" loading="lazy" />
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="builds-progress" aria-hidden="true">
+          <span class="builds-counter">01</span>
+          <span class="builds-total">/ 04</span>
+          <span class="builds-progress-line"><span class="builds-progress-fill"></span></span>
+        </div>
+      </section>
+
+      <!-- ================= 03 · WHAT YOU GAIN (scroll-fill headlines) ================= -->
+      <section class="gains chapter-grid" id="gains">
+        <div class="chapter-label"><span>03</span> / WHAT YOU GAIN</div>
+        <h2 class="section-title">Leave with more than<br />a GitHub repo.</h2>
+
+        <ol class="gain-list">
+          <li class="gain-row">
+            <h3 class="gain-line">
+              <span class="gain-line-stroke" aria-hidden="true">Course credit.</span>
+              <span class="gain-line-fill">Course credit.</span>
+            </h3>
+            <aside class="gain-note gain-note-featured">
+              <span class="gain-leader" aria-hidden="true"></span>
+              <p class="gain-kicker">01 &mdash; Credit &amp; mentorship</p>
+              <p class="gain-note-copy">
+                Every HopBuilds project counts for
+                <strong>JHU course credit</strong>, with mentorship from
+                <strong>Professor Madooei</strong> the whole way &mdash;
+                guidance from someone who teaches this for a living. Really,
+                it's a win-win-win.
+              </p>
+            </aside>
+          </li>
+
+          <li class="gain-row">
+            <h3 class="gain-line">
+              <span class="gain-line-stroke" aria-hidden="true">A real team.</span>
+              <span class="gain-line-fill">A real team.</span>
+            </h3>
+            <aside class="gain-note">
+              <span class="gain-leader" aria-hidden="true"></span>
+              <p class="gain-kicker">02 &mdash; Real experience</p>
+              <p class="gain-note-copy">
+                Teams of 3&ndash;4, led by an experienced builder. You build
+                every week and demo your progress each weekend.
+              </p>
+            </aside>
+          </li>
+
+          <li class="gain-row">
+            <h3 class="gain-line">
+              <span class="gain-line-stroke" aria-hidden="true">Shipped work.</span>
+              <span class="gain-line-fill">Shipped work.</span>
+            </h3>
+            <aside class="gain-note">
+              <span class="gain-leader" aria-hidden="true"></span>
+              <p class="gain-kicker">03 &mdash; Resume</p>
+              <p class="gain-note-copy">
+                Products used by 500+ Hopkins students &mdash; portfolio pieces
+                that actually stand out on a resume.
+              </p>
+            </aside>
+          </li>
+
+          <li class="gain-row">
+            <h3 class="gain-line">
+              <span class="gain-line-stroke" aria-hidden="true">A demo day.</span>
+              <span class="gain-line-fill">A demo day.</span>
+            </h3>
+            <aside class="gain-note">
+              <span class="gain-leader" aria-hidden="true"></span>
+              <p class="gain-kicker">04 &mdash; Showcase</p>
+              <p class="gain-note-copy">
+                Every semester closes with a final presentation &mdash; your
+                team, your product, in front of the club and beyond.
+              </p>
+            </aside>
+          </li>
+        </ol>
+      </section>
+
+      <!-- ================= 04 · THE SOCIAL SIDE ================= -->
+      <section class="social" id="social">
+        <div class="social-media">
+          <img
+            src="./assets/home/social-rainier.jpg"
+            alt="Six HopBuilds members arm in arm on a mountain ridge above the clouds at Mount Rainier"
+          />
+        </div>
+        <div class="social-overlay chapter-grid">
+          <div class="chapter-label chapter-label-light"><span>04</span> / THE SOCIAL SIDE</div>
+          <h2 class="social-title">It's not all commits.</h2>
+          <p class="social-copy">
+            Hikes above the clouds, late-night hangouts, and a team that
+            actually likes each other. Fun, no pressure &mdash; that's the
+            whole point.
+          </p>
+        </div>
+      </section>
+
+      <!-- ================= 05 · JOIN ================= -->
+      <section class="join chapter-grid" id="join">
+        <div class="chapter-label"><span>05</span> / JOIN US</div>
+        <div class="join-head">
+          <h2 class="section-title join-title">Build with us.</h2>
+          <p class="join-sub">
+            We're looking for 9&ndash;10 students who are passionate about
+            technology and design. You don't need to be a coding wizard &mdash;
+            just willing to learn and put in the work to make something great.
+          </p>
+          <a
+            class="btn btn-primary btn-large"
+            href="https://docs.google.com/forms/d/e/1FAIpQLScCDca0vhUvHgQoS_NWhagKkoFUA1jHvasKyQlkR4wZK1cF2w/viewform?usp=dialog"
+            target="_blank"
+            rel="noopener"
+          >
+            Apply now &rarr;
+          </a>
+        </div>
+
+        <div class="join-roles">
+          <div class="role-card">
+            <h4>Developers</h4>
+            <p>Build products used by thousands of students.</p>
+          </div>
+          <div class="role-card">
+            <h4>Designers</h4>
+            <p>Craft intuitive user experiences.</p>
+          </div>
+          <div class="role-card">
+            <h4>Strategists</h4>
+            <p>Drive marketing and product decisions.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-links">
+        <a href="mailto:dguo10@jh.edu">dguo10@jh.edu</a>
+        <a href="https://www.instagram.com/jhuswec/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://github.com/JHU-SWEC" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 HopBuilds &middot; Johns Hopkins University</p>
+    </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
