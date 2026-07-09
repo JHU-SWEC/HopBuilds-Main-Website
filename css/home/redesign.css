@@ -478,9 +478,10 @@ a {
 
 .story-pin {
   min-height: 60vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: center;
 }
 
 .story-line {
@@ -504,10 +505,19 @@ a {
 }
 
 .story-detail {
-  max-width: 42rem;
-  margin-top: 2.5rem;
+  max-width: 26rem;
+  border-left: 2px solid var(--spirit);
+  padding-left: clamp(1.25rem, 2vw, 1.75rem);
   color: var(--slate);
   font-size: 1.1rem;
+}
+
+@media (max-width: 767px) {
+  .story-pin {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 2rem;
+  }
 }
 
 /* ============================================================
