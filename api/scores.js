@@ -107,6 +107,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed." });
   } catch (err) {
     console.error(`${req.method} /api/scores failed:`, err);
-    return res.status(500).json({ error: "Leaderboard is unavailable right now." });
+
+    /* Configuration mistakes are worth naming: they are the difference between
+       "the club needs to fix a setting" and "the database is down". The text
+       describes the deployment, never the credentials themselves. */
+    const message = /MONGODB_URI is not set/.test(err?.message)
+      ? "Leaderboard is not configured: MONGODB_URI is missing."
+      : "Leaderboard is unavailable right now.";
+
+    return res.status(500).json({ error: message });
   }
 }

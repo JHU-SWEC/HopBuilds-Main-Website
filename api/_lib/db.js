@@ -8,12 +8,7 @@
 
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB || "hopbuilds";
-
-if (!uri) {
-  throw new Error("MONGODB_URI is not set. Add it in the Vercel project settings.");
-}
 
 /* Reuse across invocations, and across hot reloads in `vercel dev`. */
 let cached = globalThis._hopbuildsMongo;
@@ -22,6 +17,14 @@ if (!cached) {
 }
 
 const getClient = () => {
+  /* Checked here rather than at module load: a throw during import crashes the
+     function before the handler's error handling exists, which turns a missing
+     environment variable into an opaque platform error instead of a clear one. */
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error("MONGODB_URI is not set in this environment.");
+  }
+
   if (!cached.promise) {
     cached.promise = new MongoClient(uri).connect().catch((err) => {
       /* Clear the cache so the next invocation retries instead of reusing a

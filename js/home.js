@@ -226,7 +226,18 @@
     const loadBoard = async () => {
       try {
         const res = await fetch(API + "?limit=10");
-        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        if (!res.ok) {
+          /* Surface what actually went wrong. A 404 means the function is not
+             deployed; a 500 usually means the database is unconfigured. Both
+             are fixed in the host's settings, so saying so beats a generic
+             "could not reach" that sends people hunting through the code. */
+          const detail = await res.json().catch(() => null);
+          if (detail?.error) throw new Error(detail.error);
+          if (res.status === 404) throw new Error("Leaderboard API not found (404).");
+          throw new Error("Leaderboard error (" + res.status + ").");
+        }
+
         const rows = await res.json();
 
         boardReady = true;
@@ -240,7 +251,7 @@
         boardReady = false;
         boardList.textContent = "";
         boardEmpty.hidden = false;
-        boardEmpty.textContent = "Could not reach the leaderboard.";
+        boardEmpty.textContent = err.message || "Could not reach the leaderboard.";
       }
     };
 
