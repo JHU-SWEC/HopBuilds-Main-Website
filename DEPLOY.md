@@ -23,14 +23,19 @@ no API host and no CORS configuration.
 
 ```bash
 npm install
-npm i -g vercel        # once
 cp .env.example .env.local   # then fill in MONGODB_URI
-vercel dev
+npm run dev                  # http://localhost:8000
 ```
 
-`vercel dev` serves the page and the function together on one port, matching
-production. A plain `python3 -m http.server` will serve the page but every
-leaderboard request will 404, because nothing is running the function.
+`npm run dev` serves the page and runs the leaderboard function on one port,
+so the page calls the same same-origin `/api/scores` it uses in production.
+It needs no Vercel account.
+
+A plain `python3 -m http.server` will serve the page but every leaderboard
+request 404s, because nothing is running the function.
+
+For a closer match to the production runtime, `npm run dev:vercel` uses
+`vercel dev` instead, which requires the Vercel CLI and a login.
 
 ## Environment variables
 

@@ -8,7 +8,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "node scripts/dev-server.js",
+    "dev:vercel": "vercel dev",
     "export-emails": "node scripts/export-emails.js"
   },
   "dependencies": {
