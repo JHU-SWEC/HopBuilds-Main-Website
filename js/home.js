@@ -44,11 +44,11 @@
 
     const COMMANDS = {
       help: () => [
-        "help       — this menu",
-        "projects   — what we're shipping",
-        "join       — apply to hopbuilds",
-        "whoami     — ?",
-        "clear      — clean slate",
+        "help       : this menu",
+        "projects   : what we're shipping",
+        "join       : apply to hopbuilds",
+        "whoami     : ?",
+        "clear      : clean slate",
       ],
       projects: () => [
         "lost@jhu       · live · lostatjhu.org",
@@ -76,9 +76,9 @@
         COMMANDS[cmd]().forEach(printOut);
       } else if (cmd.startsWith("sudo")) {
         printOut("[sudo] password for jay:");
-        printOut("just kidding — you're in.");
+        printOut("just kidding, you're in.");
       } else {
-        printOut(`command not found: ${cmd} — try 'help'`);
+        printOut(`command not found: ${cmd}, try 'help'`);
       }
     };
 
@@ -94,7 +94,7 @@
     });
     term.addEventListener("click", () => input.focus());
 
-    printOut("welcome to hopbuilds.sh — built at 3410 N Charles St.");
+    printOut("welcome to hopbuilds.sh, built at 3410 N Charles St.");
 
     /* auto-type 'help' once as a demo, unless the visitor beats us to it */
     if (reduceMotion) {
