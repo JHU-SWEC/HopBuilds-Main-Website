@@ -1,14 +1,18 @@
 /**
  * Print the collected emails as CSV, newest first.
  *
- *   cd server && node export-emails.js > emails.csv
+ *   node scripts/export-emails.js > emails.csv
  *
  * Emails are never exposed through the public API, so this script is the way
- * to get at them. It reads the same MONGODB_URI as the server.
+ * to get at them. It reads MONGODB_URI from .env.local.
  */
 
-import "dotenv/config";
+import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
+
+/* .env.local is what `vercel dev` uses, so prefer it and fall back to .env. */
+dotenv.config({ path: ".env.local" });
+dotenv.config();
 
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB || "hopbuilds";

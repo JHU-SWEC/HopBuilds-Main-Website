@@ -145,11 +145,9 @@
     const refreshBtn = document.getElementById("arcade-refresh");
     if (!game || !play || !panel || !input || !startBtn) return;
 
-    /* Leaderboard API. Local dev talks to the server on :3001; anywhere else
-       uses the deployed URL. Update DEPLOYED_API once the server is hosted. */
-    const DEPLOYED_API = "";
-    const isLocal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
-    const API = isLocal ? "http://localhost:3001" : DEPLOYED_API;
+    /* The API ships with the site as a Vercel function, so this is same-origin
+       and needs no host or CORS. Run `vercel dev` locally to serve both. */
+    const API = "/api/scores";
 
     const DURATION = 30000;
     const BEST_KEY = "hopbuilds:arcade-best";
@@ -221,17 +219,17 @@
       });
     };
 
+    /* Set once the board has loaded, so a failed fetch does not offer to save
+       a score into a leaderboard we cannot reach. */
+    let boardReady = false;
+
     const loadBoard = async () => {
-      if (!API) {
-        boardEmpty.hidden = false;
-        boardEmpty.textContent = "Leaderboard offline.";
-        return;
-      }
       try {
-        const res = await fetch(API + "/api/scores?limit=10");
+        const res = await fetch(API + "?limit=10");
         if (!res.ok) throw new Error("HTTP " + res.status);
         const rows = await res.json();
 
+        boardReady = true;
         boardFull = rows.length >= 10;
         lowestOnBoard = rows.length ? rows[rows.length - 1].score : 0;
 
@@ -239,6 +237,7 @@
         boardEmpty.hidden = rows.length > 0;
         if (!rows.length) boardEmpty.textContent = "No scores yet. Be the first on the board.";
       } catch (err) {
+        boardReady = false;
         boardList.textContent = "";
         boardEmpty.hidden = false;
         boardEmpty.textContent = "Could not reach the leaderboard.";
@@ -316,7 +315,7 @@
         return;
       }
 
-      if (API && qualifies(pendingScore)) {
+      if (boardReady && qualifies(pendingScore)) {
         saveTitle.textContent =
           pendingScore +
           (pendingScore === 1 ? " problem. " : " problems. ") +
@@ -389,7 +388,7 @@
       if (email) payload.email = email;
 
       try {
-        const res = await fetch(API + "/api/scores", {
+        const res = await fetch(API, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),

@@ -1,0 +1,20 @@
+{
+  "name": "hopbuilds-main-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "HopBuilds homepage plus the serverless leaderboard API for the speed-math bonus round.",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "export-emails": "node scripts/export-emails.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.8.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  }
+}
