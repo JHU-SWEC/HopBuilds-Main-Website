@@ -1,0 +1,15 @@
+# Secrets — never commit
+*.env
+.env
+.env.*
+atlas-credentials.env
+
+# ...but the templates are safe and belong in the repo
+!*.env.example
+!.env.example
+
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store

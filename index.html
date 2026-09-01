@@ -357,6 +357,117 @@
           </div>
         </div>
       </section>
+
+      <!-- ================= BONUS · SPEED MATH ================= -->
+      <section class="arcade chapter-grid" id="arcade">
+        <div class="chapter-label"><span>+</span> / BONUS ROUND</div>
+        <div class="arcade-head">
+          <h2 class="section-title">Think you're fast?</h2>
+          <p class="arcade-copy">
+            Thirty seconds of mental math, the same drill quants and engineers
+            use to warm up. No calculator. Correct answers advance on their own.
+            The top two scorers get an automatic interview if they apply to
+            HopBuilds, so leave your email when you save your score. That's how
+            we reach you.
+          </p>
+        </div>
+
+        <div class="arcade-game" id="arcade-game">
+          <div class="arcade-hud">
+            <div class="arcade-stat">
+              <span class="arcade-stat-label">Score</span>
+              <span class="arcade-stat-value" id="arcade-score">0</span>
+            </div>
+            <div class="arcade-stat arcade-stat-time">
+              <span class="arcade-stat-label">Time</span>
+              <span class="arcade-stat-value" id="arcade-time">30</span>
+            </div>
+            <div class="arcade-stat">
+              <span class="arcade-stat-label">Best</span>
+              <span class="arcade-stat-value" id="arcade-best">&ndash;</span>
+            </div>
+          </div>
+
+          <div class="arcade-timer-line" aria-hidden="true">
+            <span class="arcade-timer-fill" id="arcade-timer-fill"></span>
+          </div>
+
+          <div class="arcade-stage">
+            <!-- idle / game-over panel -->
+            <div class="arcade-panel" id="arcade-panel">
+              <p class="arcade-panel-title" id="arcade-panel-title">30 seconds on the clock.</p>
+              <p class="arcade-panel-sub" id="arcade-panel-sub">
+                Addition and subtraction to 100, multiplication and division
+                through the 12s.
+              </p>
+              <button class="btn btn-primary" type="button" id="arcade-start">Start drill</button>
+            </div>
+
+            <!-- live play -->
+            <div class="arcade-play" id="arcade-play" hidden>
+              <p class="arcade-problem" id="arcade-problem" aria-live="polite">2 + 2</p>
+              <input
+                class="arcade-input"
+                id="arcade-input"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                aria-label="Your answer"
+              />
+              <p class="arcade-hint">Type the answer &middot; Esc to stop</p>
+            </div>
+
+            <!-- name entry after a qualifying run -->
+            <form class="arcade-save" id="arcade-save" hidden>
+              <p class="arcade-panel-title" id="arcade-save-title">You made the board.</p>
+              <p class="arcade-panel-sub">Add your name to the global leaderboard.</p>
+              <div class="arcade-fields">
+                <input
+                  class="arcade-name-input"
+                  id="arcade-name"
+                  type="text"
+                  maxlength="16"
+                  autocomplete="off"
+                  spellcheck="false"
+                  placeholder="Your name"
+                  aria-label="Your name for the leaderboard"
+                />
+                <input
+                  class="arcade-name-input"
+                  id="arcade-email"
+                  type="email"
+                  maxlength="254"
+                  autocomplete="email"
+                  spellcheck="false"
+                  placeholder="Email (optional)"
+                  aria-label="Your email, optional"
+                />
+              </div>
+              <p class="arcade-privacy">
+                Top two scorers get an automatic interview, so add your email if
+                you want us to be able to reach you. Only your name and score
+                appear on the board.
+              </p>
+              <p class="arcade-save-error" id="arcade-save-error" role="alert" hidden></p>
+              <div class="arcade-save-actions">
+                <button class="btn btn-primary" type="submit" id="arcade-submit">Save score</button>
+                <button class="btn btn-ghost arcade-skip" type="button" id="arcade-skip">Skip</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="arcade-board" id="arcade-board">
+          <div class="arcade-board-head">
+            <p class="arcade-board-title">Global leaderboard</p>
+            <button class="arcade-board-refresh" type="button" id="arcade-refresh">Refresh</button>
+          </div>
+          <ol class="arcade-board-list" id="arcade-board-list"></ol>
+          <p class="arcade-board-empty" id="arcade-board-empty">Loading scores&hellip;</p>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
