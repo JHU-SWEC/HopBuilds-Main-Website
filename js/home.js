@@ -223,6 +223,19 @@
        a score into a leaderboard we cannot reach. */
     let boardReady = false;
 
+    /**
+     * Reads a JSON body, or explains what arrived instead. A host that cannot
+     * run the function answers with an HTML page, and letting res.json() fail
+     * on that produces an unreadable "Unexpected token '<'".
+     */
+    const readJson = async (res) => {
+      const type = res.headers.get("content-type") || "";
+      if (!type.includes("application/json")) {
+        throw new Error("Leaderboard API is not running at this address.");
+      }
+      return res.json();
+    };
+
     const loadBoard = async () => {
       try {
         const res = await fetch(API + "?limit=10");
@@ -238,7 +251,7 @@
           throw new Error("Leaderboard error (" + res.status + ").");
         }
 
-        const rows = await res.json();
+        const rows = await readJson(res);
 
         boardReady = true;
         boardFull = rows.length >= 10;
@@ -404,8 +417,11 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(data.error || "HTTP " + res.status);
+        const data = await readJson(res).catch((err) => {
+          if (!res.ok) return {};
+          throw err;
+        });
+        if (!res.ok) throw new Error(data.error || "Could not save (" + res.status + ").");
 
         writeStore(NAME_KEY, name);
         if (email) writeStore(EMAIL_KEY, email);
