@@ -1,0 +1,464 @@
+# Vite migration
+
+Branch: `miles/vite-migration`, grounded against commit `e99c3c1`.
+
+## The Problem
+
+The site ships three animation libraries (GSAP, ScrollTrigger, Lenis) as hand-vendored, unversioned files in `js/vendor/`, loaded as classic `<script>` tags (`index.html:482-485`), and `css/lenis.css` is a manually-copied snapshot of Lenis's stylesheet that has already drifted from upstream (it is missing `html.lenis, html.lenis body { height: auto }` from Lenis 1.1.14's real `dist/lenis.css`). There is no build step: nothing minifies, bundles, or dependency-checks any of this, and `js/home.js` is a single 619-line file with no module boundaries. Separately, the repo carries an orphaned second page (`project.html`) that nothing links to, about 6 MB of images in `assets/home/` that no HTML or CSS references, and a 1.9 MB PNG used only as a 16x16 favicon. On top of that, reduced-motion desktop users cannot reach build cards 2-4 in the "What We Build" section because the CSS fallback for that scroll-driven gallery is scoped to mobile only. This plan introduces Vite to fix the tooling gap (real dependency management, an ES module graph, a dev server, a production build) and uses the same branch to fix the accessibility bug and prune the dead weight, since touching every one of these files once is cheaper than touching them twice.
+
+## The Technical Plan
+
+Vite becomes the frontend build tool. The site stays vanilla HTML/CSS/JS — no React, no component framework (see Alternatives). `index.html` becomes Vite's single entry point; its one `<script>` becomes `type="module"` and imports GSAP, ScrollTrigger, and Lenis as real npm packages instead of vendored globals. `js/home.js` splits into four small modules along the seams that already exist in the file (a terminal module, an arcade/leaderboard module, and an animations module, wired together by a thin entry module). `npm run build` produces a `dist/` directory of hashed, bundled, minified assets that Vercel serves as the site; `npm run dev` runs Vite's dev server with HMR, extended with a small plugin that also dispatches `/api/scores` to the real `api/scores.js` handler, so local dev stays a single process with no Vercel login required (that job currently belongs to `scripts/dev-server.js`, which is deleted).
+
+What Vite explicitly does **not** do: it does not touch `api/` (Vercel compiles serverless functions under `api/` at the repo root independently of `outputDirectory`, so `vite build` + `outputDirectory: dist` + `api/` at root coexist without conflict), and it does not optimize images. The 1.9 MB favicon is fixed by manually resizing it in this plan (Phase 4b) — Vite does not shrink image bytes on its own, and the favicon *is* referenced from `index.html`, so it's genuinely part of the built payload. The ~6 MB of dead images in `assets/home/` are different: nothing in the repo has a `public/` directory, and Vite only copies files it can trace from `index.html`'s module graph into `dist/` — unreferenced files under `assets/home/` are therefore already excluded from `vite build` output with zero configuration, the moment Phase 1's `vite.config.js` exists. Deleting them (Phase 4d) has no deployed-payload effect; it's repo hygiene (fewer bytes to clone, no dead files to trip over), not a build-output fix.
+
+**A previously-unstated benefit: this migration incidentally closes a production exposure that exists today.** Today `vercel.json` has `outputDirectory: null` and the repo has no `public/` directory, so under Vercel's "Other" framework behavior the entire repo root is what gets served as static output in production right now — not just `index.html` and its dependencies. That includes git-tracked files with no business being public: `.vscode/c_cpp_properties.json`, `.vscode/launch.json`, `.vscode/settings.json`, `docs/plans/2026-01-27-homepage-redesign.md`, `scripts/export-emails.js` (reveals the MongoDB database/collection naming), and `content/data.js`. Phase 5's `outputDirectory: "dist"` fixes this as a side effect of switching to a real build: once `vite build`'s traced module graph is the deploy artifact, only files Vite actually references ship, and everything above stops being reachable in production without anyone having to enumerate or `.vercelignore` it by hand. This is a real, previously-undiscussed benefit of the migration, not just a tooling upgrade — see the Rollback warning below for what reverting undoes.
+
+### Before
+
+```
+/
+├── index.html
+├── project.html                       (orphaned, no inbound links)
+├── README.md                          (describes classic <script> tags, js/home.js, scripts/dev-server.js)
+├── AGENTS.md                          (documents the pre-migration classic-script setup as current)
+├── Blue_Jay_Coding_Icon.png           (1.9 MB, used as favicon)
+├── content/
+│   └── data.js                        (never loaded by any HTML/JS)
+├── css/
+│   ├── lenis.css                      (stale hand copy)
+│   ├── globals.css                    (project.html only)
+│   ├── transition.css                 (project.html only)
+│   ├── home/redesign.css
+│   └── project/project.css            (project.html only)
+├── js/
+│   ├── home.js                        (619 lines, one IIFE)
+│   ├── project.js                     (project.html only)
+│   ├── transition.js                  (project.html only)
+│   └── vendor/
+│       ├── gsap.min.js
+│       ├── ScrollTrigger.min.js
+│       └── lenis.min.js
+├── api/
+│   ├── scores.js
+│   └── _lib/...
+├── scripts/
+│   ├── dev-server.js                  (static file server + API dispatch)
+│   └── export-emails.js
+├── assets/
+│   ├── home/                          (6 unreferenced files, ~6 MB)
+│   │   └── logos/
+│   └── project/                       (+ project3.jpg, unreferenced once content/data.js is gone)
+├── vercel.json                        (framework/buildCommand/outputDirectory: null)
+├── package.json                       (engines.node >=18, no gsap/lenis deps)
+└── DEPLOY.md
+```
+
+### After
+
+```
+/
+├── index.html                          (module entry, small favicon)
+├── README.md                           (rewritten: ESM entry, module split, Vite dev server)
+├── AGENTS.md                           (rewritten: current-state sections match post-migration reality)
+├── Blue_Jay_Coding_Icon.png            (~5 KB, resized)
+├── assets/
+│   ├── source/
+│   │   └── Blue_Jay_Coding_Icon-original.png   (kept, not served/built)
+│   ├── home/                           (6 unreferenced files removed)
+│   └── project/                        (4 card images kept; project3.jpg removed)
+├── css/
+│   └── home/redesign.css               (reduced-motion fix added)
+├── js/
+│   ├── main.js                         (new entry: wires the three modules below)
+│   ├── terminal.js                     (extracted from home.js:9-120)
+│   ├── arcade.js                       (extracted from home.js:123-442)
+│   └── animations.js                   (extracted from home.js:444-618; imports gsap/ScrollTrigger/Lenis)
+├── api/                                (unchanged)
+├── scripts/
+│   ├── vite-api-plugin.js              (new; ports dev-server.js:44-83)
+│   └── export-emails.js
+├── vite.config.js                      (new)
+├── vercel.json                         (buildCommand: "vite build", outputDirectory: "dist")
+├── package.json                        (vite/gsap/lenis added, engines bumped)
+├── .nvmrc                              (new, "22")
+├── .gitignore                          (dist/, .vercel/ added)
+└── DEPLOY.md                           (rewritten build/dev sections)
+```
+
+Deleted entirely: `project.html`, `css/globals.css`, `css/transition.css`, `css/project/project.css`, `css/lenis.css`, `js/project.js`, `js/transition.js`, `js/home.js`, `js/vendor/`, `content/data.js` (and the now-empty `content/` directory), `scripts/dev-server.js`, `assets/project/project3.jpg`, and 6 named files under `assets/home/`.
+
+## Alternatives
+
+- **React or another component framework.** Rejected. Every section of the site is static marketing content with no shared client state; the only interactive widgets (terminal, arcade game) are small, self-contained, and already framework-free. A rewrite would multiply the size of this change for no capability the current vanilla JS lacks. Record this so it isn't re-proposed: the goal of this migration is build tooling, not a rendering model change.
+- **Keep vendoring minified libraries by hand, no build tool.** Rejected — this is the status quo and it's already broken: `css/lenis.css` silently drifted from upstream because nothing checks it against the real package. No dependency versions, no minification of first-party code, no HMR.
+- **webpack, esbuild directly, or Parcel instead of Vite.** Rejected. Vite is the standard choice for a vanilla-JS + ESM site in this size range: native ESM dev server (no bundling needed in dev, so it starts fast), a much smaller config surface than hand-rolled esbuild, and first-class handling of `index.html` as an entry point (bare HTML entry is not esbuild's default model).
+- **`vercel dev` as the only local dev workflow.** Rejected as the *default* dev command (kept as the secondary `dev:vercel` script). It requires the Vercel CLI and a login, which is exactly the friction the current `scripts/dev-server.js` exists to avoid (see its own header comment). It also doesn't give Vite's dev server or HMR for the frontend half.
+- **Two dev processes (`vite` + `node scripts/dev-server.js`) behind a proxy.** Considered and rejected in favor of one process. This is a deliberate scope decision: a Vite plugin absorbing the API dispatch (below) keeps `npm run dev` a single command with no `concurrently`/proxy configuration to maintain.
+- **WebP conversion of the four build-card images, or a broader image-optimization pass.** Out of scope for this change. Only the favicon is resized, because it is downloaded on every page load regardless of viewport or connection and is disproportionately (1.9 MB for a 16-32px icon) larger than everything else combined; it is not the start of a general image-optimization initiative.
+- **Shrinking `social-rainier.jpg` (613 KB) or the marquee logo images.** Explicitly out of scope — the user reviewed this and decided payload beyond the favicon is not a current concern. Do not re-litigate this in a future pass of this doc without a new decision.
+- **Client-side data-driven card rendering, HTML partials, or multi-page-app routing config.** Out of scope. `content/data.js` (a data-driven carousel source) is deleted, not adopted, because nothing loads it today and adopting it would be a scope increase unrelated to build tooling.
+- **Fixing `.hero-terminal`'s `display: none` below 1024px while `initTerminal` still runs underneath it.** Known, deliberately deferred; not touched by this plan.
+
+## Detailed Implementation
+
+Phases are meant to be implemented in order on the feature branch. Only the final phase (5) needs to survive contact with a real Vercel deployment before Cutover; intermediate phases are allowed to leave the site non-functional between commits on the branch, since nothing before Cutover is deployed to production.
+
+**Prerequisites.** `README.md`, `AGENTS.md`, and this design doc are currently **untracked** in git — verified: `git ls-files` returns 52 tracked files, and none of these three is among them, while `vercel.json`, `DEPLOY.md`, `package.json`, and `index.html` are. "Grounded against commit `e99c3c1`" (top of this doc) describes the code this plan was written against, not these three files — they exist on disk in this checkout but are not part of that commit, and nothing in this plan assumes otherwise. This checkout has no `node_modules/` and no `.env.local` — `npm install` and `cp .env.example .env.local` (then fill in `MONGODB_URI`) are needed before Phase 1's `npm run build` acceptance check, or any later phase's, will run at all. (Phase 1 has no standalone `npm run dev` acceptance check of its own — `npm run dev` is untouched at this phase, and is only mentioned as a cautionary note inside the `npm run build` bullet.) Neither prerequisite is a migration step; both are already true of working on `main` today. If the implementation machine's active Node isn't already on the major this plan targets, install it first — `nvm install 22 && nvm use 22` (or the equivalent for whatever Node version manager is in use) — before running `npm install`; Vite (current major) refuses to install/run on an unsupported Node major, so this has to happen before anything else in Phase 1, not as a side effect of `.nvmrc` existing (`.nvmrc` documents the pin for `nvm use`, it doesn't switch anything by itself).
+
+**Phase order and the dev server.** Phases 1-3 below deliberately do the toolchain swap in three steps rather than one, and the order matters: Phase 1 gets `vite build`/`vite preview` working while leaving `npm run dev` on the old `node scripts/dev-server.js` untouched; **Phase 2 switches `npm run dev` to Vite's real dev server** (with a plugin that ports the old server's `/api/scores` dispatch) while `index.html` still loads GSAP/ScrollTrigger/Lenis as classic, non-module `<script>` tags; only then does **Phase 3 convert those scripts to `type="module"` with bare npm specifiers** (`import gsap from "gsap"`, etc.). This ordering exists so that a dev server capable of resolving bare module specifiers is already running by the time any bare specifier is introduced — `scripts/dev-server.js:85-108` is a byte-for-byte static file server with zero module resolution or transform, and browsers cannot resolve a bare specifier like `"gsap"` without an import map or a bundler in front of them (`TypeError: Failed to resolve module specifier "gsap"`), so converting `index.html` to modules while that old server is still the one answering `npm run dev` would leave the entire JS module graph unable to instantiate at that checkpoint (one unresolvable import in `animations.js` blocks `terminal.js` and `arcade.js` too, since all three load through `main.js`). Each phase below states explicitly which dev server is live at its acceptance gate.
+
+### Phase 1 — Toolchain baseline
+
+**Rationale:** Vite (current major) requires Node `^20.19.0 || >=22.12.0` (Vite's own `package.json` `engines.node` field; verified empirically against Vite 8.2.2). `package.json`'s current `engines.node` is `>=18`, which is now false advertising — resolve the conflict before installing anything. The replacement is bound to `22.x`, not left open-ended: Vercel's published `engines.node` semver-range table (Vercel docs, "Node.js Version" page, "Semver ranges" table) resolves an unbounded `>=22.12.0` range to Vercel's current newest major (24.x today), not to 22.x as the number in the range might suggest — an open floor is not a pin. `22.x` is the range that actually keeps the deployed build on Node 22.
+
+**Dev server at this phase's gate:** unchanged — `npm run dev` is still `node scripts/dev-server.js`, the pre-migration static file server. Nothing in this phase touches `index.html` or the dev command.
+
+Files:
+- `package.json` — bump `engines.node` to `"22.x"`; add `devDependencies.vite` (latest stable at implementation time); add scripts `"build": "vite build"` and `"preview": "vite preview"`. Leave `"dev": "node scripts/dev-server.js"` untouched for now — Phase 2 replaces it.
+- `.nvmrc` (new) — content `22`, pinning contributors to Node 22 LTS for local development. **This has zero effect on Vercel:** Vercel does not read `.nvmrc` (or `.node-version`) for build or serverless-function Node selection at all; only `engines.node` in `package.json` governs the deployed target. Keeping `.nvmrc` is still worthwhile for contributors running `nvm use` locally, but if it and `engines.node` ever drift (e.g. someone bumps one without the other), local dev and production silently run different Node majors — that's exactly the failure mode the `"22.x"` bound above is closing off.
+- `vite.config.js` (new) — minimal for this phase:
+  ```js
+  import { defineConfig } from "vite";
+
+  export default defineConfig({
+    build: { outDir: "dist" },
+  });
+  ```
+- `.gitignore` — add `dist/` and `.vercel/`. Neither is covered by the current file (only `node_modules/`, `.DS_Store`, and `.env*` patterns are).
+
+**Acceptance (falsifiable):**
+- `cat .nvmrc` prints `22` — fails today (file doesn't exist).
+- `grep '"node"' package.json` shows `22.x`, not `>=18` — fails today.
+- `npm install` succeeds and `node_modules/.bin/vite --version` prints a version.
+- `npm run build` exits `0` and creates `dist/index.html`. **Expected at this phase only:** `dist/` will contain no working JS bundle, because `index.html` still has the old `<script src="./js/vendor/...">` tags — Vite emits build *warnings* for non-module scripts, not errors, and exits `0` regardless (verified). This is not a regression to fix here; Phase 3 fixes it. Do not treat this as a passing "site works" signal — `npm run dev` (still the old `scripts/dev-server.js`, untouched) remains the only working preview until Phase 2 lands.
+
+### Phase 2 — Dev server unification
+
+**Rationale:** `scripts/dev-server.js` currently does two unrelated jobs: serve static files (`:85-108`) and dispatch `/api/scores` to the real handler (`:44-83`). Vite's dev server takes over static/module serving, so only the API-dispatch half needs to survive, ported into a Vite plugin so `npm run dev` stays one process. This phase runs deliberately **before** Phase 3's module conversion, not after: `index.html` at this point still loads GSAP/ScrollTrigger/Lenis as classic `<script>` tags (no bare specifiers yet), so switching `npm run dev` to Vite here is a straight swap of one static/API server for another — nothing in this phase depends on module resolution working, but everything in Phase 3 depends on *this* phase already having landed. See "Phase order and the dev server" above.
+
+**Dev server at this phase's gate:** starts this phase as `node scripts/dev-server.js` (unchanged from Phase 1) and ends it as Vite's real dev server (`vite`, via the `npm run dev` script change below) — this phase is the actual cutover point. `index.html` is untouched here, so the page renders identically under both servers; only the process answering `npm run dev` changes.
+
+Files:
+- **New `scripts/vite-api-plugin.js`** — ports `dev-server.js:44-83` (`wrapResponse`, `readBody`, the dynamic per-request `import()` with a `?t=${Date.now()}` cache-bust so handler edits take effect without restarting) into a `configureServer` middleware:
+  ```js
+  import path from "node:path";
+  import { fileURLToPath, pathToFileURL } from "node:url";
+
+  const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+  const wrapResponse = (res) => {
+    res.status = (code) => { res.statusCode = code; return res; };
+    res.json = (payload) => {
+      res.setHeader("Content-Type", "application/json; charset=utf-8");
+      res.end(JSON.stringify(payload));
+      return res;
+    };
+    return res;
+  };
+
+  const readBody = (req) =>
+    new Promise((resolve) => {
+      let raw = "";
+      req.on("data", (chunk) => (raw += chunk));
+      req.on("end", () => {
+        if (!raw) return resolve(undefined);
+        try { resolve(JSON.parse(raw)); } catch { resolve(raw); }
+      });
+    });
+
+  export default function apiPlugin() {
+    return {
+      name: "hopbuilds-api",
+      configureServer(server) {
+        // Registering here (not returning a function) runs this middleware
+        // BEFORE Vite's own internal middlewares, matching dev-server.js's
+        // routing priority of checking /api/scores first.
+        server.middlewares.use(async (req, res, next) => {
+          const url = new URL(req.url, "http://localhost");
+          if (url.pathname !== "/api/scores") {
+            if (url.pathname.startsWith("/api/")) {
+              res.statusCode = 404;
+              return res.end("Not found");
+            }
+            return next();
+          }
+          try {
+            const modulePath = pathToFileURL(path.join(ROOT, "api", "scores.js"));
+            const { default: handler } = await import(`${modulePath.href}?t=${Date.now()}`);
+            // Ported unchanged from dev-server.js:79, including its known gap: Object.fromEntries
+            // collapses a repeated query key to its last value, where Vercel's Node runtime gives
+            // an array for repeated keys. This plugin does not fully match Vercel's req.query
+            // contract for that edge case. It's harmless today only because api/scores.js:51 reads
+            // req.query?.limit as a scalar and no handler currently relies on repeated-key arrays —
+            // if a future handler needs that, this line needs a real fix, not just this comment.
+            req.query = Object.fromEntries(url.searchParams);
+            if (req.method === "POST") req.body = await readBody(req);
+            await handler(req, wrapResponse(res));
+          } catch (err) {
+            console.error(`${req.method} ${url.pathname} failed:`, err);
+            if (!res.headersSent) {
+              res.statusCode = 500;
+              res.end("Server error");
+            }
+          }
+        });
+      },
+    };
+  }
+  ```
+- **`vite.config.js`** — load env the same way `dev-server.js:22-23` did (`.env.local` then `.env`, via `dotenv`, kept as a devDependency), register the plugin, and close the security gap described below:
+  ```js
+  import { defineConfig } from "vite";
+  import dotenv from "dotenv";
+  import apiPlugin from "./scripts/vite-api-plugin.js";
+
+  dotenv.config({ path: ".env.local" });
+  dotenv.config();
+
+  export default defineConfig({
+    plugins: [apiPlugin()],
+    build: { outDir: "dist" },
+    server: {
+      port: Number(process.env.PORT) || 8000, // keep the URL DEPLOY.md already documents
+      strictPort: true, // fail loudly instead of silently moving to 8001+, see note below
+      fs: {
+        // Vite's `server.fs.deny` REPLACES Vite's built-in defaults, it does not
+        // extend them (see note below) — every one of Vite's own default entries
+        // has to be listed here explicitly, alongside the three custom ones this
+        // project needs, or they're silently gone.
+        deny: [
+          "**/api/**",
+          "**/scripts/**",
+          "**/*.env",
+          ".env",
+          ".env.*",
+          "*.{crt,pem,key,p12,pfx,cer,der}",
+          ".npmrc",
+          ".yarnrc.yml",
+          "**/.git/**",
+        ],
+      },
+    },
+  });
+  ```
+  **`strictPort: true` is required, not optional.** `dev-server.js`'s bare `http.createServer(...).listen()` throws `EADDRINUSE` if port 8000 is taken. Vite's default behavior is different: without `strictPort`, an in-use port makes Vite silently fall back to the next free one and log "Port 8000 is in use, trying another one...", which is easy to miss. Every `curl http://localhost:8000/...` in this plan's acceptance checks — and every URL in `DEPLOY.md` — assumes port 8000. Without `strictPort: true`, `npm run dev` can come up on 8001 with no obvious error, and every one of those checks fails for a reason that has nothing to do with what they're actually testing.
+  **Security note — this is a deliberate posture regression, not a like-for-like port.** `dev-server.js:90-97` implements static-file serving as an **allowlist**: `serveStatic` only serves an extension it recognizes (`TYPES`) and separately blocks anything under `api/`, `scripts/`, or `node_modules/` by path prefix — its own comment states the reasoning explicitly: *"Allowlist, not denylist: only known static types are servable. A denylist leaks anything it forgets, and this project keeps credentials in the repo root, so a forgotten pattern would serve them."* Vite's dev server works the opposite way: it serves the whole project root by default and `server.fs.deny` is a **denylist** bolted on top — the exact shape `dev-server.js`'s own comment warns against. Moving from `dev-server.js` to Vite's dev server is therefore a genuine security-posture regression from allowlist to denylist, accepted here as the cost of getting Vite's dev server/HMR; it is not a neutral swap and should not be described as one.
+  Four bugs make the naive denylist worse than a plain regression, and all four are fixed in the config already shown:
+  - **`api/**` and `scripts/**` (no leading `**/`) do not match.** Vite compiles `fs.deny` globs with `matchBase: false`, and only auto-prefixes a bare pattern with `**/` when the pattern itself contains no `/` (`node_modules/vite/dist/node/chunks/node.js:36866-36867`). `api/**` and `scripts/**` both contain a `/`, so neither gets that prefix, and Vite matches deny globs against normalized *absolute* paths — so `api/**` never matches `/absolute/path/to/repo/api/scores.js`. Verified against a live Vite 8.2.2 dev server: with `fs.deny: ["api/**", "scripts/**", ...]`, `curl .../api/scores.js` returns `200` with the raw handler source. The fix is the leading `**/` already in the config above: `**/api/**`, `**/scripts/**`.
+  - **`scripts/**` is the finding that actually matters; `api/**` is a red herring.** Even with the glob bug unfixed, `curl .../api/scores.js` in this repo is *also* independently blocked by the plugin's own `/api/*` catch-all 404 (the `if (url.pathname.startsWith("/api/"))` branch a few lines above) — so `api/**`'s breakage is masked by accidental redundancy, not by `fs.deny` doing anything. `scripts/**` has no such redundancy: nothing else in this plugin or in Vite's own routing blocks `/scripts/*`. With the unfixed glob, `curl .../scripts/vite-api-plugin.js` returns `200` with the full plugin source; in this repo the same bug would also serve `scripts/export-emails.js` in full, revealing the Mongo database/collection naming and export logic it contains. **Compensating control:** none beyond getting the glob right — there is no second layer here the way there accidentally is for `api/`. Get the leading `**/` right and verify it with `curl`, per the acceptance tests below; do not assume `fs.deny`'s defaults or a plausible-looking glob are sufficient without checking.
+  - **Supplying `server.fs.deny` at all silently discards Vite's own built-in default entries, unless you re-list them.** This is a distinct bug from the two glob-syntax bugs above and it is worse: it's not about whether the patterns you wrote are correct, it's that writing *any* explicit `fs.deny` array replaces Vite's defaults outright rather than adding to them. Vite's config merge (`mergeWithDefaultsRecursively` + `isObject$1`, `node_modules/vite/dist/node/chunks/node.js:2756-2778`) only recursively merges plain objects; arrays fail the `isObject$1` check and are straight-assigned, so a custom `fs.deny` array overwrites, it does not extend, Vite's default `server.fs.deny` (`node_modules/vite/dist/node/chunks/node.js:26743`): `[".env", ".env.*", "*.{crt,pem,key,p12,pfx,cer,der}", ".npmrc", ".yarnrc.yml", "**/.git/**"]`. A config with only the two project-specific entries (`**/api/**`, `**/scripts/**`, `.env`, `.env.*`) therefore silently drops the last four defaults. Verified live, two reviewers independently: with the 4-entry array, `curl .../.git/HEAD` returns `200` and `curl .../.npmrc` returns `200`; with no explicit `fs.deny` at all (Vite's untouched defaults), both return `403`. The dev server root is the repo root and `.git/` is always present there, so this silently reopens the entire commit history — every past commit, including any that predate a since-rotated credential — to anyone who can reach the dev server. `.gitignore:5` (`atlas-credentials.env`) already shows this project treats repo-root credential files as a live threat model; a leaked `.git/` history is the same threat model from a different angle. The fix is the 9-entry array already in the config above, which lists Vite's six defaults explicitly alongside the three project-specific entries, so nothing is lost by opting in to a custom list.
+  - **`.env`/`.env.*` (Vite's own defaults) only match filenames that *start* with `.env` — they miss a credential file with no leading dot.** `atlas-credentials.env` is exactly that case: `.gitignore:5` names it explicitly, alongside the wildcard `*.env` at `.gitignore:2` — the same file this doc's threat-model note two paragraphs below cites as evidence of a live risk, in the same section whose 8-entry config (before this fix) doesn't actually protect it. Verified live: with `.env`/`.env.*` present but no wildcard entry, `curl .../atlas-credentials.env` returns `200` with the plaintext file content, over the Vite dev server, under this section's own finalized config. This is a real regression versus `dev-server.js`, which blocks it today for an unrelated reason (`path.extname("atlas-credentials.env")` is `.env`, not a key in `dev-server.js`'s `TYPES` allowlist, so it 403s). The fix is the ninth entry in the config above, `**/*.env`. Vite auto-prefixes `**/` only for patterns with no `/` in them (per the glob-prefix note two bullets up), so a bare `*.env` would resolve the same way — the explicit `**/*.env` is used here anyway, because it states the intent (match at any depth) instead of relying on a reader knowing the auto-prefix rule. **Checked for other gaps of this shape:** `.gitignore`'s only secret-naming lines are 2-5 (`*.env`, `.env`, `.env.*`, `atlas-credentials.env`; line 1 is the `# Secrets — never commit` comment above them) — all four covered once `**/*.env` is added, alongside the two already-covered dot-prefixed defaults. The remaining lines (`!*.env.example`, `!.env.example`, `node_modules/`, `.DS_Store`) name no credential file. No further `fs.deny` entries are needed beyond the 9 in the config above.
+  **The lesson, stated explicitly so it isn't relearned the hard way:** the warning below this list in an earlier draft of this doc ("do not assume Vite's built-in defaults already cover any of this without checking") was correct in spirit but incomplete in practice — it drove checking whether the *chosen patterns* matched what they were meant to match, but never checking whether the mere act of supplying `fs.deny` discards the defaults in the first place. Those are two different failure modes, and catching one doesn't catch the other. When overriding any Vite option that has a non-empty built-in default (arrays especially, since array merging is all-or-nothing per `node.js:2756-2778` above), explicitly re-list the defaults or diff the resulting resolved config against Vite's defaults — don't just check that your own additions look right in isolation.
+  Do not assume Vite's built-in defaults already cover any of this, or that supplying an option only adds to those defaults rather than replacing them, without checking — verify with the acceptance tests below rather than trusting defaults or this doc.
+- Delete `scripts/dev-server.js` entirely (both halves — the static-serving half is now redundant with Vite's own serving, and the API half has moved into the plugin above).
+- **`package.json`** — change `"dev": "node scripts/dev-server.js"` to `"dev": "vite"`. Leave `"dev:vercel": "vercel dev"` as-is (still useful as a closer-to-production check).
+
+**Acceptance (falsifiable):**
+- `test -f scripts/dev-server.js` fails (file gone).
+- **Security, new proof — this is the one that would have caught S1/S2:** `npm run dev`, then `curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/scripts/vite-api-plugin.js` is `403` or `404`, never `200`. No test in an earlier draft of this plan probed `/scripts/*` at all, so the `api/**`/`scripts/**` glob bug above would have shipped completely undetected. This check is false with the unfixed glob (`api/**`, `scripts/**`, verified `200` against a live Vite 8.2.2 dev server) and true only with the `**/api/**`, `**/scripts/**` fix.
+- `curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/api/scores.js` (the raw handler source, requested as a static path rather than the `/api/scores` route) is `403` or `404`, never `200` with visible source. Note this one is redundant with the plugin's own `/api/*` catch-all 404 above, so on its own it would *not* have caught the `api/**` glob bug — the `/scripts/*` check above is the one that actually exercises `fs.deny`.
+- **Security, new proof — this is the one that would have caught the "`fs.deny` replaces defaults, not extends them" bug:** `npm run dev`, then `curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/.git/HEAD` (or `.git/config`) is `403` or `404`, never `200`; and `curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/.npmrc` is `403` or `404`, never `200`. Both are `200` against the 4-entry `fs.deny` array (`**/api/**`, `**/scripts/**`, `.env`, `.env.*`) verified live in a real scaffold, and `403` only with Vite's six default deny patterns re-listed alongside the three project-specific ones, per the config above.
+- **Security, new proof — this is the one that would have caught the wildcard-secret gap (a real file this repo `.gitignore`s, not a hypothetical):** `atlas-credentials.env` doesn't exist in a clean checkout, so create it temporarily — `echo test > atlas-credentials.env` — then with `npm run dev` running, `curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/atlas-credentials.env` is `403` or `404`, never `200`; then delete it (`rm atlas-credentials.env`). It's already covered by `.gitignore:5`, so this never risks a commit, but don't leave it lying around regardless. This is `200` (plaintext content served) against the 8-entry array (`.env`/`.env.*` present, `**/*.env` not yet added) and `403` only with the 9-entry array above.
+- **Regression guard, not new-capability proof:** `curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/.env.local` is `403` or `404`, never `200`. `path.extname(".env.local")` is `.local`, which isn't in `dev-server.js`'s `TYPES` allowlist, so this already returns `403` on unmodified `main` — the point of re-checking it here is to confirm the new denylist doesn't regress a case the old allowlist already handled, not that this phase adds new protection.
+- **Regression guard, not new-capability proof:** `npm run dev`, then `curl http://localhost:8000/api/scores` returns JSON with `Content-Type: application/json` (either `[]` or real rows, depending on `MONGODB_URI`), from the *same* process serving `http://localhost:8000/`. This is exactly what `scripts/dev-server.js` already does on unmodified `main`; this check confirms the plugin preserves that behavior, not that it's new.
+- **Variant-path class, tested and confirmed non-exploitable — documented so it isn't re-derived later:** `curl` the same `/api/*`/`/scripts/*` targets above through path variants that sometimes bypass naive path-matching — `//api/scores.js` (double leading slash), `/api%2fscores.js` (encoded slash), `/API/scores.js` (case variant) — against a live server running the fixed globs above. None of them re-expose source, but not for the same reason: `//api/scores.js` and `/api%2fscores.js` fall through to the SPA `index.html` fallback (`200`, but the HTML shell, not the source file) because no file exists on disk at the reinterpreted path; `/API/scores.js` instead gets a direct `403` from `fs.deny` itself, because Vite's glob matcher runs with `nocase: true` — `**/api/**` matches the case-varied path directly, without needing the SPA fallback at all. The safety conclusion is unchanged (none of the three leak source), but only two of the three get there via the fallback path — worth naming correctly so the mechanism isn't misdescribed if this is re-derived later.
+- In the browser at `npm run dev`, play the arcade drill and submit a qualifying score; it appears in the leaderboard after a refresh (end-to-end functional check against `MONGODB_URI`).
+- `npm run build && npm run preview` still succeeds — `vite.config.js` is build-relevant (it now has a `plugins` array and `build.outDir`), so this regression guard applies here too even though this phase's main concern is dev-only.
+
+### Phase 3 — Dependencies, module split, and ESM correctness
+
+**Rationale:** This is the core conversion: real npm packages instead of vendored globals, and `js/home.js` split along its existing seams into ES modules loaded from a `type="module"` entry.
+
+**Dev server at this phase's gate:** `npm run dev` is already Vite's real dev server, switched over in Phase 2 (before this phase, deliberately — see "Phase order and the dev server" above). That matters here specifically: the bare npm specifiers this phase introduces below (`import gsap from "gsap"`, `import Lenis from "lenis"`, etc.) need a dev server with real module resolution to work at all, and Phase 2 already put one in place. Every `npm run dev` acceptance check below runs against that real Vite dev server, not the old `scripts/dev-server.js` (which no longer exists by this point — Phase 2 deleted it).
+
+Files:
+- `package.json` — add `dependencies.gsap: "3.12.5"` and `dependencies.lenis: "1.1.14"`, pinned to the exact versions currently vendored (readable from the file banners in `js/vendor/`) so behavior doesn't drift as a side effect of this migration.
+- Delete `js/vendor/gsap.min.js`, `js/vendor/ScrollTrigger.min.js`, `js/vendor/lenis.min.js`, and the now-empty `js/vendor/` directory.
+- Delete `css/lenis.css` (stale copy; superseded by importing the real package's stylesheet from JS, below).
+- Delete `js/home.js` (fully superseded by the four new files below).
+- **New `js/terminal.js`** — the body of `initTerminal` (`js/home.js:9-120`), exported as `export default function initTerminal() { ... }`. Self-contained already (no GSAP dependency), so the extraction is a near-verbatim move. It needs its own `reduceMotion` check (`const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;`) since the shared outer-scope constant at the old `home.js:6` no longer exists — this two-line duplication (mirrored in `animations.js`) is intentional; a shared singleton for a value this cheap and rarely re-read isn't worth a fifth module.
+- **New `js/arcade.js`** — the body of `initArcade` (`js/home.js:123-442`), exported as `export default function initArcade() { ... }`. Verbatim move: no GSAP usage, `const API = "/api/scores"` stays a relative same-origin path, `fetch`/`localStorage` keys unchanged, `loadBoard()` still called eagerly on init.
+- **New `js/animations.js`** — the body of `js/home.js:444-618` (Lenis init through the social parallax), restructured as follows:
+  - `import gsap from "gsap"; import { ScrollTrigger } from "gsap/ScrollTrigger"; import Lenis from "lenis"; import "lenis/dist/lenis.css";` — the last import replaces the deleted `css/lenis.css` link in `index.html`, and pulls in the *real*, non-stale Lenis stylesheet.
+  - `gsap.registerPlugin(ScrollTrigger);` at module scope.
+  - **Delete** the guard at old `home.js:454` (`if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;`) outright rather than restructure it. It existed only because GSAP/ScrollTrigger were optional classic-script globals that might fail to load; with static `import` of npm packages that failure mode doesn't exist (a missing package fails the build, not the page). Two other `typeof` guards in this range are left in place, not deleted: `typeof Lenis !== "undefined"` (old `:445`) and `typeof ScrollTrigger !== "undefined"` inside the Lenis `scroll` callback (old `:448`). Static imports make both conditions vacuously true from now on — they become harmless dead conditionals rather than real guards — but neither one is ES-module-illegal the way `:454`'s top-level `return` was, so there's no correctness reason to touch them in this pass; leave them as a small, known no-op.
+  - Wrap the entire module body in `export default function initAnimations() { ... }`. This is the fix for the two illegal top-level `return`s (`home.js:454` and `:472`, both illegal at ES module top level): once they're inside a function body, `return` is ordinary control flow again, no other rewriting is needed. Confirm the old ordering is preserved inside the function: Lenis init (old `:445-452`) is *already* gated inline on `!reduceMotion` (`if (typeof Lenis !== "undefined" && !reduceMotion) { ... }`) — it does not run for reduced-motion users. Immediately after it, the nav-state/progress-bar `ScrollTrigger.create` and `gsap.to(".progress-bar", ...)` (old `:458-470`) run unconditionally; *then* `if (reduceMotion) return;` (old `:472`) gates everything after that point (hero intro through social parallax). This preserves the original behavior exactly — nav state and the progress bar still run for reduced-motion users; Lenis and the animated reveals do not.
+  - **Dev-only ScrollTrigger devtools shim.** ScrollTrigger is no longer a `window` global once it's an ES module import, so `ScrollTrigger.getAll().length` typed into devtools would throw. Add, near the top of the module:
+    ```js
+    if (import.meta.env.DEV) window.ScrollTrigger = ScrollTrigger;
+    ```
+    `import.meta.env.DEV` is statically `false` in production builds, so Vite dead-code-eliminates this branch and `ScrollTrigger` is never attached to `window` in production.
+  - **No CSS-HMR → ScrollTrigger.refresh() hook.** An earlier draft of this doc proposed listening for `import.meta.hot.on("vite:afterUpdate", ...)` and checking `payload.updates?.some(u => u.type === "css-update")` to re-measure pinned sections after a live CSS edit. That mechanism does not exist in the Vite version this plan targets: `"css-update"` does not appear anywhere in Vite's shipped runtime, only as a vestigial union member in `vite/types/hmrPayload.d.ts:40`, and real `vite:afterUpdate` payloads observed for both `<link>`-referenced and JS-imported CSS come back as `"js-update"` (verified empirically against Vite 8.2.2). The hook would never fire, and `css/home/redesign.css` is loaded as a plain `<link>` in `index.html` (unchanged by every phase of this plan), so there is no code path that makes it JS-imported CSS either. Do not add this hook. `import.meta.hot.dispose()` also does *not* make `js/main.js` self-accepting — it's the HTML entry with no importer, so any JS edit falls through to a full page reload (Vite's default when a module can't accept its own update), which means **no manual GSAP teardown code is needed anywhere in this migration** — a reload already tears everything down.
+    **Known, accepted limitation:** Vite's CSS HMR still swaps `<link>` stylesheet content live during `npm run dev`, without a page reload, which can change the height/width of pinned or scrubbed sections. ScrollTrigger caches trigger start/end positions from the last time it measured the page and has no way to know the DOM changed size underneath it, so a CSS edit during `npm run dev` can desync a pinned section (e.g. the horizontal `.builds` gallery) until the page is manually reloaded. This is a dev-only annoyance, not a production defect — reload the page after CSS edits that change section height/width. If a real fix is worth adding later, it must be re-verified against the Vite version actually installed at the time (`grep -rn` the shipped `node_modules/vite/dist/` for the exact HMR payload shape, don't trust event/type names from documentation or from this doc) before being written into code.
+  - Everything else (`mm.add` breakpoints, the `gains` loop, `reveal()`, mobile story reveal, social parallax) moves verbatim.
+- **New `js/main.js`** — the module entry `index.html` loads:
+  ```js
+  import initTerminal from "./terminal.js";
+  import initArcade from "./arcade.js";
+  import initAnimations from "./animations.js";
+
+  initTerminal();
+  initArcade();
+  initAnimations();
+  ```
+- **`index.html`:**
+  - Delete `:25` (`<link rel="stylesheet" href="./css/lenis.css" />`).
+  - Delete `:482-484` (the three vendor `<script src>` tags).
+  - Replace `:485` (`<script src="./js/home.js"></script>`) with `<script type="module" src="./js/main.js"></script>`.
+- **Hero-tween flash-of-final-state mitigation.** `type="module"` scripts are deferred (they run after the document is parsed), unlike the old bottom-of-body classic scripts, so the browser can paint the hero in its natural CSS state *before* `gsap.from(".hero-title-line", { yPercent: 60, opacity: 0, ... })` (and the eyebrow/tagline/actions/terminal tweens right after it) ever runs — producing a visible flash of the final layout followed by a snap back to the animated start state. Mitigate by authoring the same from-state directly in `css/home/redesign.css`, near the existing hero rules (`:261-303`), gated to only apply when the animation will actually run:
+  ```css
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-title-line,
+    .hero-eyebrow,
+    .hero-tagline,
+    .hero-actions,
+    .hero-terminal {
+      opacity: 0;
+    }
+    .hero-title-line { transform: translateY(60%); }
+    .hero-eyebrow, .hero-tagline, .hero-actions { transform: translateY(24px); }
+    .hero-terminal { transform: rotate(-1.5deg) translateY(48px) scale(0.96); }
+  }
+  ```
+  **`.hero-terminal` needs the compose, not a plain override.** The base rule already sets `.hero-terminal { transform: rotate(-1.5deg); }` (`css/home/redesign.css:308`). A from-state rule of just `transform: translateY(48px) scale(0.96)` at identical specificity would win the cascade and silently drop the rotation for the entire pre-animation window — a visible (if subtle) regression from the current tilted look. The `rotate(-1.5deg) translateY(48px) scale(0.96)` composition above keeps both. `gsap.from()` itself doesn't have this problem — GSAP's CSSPlugin decomposes the existing computed transform and animates only the components it's told to (`y`, `scale`), leaving the rotation alone (verified empirically against gsap 3.12.5) — so this fix only needs to happen in the hand-authored CSS mitigation, not in `animations.js`'s tween call. These values must be kept in sync by hand with `animations.js`'s tween definitions (`gsap.from(".hero-title-line", ...)` etc.) — leave a comment in both files cross-referencing the other, since nothing enforces this automatically. **Residual risk, accepted:** if the module script fails to execute at all (network failure, JS disabled), a motion-ok visitor sees a permanently empty hero, since nothing un-hides these elements without JS. This is a pre-existing characteristic of a JS-driven hero animation, not a new one introduced here, but it's now slightly more exposed by moving the from-state into CSS; call this out in Open Questions.
+
+**Acceptance (falsifiable):**
+- `test -d js/vendor` fails (directory gone); `test -f css/lenis.css` fails; `test -f js/home.js` fails.
+- `grep -c 'type="module"' index.html` is `1`; `grep js/vendor index.html` matches nothing (3 matches today).
+- `npm run build && npm run preview`: open the preview URL and confirm `dist/index.html` references a hashed entry script — Vite names the built entry chunk after the HTML entry file (`index.html`), not after the source script it loads, so the real output is `dist/assets/index-<hash>.js`, e.g. `grep -o 'assets/index-[^"]*\.js' dist/index.html` matches (any hashed `.js` under `assets/` also works if the exact prefix drifts). This is the first point in the plan where this is true — Phase 1's build produced no JS at all, per its documented expected state.
+- **New capability, not a regression guard:** `npm run build && npm run preview`, open devtools console on the preview URL and confirm `window.ScrollTrigger` is `undefined`. This is the thing actually worth proving about the dev-only shim — that it's stripped from production — and it's false before this phase exists at all (there's no `dist/` to preview) and specifically demonstrates the `import.meta.env.DEV` dead-code-elimination, not just that ScrollTrigger loaded.
+- **Regression guard, not new-capability proof:** with `npm run dev` running (the real Vite dev server, switched in Phase 2, so `import gsap from "gsap"` etc. resolve and `animations.js`'s dev-only shim actually executes), open devtools console and confirm `window.ScrollTrigger.getAll().length` returns a number without throwing. This is already true on unmodified `main` today (the vendored GSAP UMD bundle already attaches `ScrollTrigger` to `window` in a classic-script context) — the point of checking it here is only to confirm the dev-only shim keeps that pre-existing devtools workflow alive, not that this phase introduced it.
+- **Regression guard, not new-capability proof:** with `npm run dev` running (same Vite dev server as above), in devtools, enable "Emulate CSS prefers-reduced-motion: reduce", hard reload: hero elements are visible immediately with no animation, and scrolling still toggles `.site-nav.is-scrolled` and advances `.progress-bar`. Both halves of this are already true on unmodified `main` (`js/home.js:454-470` already runs before the `if (reduceMotion) return;` at `:472`, and the gated `gsap.from()` hero tweens never apply a hidden start state under reduced motion) — this check exists only to confirm the Phase 3 module restructuring didn't accidentally break already-correct behavior, not to demonstrate a fix.
+
+### Phase 4 — Content and asset cleanup
+
+**Dev server at this phase's gate:** unchanged — Vite's real dev server, switched over in Phase 2, still the one answering `npm run dev`. Nothing in this phase touches the dev command; `npm run build && npm run preview` (used by 4a's and the phase-closing acceptance below) runs against Vite's build output, same as every phase since Phase 1.
+
+**4a. Reduced-motion desktop fix.** Root cause, all three pieces confirmed present in the current file (line numbers below are pre-Phase-3 — see the re-locate note at the end of this subsection): `.builds { overflow: hidden }` (`css/home/redesign.css:529`) plus `.builds-track-wrap { overflow-x: auto }` scoped to `@media (max-width: 767px)` only (`css/home/redesign.css:690-693`) plus `animations.js`'s `if (reduceMotion) return;` (old `home.js:472`, preserved in Phase 3) skipping the GSAP horizontal-pin tween (old `:524-550`) together mean a desktop visitor with reduced motion gets `overflow: hidden` and no GSAP driving the track's transform and no native-scroll fallback (that's mobile-only) — `.builds-track` never moves, and cards 2-4 ("HopParlays", "JHU Rideshare", "JHU Club Board") are permanently clipped out of view.
+
+  `css/home/redesign.css` already has three separate `@media (prefers-reduced-motion: reduce)` blocks (`:464`, `:1314`, `:1349`) — this is not a fresh insertion. Add these rules **into the existing block at `:1349`**, which already contains `html { scroll-behavior: auto }` and `.build-card { position: static }`:
+  ```css
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    .build-card {
+      position: static;
+    }
+
+    /* --- added: reduced-motion desktop fix for the pinned .builds gallery --- */
+    .builds {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .builds-track-wrap {
+      overflow-x: auto;
+    }
+    .builds-progress {
+      display: none; /* driven by the GSAP onUpdate that no longer runs */
+    }
+  }
+  ```
+  This mirrors the existing mobile fallback but keys off motion preference instead of viewport width, at any screen size. `.builds-progress` (the "01 / 04" counter, already `aria-hidden="true"` at `index.html:208`) is hidden rather than left stuck at "01" once its driving `onUpdate` callback (old `:543-547`) never runs. **Note for the implementer — applies to every `css/home/redesign.css` line number cited in this subsection, not just `:1349`:** Phase 3 inserts a new hero-tween CSS block near `css/home/redesign.css:261-303` (Phase 4 runs after Phase 3, per the phase order above), which shifts every line number below it. That includes the root-cause citations earlier in this subsection — `.builds { overflow: hidden }` at `:529` and `.builds-track-wrap`'s mobile-only `overflow-x: auto` at `:690-693` — as well as the `@media (prefers-reduced-motion: reduce)` block at `:1349` this fix is added to. Re-locate all three by content search (`.builds {`, `.builds-track-wrap {`, and `.build-card { position: static }` respectively) at implementation time; do not trust any of these line numbers once Phase 3 has landed. **`.builds {` is not unique — it has two hits, and only one is the target.** One is the top-level rule (the one meant here, carrying `overflow: hidden`); the other is nested inside `@media (max-width: 767px)` and carries `min-height: 0; display: block;` instead. Take the top-level hit, not the one inside that media query.
+  **Sweep result:** every other `css/home/redesign.css:<line>` citation in this doc was checked against Phase 3's insertion point. `:308` (Phase 3's own hero-terminal transform-compose note) and `:261-303` (the insertion point itself) are both read and acted on *during* Phase 3, before the CSS insertion happens, so they're accurate at the point they're used and need no caution. `:464` and `:1314` (the other two pre-existing `prefers-reduced-motion` blocks, mentioned two paragraphs above only to establish that this block isn't a fresh insertion) are not used as navigation targets for any edit, so a stale line number there doesn't send an implementer anywhere wrong; no caution added. One other `css/home/redesign.css:<line>` citation exists in this doc outside this subsection and the Phase 3 section: the `:391-393` citation inside Phase 5's editorial-decisions bullet about `AGENTS.md:79-81` (the hero-terminal `display: none` gotcha), below. It is not an uncovered stale-number trap, though — that bullet already carries its own independent re-verify-by-content-search instruction, so it doesn't need repeating here.
+
+  **Acceptance:** with devtools "Emulate CSS prefers-reduced-motion: reduce" enabled and viewport ≥768px, scroll `.builds-track-wrap` to its max `scrollLeft` and confirm `document.querySelectorAll('.build-card')[3]` (the Club Board card) is within the viewport — fails today (the container can't scroll at all under this condition), passes after.
+
+- **4b. Favicon.** Move the current 1.9 MB `Blue_Jay_Coding_Icon.png` to `assets/source/Blue_Jay_Coding_Icon-original.png` as a preserved high-res source (not referenced by any HTML, not built or served). Produce a new, small file at the original path `./Blue_Jay_Coding_Icon.png` (still the path `index.html:11` references — no HTML change needed here since `project.html`, the icon's other consumer, is deleted in 4c), resized to a favicon-appropriate size (e.g. 32-64px) targeting roughly 5 KB, using any local image tool (e.g. macOS `sips`, or ImageMagick). Restated from the Technical Plan: Vite does not do this automatically — it only copies whatever bytes exist as a static asset, so this step must happen by hand before or independent of any `vite build`.
+
+  **The source path and the deployed path diverge once `vite build` runs.** `index.html:11`'s `<link rel="icon" href="./Blue_Jay_Coding_Icon.png">` makes the favicon a referenced asset in Vite's module graph, so `vite build` doesn't just copy it — it hashes it and relocates it into `dist/assets/Blue_Jay_Coding_Icon-<hash>.png`, rewriting the `<link href>` in `dist/index.html` to match. `./Blue_Jay_Coding_Icon.png` at the repo root stays the right path for the *source* file and for `npm run dev` (Vite serves un-hashed assets from their source path in dev), but do not expect that exact path to be what's requested in production — check the built output for the hashed filename instead.
+
+  **Acceptance:** `ls -la Blue_Jay_Coding_Icon.png` reports roughly 5 KB, not 1.9 MB (checks the source file, unaffected by build hashing); `find . -iname '*Blue_Jay*' -not -path './node_modules/*'` still returns two files (the small served one and the preserved high-res source) — falsifiable that the original wasn't destroyed. Separately, for the deployed payload itself: `npm run build`, then `grep -o 'assets/Blue_Jay_Coding_Icon-[^"]*\.png' dist/index.html` matches, and the matched file under `dist/assets/` is a few KB, not 1.9 MB — fails before this step (no such hashed file exists, and the referenced favicon in a build from before this phase is still the 1.9 MB original), true only after.
+
+- **4c. Delete `project.html` and its exclusive dependents.** `project.html`'s only inbound reference anywhere in the repo is `content/data.js:8` (`url: "./project.html"`), and `content/data.js` itself is never loaded by any `<script>` or `import` (confirmed by a repo-wide grep) — it is orphaned. Delete: `project.html`, `css/globals.css`, `css/transition.css`, `css/project/project.css`, `js/project.js`, `js/transition.js`, `content/data.js`, and the `content/` directory (verify at implementation time that `content/` holds nothing else before removing the directory itself — it currently holds only `data.js`). Also delete `assets/project/project3.jpg`: it is referenced only by `content/data.js:6` and becomes dead weight once that file is gone. **Keep** the four build-card images in `assets/project/` (`LostandFoundBlueJay.png`, `GamblingBlueJay.png`, `drivingbluejay.png`, `Clubboardbluejay.png`) — these are the ones `index.html:161,175,190,202` actually uses.
+
+  **This is repo hygiene, not a payload reduction.** `project.html` was never Vite's build entry (only `index.html` is), so once `vite build` is the deploy path — structurally from Phase 1's `vite.config.js` onward, live in production from the Phase 5 cutover — `project.html` and everything only it depends on already don't ship in `dist/`, regardless of whether they're still physically present in the repo. Deleting them here removes dead source files and stops a future contributor from finding and trusting orphaned code; it does not shrink anything a visitor downloads.
+
+  **Acceptance:** `git ls-files | grep -E 'project\.html|globals\.css|transition\.css|project/project\.css|js/project\.js|js/transition\.js|content/data\.js|project3\.jpg'` returns nothing (currently returns 8 paths); `ls assets/project | wc -l` is `4` (currently `5` — `ls assets/project/*.png | wc -l` alone would stay `4` before and after, since `project3.jpg` isn't a `.png` and wouldn't be caught by that glob; counting the whole directory is what actually falls from 5 to 4).
+
+  **Pre-existing debt, not introduced or fixed by this phase:** `assets/project/.DS_Store` is tracked in git (`git ls-files assets/project` shows it) despite `.gitignore:15` listing `.DS_Store` — `.gitignore` doesn't retroactively untrack a file already committed before the pattern was added. It doesn't affect the `ls assets/project | wc -l` check above (plain `ls` hides dotfiles, so the count stays `4`), and this plan leaves it as-is rather than folding an unrelated `git rm --cached` into this phase — noted here so it's a conscious decision, not an oversight.
+
+- **4d. Prune unreferenced `assets/home/` images.** Delete `team-photo-placeholder.jpeg` (2.37 MB), `hero-gilman-sky.png` (1.22 MB), `hopbuilds-nav-logo.png` (578 KB), `Serendale.ai.png` (1.80 MB), `team-photo.webp` (46 KB), `footer-designer-icon.webp` (2.3 KB) — none of these six basenames appear in any `.html`, `.css`, or `.js` file in the repo (confirmed by grep across `css/`, `js/`, and `*.html`). Same caveat as 4c: since nothing in the repo has a `public/` directory and none of these six files are referenced from `index.html`'s module graph, `vite build` already excludes them from `dist/` on its own (see the Technical Plan). This step is repo hygiene — ~6 MB less to clone and no dead files to trip a future contributor — not a build-output fix.
+
+  **Acceptance:** `find . -not -path './node_modules/*' \( -name team-photo-placeholder.jpeg -o -name hero-gilman-sky.png -o -name hopbuilds-nav-logo.png -o -name Serendale.ai.png -o -name team-photo.webp -o -name footer-designer-icon.webp \)` returns nothing (currently returns 6 paths).
+
+Since `css/home/redesign.css` (build-relevant) changes in 4a, run `npm run build && npm run preview` after this phase and confirm the preview loads with no 404s in the Network tab for any deleted asset path.
+
+### Phase 5 — Vercel config and docs
+
+**Dev server at this phase's gate:** this phase doesn't touch `index.html`, `vite.config.js`, or any local dev path — Vite's real dev server (live since Phase 2) is unaffected by this phase's `vercel.json`/`DEPLOY.md`/`README.md`/`AGENTS.md` edits, and `npm run dev`/`npm run build && npm run preview` still work exactly as in Phase 4. But the acceptance check that actually matters for this phase (below) does not run against any local dev server at all: it runs against a real Vercel **preview** deployment. This is the first and only point in the plan where the thing being verified is Vercel's own build/serve path rather than a local process.
+
+- **`vercel.json`:**
+  ```json
+  {
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "framework": null,
+    "buildCommand": "vite build",
+    "outputDirectory": "dist"
+  }
+  ```
+  `framework` stays explicitly `null` rather than switching to Vercel's built-in `"vite"` preset — this project already deliberately opted out of framework auto-detection (see the commit that produced the current file, "Pin Vercel to a static site with serverless functions"), and setting `buildCommand`/`outputDirectory` by hand keeps that same fully-explicit posture instead of trusting preset defaults. `api/` continues to be compiled independently of `outputDirectory`, per the Technical Plan.
+- **`DEPLOY.md`:**
+  - Step 1 of "One-time setup" currently says *"No build command or framework preset is needed; the defaults serve `index.html` and compile anything under `api/`."* (this sentence word-wraps across `DEPLOY.md:10-12`) — this is now false and must be rewritten to say Vercel reads `buildCommand`/`outputDirectory` from `vercel.json` (`vite build` / `dist`) automatically, and still compiles `api/` independently of that output directory.
+  - "Local development" section: update the description of `npm run dev` to note it's Vite's dev server (with HMR) doing the static/module serving, extended by a small plugin for `/api/scores` — same single command, same `http://localhost:8000` URL. Keep the existing warning that a plain `python3 -m http.server` won't run the API, and add that it also won't resolve bare-specifier imports like `import gsap from "gsap"` — only Vite's dev server does that.
+  - Add a line noting `npm run build` produces `dist/` and `npm run preview` serves that build locally, for a pre-push sanity check of the production bundle.
+  - **New Node-version note — add it, don't "rewrite" it; `DEPLOY.md` has no existing Node-version content to rewrite.** Verified directly: `grep -in "node" DEPLOY.md` returns exactly one hit today, line 54, `node scripts/export-emails.js > emails.csv` — a shell command, not a version note. Add a new step after step 4 of "One-time setup" (`Redeploy. /api/scores should return [] or the current board as JSON.`), before the `## Local development` header, framed around `engines.node`, not a dashboard instruction: Vercel's documented behavior is that `engines.node` in `package.json` always overrides whatever is set in Project Settings → General → Node.js Version — the dashboard dropdown is inert once `engines.node` is committed. So the note to add is: Vite requires Node `^20.19.0 || >=22.12.0`, and this repo's `package.json` pins `engines.node` to `"22.x"` (Phase 1) specifically so Vercel resolves to Node 22 rather than defaulting an open-ended range to its newest major — that pin, not any dashboard setting, is what controls the deployed Node version. If the dashboard dropdown shows something else, that's just stale UI, not a real conflict; don't "fix" it there. Do not tell readers to change the dashboard Node.js Version as routine guidance — it does nothing while `engines.node` is present (there is one narrow, deliberate exception to this, described in the build-cache note immediately below).
+  - **Build-cache caveat — add as a second paragraph in that same new step.** Bumping `engines.node` alone doesn't reliably force Vercel to drop a cached build from before the bump: per vercel/vercel#14368, a stale build cache can restore artifacts built on the previous Node major and the deploy can silently keep running old Node. Be precise about what that issue actually demonstrates, rather than overclaiming it: the only fix confirmed there is changing the dashboard's Node.js Version dropdown itself, which triggers Vercel's "Skipping build cache since Node.js version changed" log line — nothing in the issue or in Vercel's docs confirms that a generic cache-bypass re-resolves a stale Node-major selection specifically. (This repo's exposure is lower than that issue's: it's pnpm's strict-engine check hard-failing on a mismatch there; this repo uses npm with a plain `package-lock.json` and no `engine-strict` in any `.npmrc`, so a stale-cache mismatch here degrades silently instead of failing loudly — worse for detection even though less immediately breaking.) Instruction to add, in order: (1) detection — if the first post-merge production build needs checking, look at the build log for which Node major it actually used, logged near the start of the build step; (2) if it's stale, the pragmatic first attempt is Vercel's dashboard "Redeploy" action with "Use existing Build Cache" turned off — Vercel's generic stale-cache bypass, worth trying first because it's low-cost, but unconfirmed for this specific failure mode, so re-check the log after it runs rather than assuming it worked; (3) if the log still shows the stale major after that, the one lever the linked issue does confirm is changing the dashboard Node.js Version dropdown itself — a deliberate, last-resort exception to "don't touch the dashboard" above, used only to force the cache-invalidation log line, then reverted back afterward since `engines.node` is what should govern going forward. Also add to the Cutover checklist below that the first post-merge build's log should be sanity-checked for which Node major it actually ran on, not just that it succeeded.
+- **`README.md` and `AGENTS.md` — procedure, not a line-numbered edit list.** Earlier drafts of this section enumerated specific line numbers for these edits, and it kept failing: `js/home.js` and other cited files change shape across Phases 3 and 4, both docs may drift further by the time this phase runs, and successive rounds of review each turned up edits the previous line-numbered list had missed (a "Vanilla JS, no framework, no build step, no bundler" bullet in `AGENTS.md`'s Code Conventions section, a `js/home.js` citation in `AGENTS.md`'s DOM-sanitization bullet, and the `AGENTS.md` gotcha about `scripts/dev-server.js` never setting `x-forwarded-for`, among others). Line numbers are the wrong tool here. Use a procedure instead, and make the acceptance check below run the *exact same* greps as the procedure, so the two operations can't diverge:
+  1. Grep both `README.md` and `AGENTS.md` for this list of now-false tokens: `scripts/dev-server.js`, `js/home.js`, `js/vendor`, `css/lenis.css`, `project.html`, `content/data.js`, `no build step`, `no bundler`, `not yet implemented`, `is planned but`, `` classic `<script>` `` (the literal phrase, backticks included — both files spell it identically), `>=18`. **Count per token, not per file, and count occurrences, not matching lines — a plain `grep -c` gets both of those wrong.** `grep -c <token> <file>` returns one aggregate count of *matching lines* for the whole file: it gives no signal for which of the 12 tokens is still present when the count is nonzero mid-implementation, and it undercounts a line that matches the same token twice (`AGENTS.md:66` today has `content/data.js` twice on one line — `grep -c` counts that as `1`, not `2`). It also misses a token that word-wraps across a line break in the source markdown: `AGENTS.md:26-27` splits "no build step" across "There is no build" / "  step:", so `grep -c 'no build step' AGENTS.md` returns `2` today while the phrase actually appears `3` times once the wrap is collapsed (verified directly). Run each token as `tr -s ' \n' ' ' < <file> | grep -o -e '<token>' | wc -l` instead — the same whitespace-collapsing fix already used for `DEPLOY.md`'s "No build command" check below, applied per token here so a nonzero result also says which token survives.
+  2. For every hit, fix the surrounding prose/table row/list item to match post-migration reality (real npm dependencies, the ESM entry and module split, `vite build`/`dist`, Vite's dev server plus the API plugin). A hit doesn't always mean "delete" — see the specific decisions below for cases where the right fix is a rewrite or a repoint, not a removal. **This step only removes stale claims; it doesn't add anything, and nothing above catches that gap.** Separately confirm `README.md`'s repo-structure table and npm-scripts description gain rows/mentions for `vite.config.js`, `.nvmrc`, `scripts/vite-api-plugin.js`, `npm run build`, and `npm run preview` — none of the 12 tokens above would fail if these were simply never added, since absence of a stale claim isn't presence of a correct one.
+  3. Re-run the same per-token, wrap-safe counts: every one of the 12 now-false tokens must return `0` occurrences in both files, and every one of the 5 new-tooling tokens from step 2 must return a nonzero count in `README.md`. This is the acceptance check further down (both the negative and positive halves) — it's step 1 (and its step-2 companion) run again, not a separate list to keep in sync by hand.
+  4. **`git add README.md AGENTS.md` explicitly, as part of this phase's commit — do not assume a plain commit of modified files picks them up.** Both files are untracked in git today (verified: `git ls-files README.md AGENTS.md` returns nothing, even though both exist on disk and are rewritten by steps 1-3 above). Git does not stage untracked files as a side effect of committing edits to tracked ones, so skipping this step silently leaves the rewritten `README.md`/`AGENTS.md` out of every commit this phase produces, Cutover's atomic commit included.
+
+  Specific editorial decisions already made, kept even though the line-numbered list they used to be attached to is gone:
+  - **`README.md`, the "planned migration" paragraph** (the one containing "is planned but **not yet implemented**"): repoint, don't remove — replace it with a line pointing at this design doc as a historical record of a completed migration, not a forward-looking plan, so a reader who wants the "why" behind the module split still has somewhere to go.
+  - **`README.md`, the repo-structure table:** remove the `css/lenis.css`, `js/home.js`, and `js/vendor/` rows outright, don't try to update them in place (all three are deleted, and the "How the page is built" section above already documents the `js/main.js`/`terminal.js`/`arcade.js`/`animations.js` split in prose, so the table doesn't need replacement rows for them). Update, don't remove, the `scripts/dev-server.js` row — it has a direct one-to-one replacement (`scripts/vite-api-plugin.js`), so update it in place rather than deleting and re-adding. Also update the `vercel.json` row's "no build step" description.
+  - **`README.md`, the repo-structure table's own row for this design doc** (currently "Design doc for the planned (not yet implemented) Vite migration."): same decision as the "planned migration" paragraph above — reword the description to describe the doc as a historical record of a completed migration, don't delete the row. (This row is caught by the `not yet implemented` grep either way, so it self-heals mechanically; this is the guidance on which direction to fix it in, which the grep alone doesn't provide.)
+  - **`README.md:29-36`, the "`js/home.js` is a single 619-line IIFE with three parts" breakdown:** rewrite, don't delete. Its three named parts (hero terminal, arcade game, GSAP/ScrollTrigger/Lenis animations, with `js/home.js` line ranges attached to each) map almost one-to-one onto the three new modules this migration produces (`js/terminal.js`, `js/arcade.js`, `js/animations.js`), so the content is still the right shape and worth keeping — it just needs to describe the post-split module boundaries instead of line ranges inside a file that no longer exists.
+  - **`README.md:62-63`, the orphaned-files note** ("Note: `project.html` and `content/data.js` also exist in the repo but are orphaned/dead code — see `AGENTS.md` for details."): delete outright, don't reword. Its premise (that these files "also exist in the repo") is false after Phase 4c deletes both, and the `AGENTS.md` gotchas it points readers at are removed in the same phase (see the known-gotchas bullet below) — there's nothing left for this note to correctly describe or point to.
+  - **`AGENTS.md`, the "Planned migration" section:** replace it with a short note that the Vite migration landed (commit/date), and that this design doc is a historical record, not a standing pre-change checklist — not a rewrite of the existing prose in place, since the section's whole premise (a pending change to check against) is gone.
+  - **`AGENTS.md`, the known-gotchas list:** remove the `js/vendor/*.min.js` "do not edit" bullet (the directory is deleted by Phase 3); remove the `project.html`/`content/data.js` orphan bullets (both deleted by Phase 4c); remove the reduced-motion accessibility-bug bullet entirely, don't renumber or update its citations (Phase 4a fixes the bug it describes, and Phase 3's hero-tween CSS insertion shifts every line number it cites anyway, so there's nothing left worth keeping accurate). For the `x-forwarded-for`/rate-limit-bucket bullet, don't just swap the filename: confirm the underlying claim still holds for Vite's dev server (it does — Vite's dev server also doesn't set `x-forwarded-for` on local requests, so `clientIp()` still resolves every local request to the same rate-limit bucket) and reword the bullet around the new filenames (`vite-api-plugin.js`/`vite`) with that confirmed behavior, not a find-and-replace of the old one. **The client-side-score-computation gotcha (`AGENTS.md:82-84`, "Scores are computed client-side (`js/home.js`) and trusted by the server... not a bug to fix") gets the same treatment as the `x-forwarded-for` bullet above, for the same reason: keep it, don't remove it.** The underlying claim is untouched by this migration — `initArcade` (where scores are computed) moves into `js/arcade.js` as a verbatim extraction per Phase 3, with no behavior change — so reword only the citation, from `js/home.js` to `js/arcade.js`.
+  - **`AGENTS.md:43-48`, the DOM-sanitization bullet in Code Conventions** ("DOM nodes carrying user- or player-supplied data are built with `document.createElement` + `.textContent`, never `innerHTML`... see `js/home.js:196-220` (`renderBoard`, which writes leaderboard names)..."): keep the content — the no-`innerHTML` rule is untouched by this migration — but its `js/home.js:196-220` citation cannot be given a replacement line range at design time. `renderBoard` moves into the new `js/arcade.js`, which doesn't exist until Phase 3's split actually runs; there is no file to search yet. This is deferred by construction, not an oversight: when rewriting this bullet during Phase 5, content-search `renderBoard` in the (by then real) `js/arcade.js` and cite whatever its actual line range turns out to be, rather than trying to predict it here.
+  - **`AGENTS.md:79-81`, the hero-terminal `display: none` gotcha** ("The hero terminal is `display: none` below 1024px (`css/home/redesign.css:391-393`), but `initTerminal()` still runs underneath it. Known, deliberately deferred."): **keep the content, fix only the citation.** The claim itself stays true post-migration — it's explicitly out of scope per the Alternatives section above, not something this plan touches — so this bullet isn't a candidate for removal or rewording the way the reduced-motion bullet above is. But its `css/home/redesign.css:391-393` citation goes stale the moment Phase 3 lands, for the same reason flagged at the Phase 4a re-locate note above: Phase 3 inserts a new CSS block near `css/home/redesign.css:261-303`, above line 391. None of the 12 grep tokens in step 1 fire on this bullet (nothing about its wording is stale, only its citation), so unlike the other bullets in this list it does not self-heal mechanically — call it out explicitly here so it isn't missed. Re-verify the line range by content search (`.hero-terminal { display: none;` inside the `@media (max-width: 1023px)` block) before writing a number into the rewritten `AGENTS.md`; do not carry the `:391-393` citation forward unchecked.
+  - **The "update in place" guidance given above for `README.md`'s repo-structure-table `scripts/dev-server.js` row applies identically to the same token in two other spots — stated explicitly here so it isn't left to inference:** `AGENTS.md:20-21` (the "`npm run dev` — starts `scripts/dev-server.js`..." bullet in Setup / build / test) and `README.md:69` (the `scripts/dev-server.js` row in the npm-scripts table). Both describe the exact same command with the exact same one-to-one replacement (`vite-api-plugin.js`/`vite`) as the repo-structure-table row already covered above, so both get updated in place too, not deleted and re-added.
+
+**Acceptance (falsifiable):**
+- `cat vercel.json` shows `"buildCommand": "vite build"` and `"outputDirectory": "dist"` (both `null` today).
+- `tr -s ' \n' ' ' < DEPLOY.md | grep -o 'No build command'` returns nothing — the plain `grep -n 'No build command' DEPLOY.md` an earlier draft of this check used is unsatisfiable in both directions, because the phrase word-wraps across `DEPLOY.md:10-12` and a single-line `grep` never sees it whole; collapsing whitespace first fixes that. Returns a match today (phrase present), nothing after the rewrite.
+- `grep -n 'engines.node' DEPLOY.md` returns a match (absent today) — this is new acceptance content, not a replacement for anything already in `DEPLOY.md`. The file has no Node-version content of any kind today: `grep -in 'node' DEPLOY.md` returns exactly one hit, line 54, `node scripts/export-emails.js > emails.csv`, unrelated to this check.
+- **This is step 3 of the README.md/AGENTS.md procedure above, run for real — not a separate check to keep in sync with it. Negative direction: every now-false token must be gone, counted per token and wrap-safe.** For each of `scripts/dev-server\.js`, `js/home\.js`, `js/vendor`, `css/lenis\.css`, `project\.html`, `content/data\.js`, `no build step`, `no bundler`, `not yet implemented`, `is planned but`, `` classic `<script>` ``, `>=18`, run `tr -s ' \n' ' ' < README.md | grep -o -e '<token>' | wc -l` and the same against `AGENTS.md` — every one of the 12 tokens must be `0` in both files. A single aggregate `grep -c -e ... -e ... README.md AGENTS.md` (an earlier draft of this check) is the wrong tool here for two reasons: it collapses to one matching-*line* count per file, so a nonzero result gives no signal for which token is still present mid-implementation; and it misses "no build step" entirely where it word-wraps across `AGENTS.md:26-27` (`grep -c 'no build step' AGENTS.md` returns `2`; the wrap-safe per-occurrence count returns `3`, verified). Verified today with the corrected method: 18 total occurrences across the 12 tokens in `README.md`, 21 in `AGENTS.md` — every one of those has to be `0` after this phase's edits land, not just the handful of tokens an earlier draft of this check covered.
+- **Companion check, positive direction — the check above only proves removal, never addition.** Nothing in the check above fails if `README.md` never gains documentation of the new tooling at all — it would pass at `0`/`0` with every stale claim gone and every new one still missing. For each of `vite\.config\.js`, `\.nvmrc`, `vite-api-plugin\.js`, `npm run build`, `npm run preview`, run the same `tr -s ' \n' ' ' < README.md | grep -o -e '<token>' | wc -l` — every one of these five must be nonzero in `README.md` after this phase's edits land. Verified today: all five are `0` in `README.md` (none of these files or scripts exists pre-migration), so this is false-before/true-after like every other check in this list, not a check that trivially always passes.
+- **Same companion check, `AGENTS.md`.** `AGENTS.md` has its own "Setup / build / test" section (`AGENTS.md:12-30`) that independently lists the complete script set as `npm run dev`, `npm run dev:vercel`, `npm run export-emails` — the README-only check above would not catch that section going stale, since it never looks at `AGENTS.md` at all. Run the same five tokens (`vite\.config\.js`, `\.nvmrc`, `vite-api-plugin\.js`, `npm run build`, `npm run preview`) against `AGENTS.md` with the same wrap-safe `tr`/`grep -o` count — every one of these five must also be nonzero in `AGENTS.md` after this phase's edits land. Verified today: all five are also `0` in `AGENTS.md`, same as `README.md`, so the same five tokens and the same false-before/true-after logic apply to both files unchanged; this isn't a case where the two files' checks need to diverge.
+- Push this branch and deploy it as a Vercel **preview** (not production): the build log shows `vite build` running and succeeding; the preview URL's HTML references hashed asset filenames, not raw `/js/main.js`; `GET <preview-url>/api/scores` returns JSON. This is the first acceptance check anywhere in this plan that runs against real Vercel infrastructure rather than local tooling, and it is the gate before Cutover below.
+- **New capability, confirms the reasoning in the Technical Plan and resolves the previously-open question about `.vscode/`/`docs/` reachability:** against the same preview URL, `curl -s -o /dev/null -w '%{http_code}' <preview-url>/docs/design/vite-migration.md` and `curl -s -o /dev/null -w '%{http_code}' <preview-url>/.vscode/settings.json` are both `404`. This is the same module-graph-tracing argument the Technical Plan already makes for `assets/home/`'s dead images applied to `.vscode/`/`docs/`: neither directory is referenced from `index.html`'s module graph, so once `outputDirectory: dist` is the deployed output (this phase), Vite never traces or copies them into `dist/` and they're structurally absent from the deploy — no `.vercelignore` is needed. This check is `200` against today's `main` (repo root is the static output, see the Technical Plan's rollback-exposure note) and `404` only once this phase's `vercel.json` change is live on a real deploy.
+
+## Cutover and Rollback
+
+The user has accepted a scheduled brief outage; no zero-downtime sequencing is needed, but the order below still matters for a clean rollback.
+
+**Cutover:**
+1. Confirm Phase 5's preview-deploy acceptance check passed (real Vercel build succeeded, hashed assets served, `/api/scores` works on the preview URL).
+2. Merge the feature branch to `main` as a single merge commit (or an equivalent single squashed commit) — this matters for rollback: the goal is one commit on `main` that contains the *entire* migration (code, `vite.config.js`, `vercel.json`, `DEPLOY.md`, `README.md`, `AGENTS.md`), so it can be reverted as one atomic unit.
+3. Vercel's existing GitHub integration auto-deploys `main` on merge; no manual Vercel dashboard changes are needed since `buildCommand`/`outputDirectory` are committed in `vercel.json`, not set through the dashboard. Watch the build log for `vite build` succeeding and `api/scores.js` being detected as a function. **Also check which Node major the build log says it actually used.** Bumping `engines.node` alone doesn't reliably invalidate a stale build cache (see the build-cache caveat in Phase 5 above) — confirm the log shows Node 22, not a cached run on the old major. If it doesn't: first try redeploying from the Vercel dashboard with "Use existing Build Cache" turned off (the pragmatic first attempt, not confirmed for this specific failure mode — re-check the log after it runs) and only if the log still shows the stale major after that, fall back to the dashboard Node.js Version dropdown itself as a last resort, then revert it back afterward — see the build-cache caveat in Phase 5 for why that's normally inert but works as an escalation.
+4. Once live, verify production directly: hero animates once on load with no visible flash, `/api/scores` GET returns real leaderboard data, the favicon request in the Network tab is a small (~5 KB) file under a hashed `/assets/Blue_Jay_Coding_Icon-<hash>.png` path — not the original `/Blue_Jay_Coding_Icon.png` path and not 1.9 MB, since `vite build` relocates referenced assets into `dist/assets/` with a content hash — and the console has no errors.
+5. If all checks pass, cutover is complete.
+
+**Rollback:**
+
+**Before reverting, know what rollback re-exposes.** Reverting `vercel.json`'s `outputDirectory` back to `null` (step 1 below) doesn't just undo the migration — it un-fixes the repo-root static-output exposure described in the Technical Plan above (under Vercel's "Other" framework behavior, a `null` `outputDirectory` with no `public/` directory serves the entire repo root, including `.vscode/`, `docs/plans/`, `scripts/export-emails.js`, and `content/data.js`). If rollback is exercised, that exposure is back the moment the reverted `main` redeploys, exactly as it is on `main` today; this isn't a new problem introduced by rolling back, but it's a real regression from the state the migration branch was in, and worth a conscious "is that still acceptable right now" check rather than an unnoticed side effect — particularly if anything under those paths was added or changed while the migration branch was in flight.
+
+1. `git revert -m 1 <merge-commit-sha>` on `main`. **Use `-m 1`, not a bare `git revert <sha>` — this is required, not optional, and it's the same command regardless of which of Cutover step 2's two landing shapes was used.** `-m 1` tells `git revert` which parent is the "mainline" to revert *against*: parent 1, the pre-merge `main` line. A bare `git revert <merge-commit-sha>` fails outright if the migration landed as a true two-parent merge commit — verified directly: `error: commit <sha> is a merge but no -m option was given.` / `fatal: revert failed`, exit `128`, no changes applied, nothing to fix by retrying. `-m 1` is required in that case. If instead the migration landed as a single squashed commit (Cutover step 2's other sanctioned option), that commit has only one parent, and `-m 1` is harmless there too — verified directly: `git revert -m 1 <squash-commit-sha>` reverts cleanly against that one parent, identically to a bare `git revert` on the same commit. So `git revert -m 1 <merge-commit-sha>` is the one command to use either way; it is not two different procedures for two different landing shapes. Because the whole migration landed as one commit (step 2 above), this single revert restores `js/vendor/`, `css/lenis.css`, `js/home.js`, the old `vercel.json` (`buildCommand`/`outputDirectory` back to `null`), and the old `DEPLOY.md` together, atomically. **`README.md` and `AGENTS.md` are the one exception to "restores" — for those two the revert deletes, it doesn't restore a prior version.** Both were untracked before the Cutover commit added them (see the Prerequisites note and Phase 5's staging step above), so there is no earlier committed version of either file for the revert to bring back; `git revert -m 1` instead removes them from `main` entirely, leaving no `README.md`/`AGENTS.md` at all on the reverted tree. This is still atomic — it lands in the same single revert commit as everything else in this list, with no separate step needed — but it is deletion, not restoration, and the pre-migration content isn't lost: it's recoverable from the reflog, or from whatever local copy the operator still has, same as it was before the migration ever touched git.
+2. Push the revert and **wait for Vercel's automatic redeploy of the reverted `main` to finish and go live** before doing anything else.
+3. Verify production is healthy again on the pre-migration code path (static files served as-is; `/api/scores` still works since `api/` was never touched by any of this).
+4. Only after step 3 is confirmed live, double-check `vercel.json` on `main` matches the pre-migration state (`framework`, `buildCommand`, `outputDirectory` all `null`) — this should already be true automatically from step 1; treat any mismatch as a revert bug (e.g. a conflict) to fix in its own follow-up commit and redeploy.
+5. **Do not** "fix" an incident by editing `vercel.json`'s `buildCommand`/`outputDirectory` back to `null` as a first response, before reverting the code. `main` at that point still has the new `index.html` (which references `/js/main.js`, an ES module with bare-specifier imports like `"gsap"` that only resolve through a bundler) and no longer has the old vendored files — reverting only the Vercel settings would make Vercel serve that broken `index.html` as a raw static file with no build step to resolve its imports, i.e. exactly the "built code is on `main`, settings alone were reverted" broken state to avoid. The merge-commit revert (step 1) must come first.
+
+## Open Questions
+
+- **Resolved (was previously left open):** whether `docs/` and `.vscode/` are publicly reachable in the deployed Vercel static output no longer needs to be treated as unverified — the Technical Plan's own reasoning for why `assets/home/`'s dead images already don't ship (Vite only copies files it can trace from `index.html`'s module graph into `dist/`, and there's no `public/` directory to fall back to) applies identically to `.vscode/` and `docs/`: neither is referenced from that graph, so once Phase 5's `outputDirectory: dist` is live, both are structurally excluded, no `.vercelignore` needed. This interacts with the rollback-exposure note above: **pre-migration** (today, and on `main` if rollback is ever exercised) these paths *are* publicly reachable, because `outputDirectory: null` with no `public/` serves the whole repo root; **post-migration** they are not. A live check (curl against the preview URL, expecting `404`) is in Phase 5's acceptance list above rather than left as an unverified aspiration.
+- Exact Vite version to pin in Phase 1 is left to whatever is current stable at implementation time (recorded in `package-lock.json`); this doc intentionally doesn't hardcode a minor/patch version.
+- Exact favicon resize tool/target (Phase 4b) is an implementation detail, not fixed here — any tool that produces a small PNG at the same *source* path (`./Blue_Jay_Coding_Icon.png`) works. That "same path" guarantee only holds for the repo source and `npm run dev`; `vite build` hashes and relocates the built favicon into `dist/assets/`, so don't expect the deployed URL to match the source path (see Phase 4b and the Cutover checklist).
+- Whether to keep the `dev:vercel` script (`vercel dev`) post-migration — it's left in place as a closer-to-production check, but this wasn't an explicit decision point, just the path of least change.
+- The hero-tween CSS from-state values (Phase 3) and the actual `gsap.from()` arguments in `animations.js` have to be kept in sync by hand; nothing enforces that they match. If they drift, the mitigation for the flash-of-final-state bug silently stops working. Worth a linked code comment at minimum; a shared constants module is probably overkill for four values.
