@@ -48,11 +48,21 @@ export default function initAnimations() {
   // opacity: 0 -- leaving the hero permanently invisible. Explicit end values
   // below are what actually reveal it. Keep the start values here in sync with
   // that CSS block by hand; nothing enforces it.
+  //
+  // Second, separate trap: a CSS from-state written in a PERCENTAGE unit is
+  // decomposed by GSAP out of the computed matrix into a PIXEL `y`, not into
+  // `yPercent`. GSAP then composes px translate() and percent translate()
+  // together, so a tween that only names `yPercent` leaves that decomposed px
+  // offset in place forever. Any tween whose CSS from-state uses a percentage
+  // translate must therefore explicitly name and zero `y` as well (see the
+  // .hero-title-line tween below). The other hero tweens use px from-states and
+  // already name `y`, so they do not need this.
   gsap.fromTo(
     ".hero-title-line",
-    { yPercent: 60, opacity: 0 },
+    { yPercent: 60, y: 0, opacity: 0 },
     {
       yPercent: 0,
+      y: 0,
       opacity: 1,
       duration: 0.9,
       stagger: 0.12,
