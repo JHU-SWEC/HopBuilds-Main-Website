@@ -40,31 +40,49 @@ export default function initAnimations() {
   if (reduceMotion) return;
 
   /* ---------- hero intro ---------- */
-  /* Keep in sync with the reduced-motion from-state block in
-     css/home/redesign.css (near the hero rules, ~:308-321). */
-  gsap.from(".hero-title-line", {
-    yPercent: 60,
-    opacity: 0,
-    duration: 0.9,
-    stagger: 0.12,
-    ease: "power3.out",
-  });
-  gsap.from(".hero-eyebrow, .hero-tagline, .hero-actions", {
-    y: 24,
-    opacity: 0,
-    duration: 0.8,
-    stagger: 0.1,
-    delay: 0.35,
-    ease: "power2.out",
-  });
-  gsap.from(".hero-terminal", {
-    y: 48,
-    opacity: 0,
-    scale: 0.96,
-    duration: 1,
-    delay: 0.55,
-    ease: "power3.out",
-  });
+  // These MUST be fromTo, not from. The hero from-state lives in CSS
+  // (css/home/redesign.css, the @media (prefers-reduced-motion: no-preference)
+  // block after the base .hero-terminal rule) to prevent a flash of the final
+  // layout before this deferred module script runs. gsap.from() would animate
+  // TO the element's current computed state -- which that CSS has set to
+  // opacity: 0 -- leaving the hero permanently invisible. Explicit end values
+  // below are what actually reveal it. Keep the start values here in sync with
+  // that CSS block by hand; nothing enforces it.
+  gsap.fromTo(
+    ".hero-title-line",
+    { yPercent: 60, opacity: 0 },
+    {
+      yPercent: 0,
+      opacity: 1,
+      duration: 0.9,
+      stagger: 0.12,
+      ease: "power3.out",
+    }
+  );
+  gsap.fromTo(
+    ".hero-eyebrow, .hero-tagline, .hero-actions",
+    { y: 24, opacity: 0 },
+    {
+      y: 0,
+      opacity: 1,
+      duration: 0.8,
+      stagger: 0.1,
+      delay: 0.35,
+      ease: "power2.out",
+    }
+  );
+  gsap.fromTo(
+    ".hero-terminal",
+    { y: 48, opacity: 0, scale: 0.96 },
+    {
+      y: 0,
+      opacity: 1,
+      scale: 1,
+      duration: 1,
+      delay: 0.55,
+      ease: "power3.out",
+    }
+  );
 
   const mm = gsap.matchMedia();
 
