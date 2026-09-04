@@ -312,6 +312,35 @@ a {
   cursor: text;
 }
 
+/* Hero from-state, kept in sync by hand with js/animations.js's hero tween
+   definitions (gsap.from(".hero-title-line", ...) etc.) — see the comment
+   there. Prevents a flash of the final layout before the deferred module
+   script runs its gsap.from() tweens. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-title-line,
+  .hero-eyebrow,
+  .hero-tagline,
+  .hero-actions,
+  .hero-terminal {
+    opacity: 0;
+  }
+  .hero-title-line {
+    transform: translateY(60%);
+  }
+  .hero-eyebrow,
+  .hero-tagline,
+  .hero-actions {
+    transform: translateY(24px);
+  }
+  .hero-terminal {
+    /* Composes with the base .hero-terminal rule's rotate(-1.5deg) above — a
+       plain translateY/scale here would win the cascade and drop the rotation.
+       This block must stay AFTER that base rule: media queries add no
+       specificity, so whichever .hero-terminal transform comes last wins. */
+    transform: rotate(-1.5deg) translateY(48px) scale(0.96);
+  }
+}
+
 .term-bar {
   display: flex;
   align-items: center;

@@ -15,6 +15,8 @@
     "export-emails": "node scripts/export-emails.js"
   },
   "dependencies": {
+    "gsap": "3.12.5",
+    "lenis": "1.1.14",
     "mongodb": "^6.8.0"
   },
   "devDependencies": {
