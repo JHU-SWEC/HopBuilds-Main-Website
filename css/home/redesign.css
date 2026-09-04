@@ -1383,4 +1383,16 @@ a {
   .build-card {
     position: static;
   }
+
+  /* --- added: reduced-motion desktop fix for the pinned .builds gallery --- */
+  .builds {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .builds-track-wrap {
+    overflow-x: auto;
+  }
+  .builds-progress {
+    display: none; /* driven by the GSAP onUpdate that no longer runs */
+  }
 }
