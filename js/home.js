@@ -275,7 +275,7 @@
 
     const rand = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 
-    /* zetamac ranges: a+b and a-b over 2..100, a*b and a/b over 2..12 by 2..100 */
+    /* zetamac ranges: a+b and a-b over 2..100, a*b and a/b over 2..10 by 2..100 */
     const nextProblem = () => {
       const mode = rand(1, 4);
       let text;
@@ -291,13 +291,13 @@
         answer = b;
         text = a + b + " − " + a;
       } else if (mode === 3) {
-        const a = rand(2, 12);
+        const a = rand(2, 10);
         const b = rand(2, 100);
         answer = a * b;
         text = a + " × " + b;
       } else {
         /* multiplication in reverse, so the division is always exact */
-        const a = rand(2, 12);
+        const a = rand(2, 10);
         const b = rand(2, 100);
         answer = b;
         text = a * b + " ÷ " + a;
@@ -333,7 +333,7 @@
       if (!finished) {
         panelTitle.textContent = "30 seconds on the clock.";
         panelSub.textContent =
-          "Addition and subtraction to 100, multiplication and division through the 12s.";
+          "Addition and subtraction to 100, multiplication and division through the 10s.";
         startBtn.textContent = "Start drill";
         showPanel("panel");
         return;
