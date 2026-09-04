@@ -28,14 +28,14 @@ is specific to working in this repo through Claude Code, and does not repeat
 - `.gitignore:4` (`.env.*`) covers `.env.local`. `.npmrc` is **not** ignored —
   if a test creates one, delete it before staging.
 
-## Migration in flight — check state before trusting docs
+## Migration landed — re-check state before trusting docs
 
-This repo is mid-way through the Vite migration described in
-[`docs/design/vite-migration.md`](./docs/design/vite-migration.md), which is the
-source of truth for that work and records rejected alternatives so they are not
-re-proposed. Phases are landing incrementally on `miles/vite-migration`. Run
-`git log --oneline -10` and read the design doc's phase sections before
-assuming any documented build/module detail still holds.
+The Vite migration described in
+[`docs/design/vite-migration.md`](./docs/design/vite-migration.md) has landed.
+That doc is now a historical record, not a standing checklist, though it still
+records rejected alternatives so they aren't re-proposed. Don't assume a
+remembered build/module detail still holds — re-check current git state and
+the actual code before relying on it.
 
 ## Verification habits this repo has earned the hard way
 
@@ -57,10 +57,22 @@ assuming any documented build/module detail still holds.
 - Claims about git state (what is tracked, what is on which branch) have a much
   shorter shelf life than claims about code. Re-check them rather than carrying
   them forward from earlier in a session.
+- A green build and an approving code review can't catch defects that live in
+  the interaction between two individually-correct files — see AGENTS.md's
+  known gotchas for the worked example. Load the page before calling
+  rendering work done.
 
 ## Git
 
 - Do not commit or push unless asked. When committing, do not amend or rebase
   commits that are already pushed.
-- The migration's rollback plan depends on each phase being a separate,
-  independently revertible commit — do not squash phases together.
+- **On the branch:** each Vite migration phase on `miles/vite-migration` stays
+  its own separate, independently revertible commit — do not squash phase
+  commits together. This governs the branch's own internal history.
+- **At cutover:** the branch must land on `main` as exactly one revertable
+  commit — either a true two-parent merge commit or a single squashed commit.
+  This does not contradict the bullet above: it concerns the merge onto `main`,
+  not the branch's internal history. Never land it via "Rebase and merge" or
+  any rebase-then-fast-forward — `git revert -m 1` against linear history exits
+  0 while reverting only the tip, i.e. a silent partial rollback. The rollback
+  plan reverts the migration as one atomic unit, not phase by phase.

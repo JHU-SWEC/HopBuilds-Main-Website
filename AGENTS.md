@@ -80,13 +80,40 @@ npm run dev                  # http://localhost:8000
   `x-forwarded-for` on local requests, so `clientIp()` (`api/scores.js:28-32`)
   resolves every local request to the same rate-limit bucket. Expected
   locally; only matters behind Vercel's proxy in production.
+- The hero intro animation's "from-state" is duplicated across two files with
+  nothing enforcing they agree: `css/home/redesign.css:319-342` (inside
+  `@media (prefers-reduced-motion: no-preference)`) sets `opacity: 0` plus
+  transforms on `.hero-title-line`, `.hero-eyebrow`, `.hero-tagline`,
+  `.hero-actions`, and `.hero-terminal`, to prevent a flash of the final
+  layout before the deferred module script runs; `js/animations.js:43-96`
+  holds the matching GSAP hero tweens. Two production bugs have already come
+  out of this duplication, and neither was catchable by `npm run build` or by
+  code review — check the rendered hero in a browser after touching either
+  file.
+  - Tweens must use `gsap.fromTo`, never `gsap.from`. `gsap.from` animates
+    FROM the given values TO the element's current computed state, and the
+    CSS has already set that computed state to `opacity: 0` — so the hero
+    animated 0 to 0 and stayed permanently invisible.
+  - If a CSS from-state expresses an offset as a percentage, the tween must
+    explicitly name and zero `y`. GSAP decomposes the computed transform
+    matrix into a pixel `y`, not into `yPercent`, then composes the pixel
+    and percent translates together; a tween naming only `yPercent` leaves
+    that decomposed pixel offset in place forever, which is what pushed the
+    title lines down onto the tagline. The px-based from-states don't hit
+    this because their tweens already name `y`.
+  - That CSS block must stay after the base `.hero-terminal` rule at
+    `css/home/redesign.css:303`. Media queries add no specificity, so at
+    equal specificity source order decides the winner; the block was
+    originally placed above the base rule and the base rule's
+    `transform: rotate(-1.5deg)` silently won.
 
 ## Vite migration
 
 The Vite migration (real npm dependencies for GSAP/ScrollTrigger/Lenis, an ES
 module split of the previous single-file homepage script, a `dist/` build, and
-deletion of orphaned pages and other dead files) has landed, phase by phase,
-on `miles/vite-migration`. Read
+deletion of orphaned pages and other dead files) is complete: all phases are
+committed on `miles/vite-migration`, `origin/main` has been merged in, and the
+branch is pushed. All that's left is landing it on `main` via PR. Read
 [`docs/design/vite-migration.md`](./docs/design/vite-migration.md) for the
 historical record of that work — it's not a standing pre-change checklist
 anymore, but it still records rejected alternatives so they aren't

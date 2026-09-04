@@ -29,7 +29,9 @@ sibling modules:
 - **`js/arcade.js`** — the 30-second speed-math drill and its calls to
   `/api/scores`.
 - **`js/animations.js`** — GSAP/ScrollTrigger/Lenis scroll animations: pinned
-  sections, reveals, and the smooth-scroll setup.
+  sections, reveals, and the smooth-scroll setup. The hero intro's animation
+  from-state is split between this file and `css/home/redesign.css`, so the
+  two must be changed together.
 
 `npm run build` bundles this with Vite into `dist/`, and `vercel.json` points
 Vercel at that same `vite build` / `dist` output. See
