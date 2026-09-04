@@ -33,15 +33,9 @@ is specific to working in this repo through Claude Code, and does not repeat
 This repo is mid-way through the Vite migration described in
 [`docs/design/vite-migration.md`](./docs/design/vite-migration.md), which is the
 source of truth for that work and records rejected alternatives so they are not
-re-proposed. Phases are landing incrementally on `miles/vite-migration`.
-
-**`AGENTS.md` is partly stale as a result** and is scheduled for correction in
-the migration's Phase 5. As of Phase 2, these `AGENTS.md` claims are no longer
-true: there *is* a build step (`vite build`), `npm run dev` starts Vite (not
-`scripts/dev-server.js`, which has been deleted), and `package.json` *does*
-have build and preview scripts. Run `git log --oneline -10` and read the design
-doc's phase sections before assuming any documented build/module detail still
-holds.
+re-proposed. Phases are landing incrementally on `miles/vite-migration`. Run
+`git log --oneline -10` and read the design doc's phase sections before
+assuming any documented build/module detail still holds.
 
 ## Verification habits this repo has earned the hard way
 
