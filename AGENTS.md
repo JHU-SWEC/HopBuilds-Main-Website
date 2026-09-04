@@ -1,5 +1,11 @@
 # AGENTS.md
 
+Read [`docs/CODEMAP.md`](./docs/CODEMAP.md) first for orientation — it maps
+which file and roughly which lines hold what. Open individual source files
+only when verifying, implementing, or debugging. This file remains
+authoritative for conventions, security rules, and known gotchas; CODEMAP is
+navigation only.
+
 ## Project overview
 
 HopBuilds Main Website is the static marketing/recruiting homepage for
