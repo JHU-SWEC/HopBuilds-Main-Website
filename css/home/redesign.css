@@ -1,6 +1,6 @@
 /* ============================================================
    HopBuilds homepage — light editorial, JHU blues, blueprint grid
-   Self-contained: index.html links only this file + lenis.css.
+   Self-contained: index.html links only this file; Lenis CSS comes from npm.
    ============================================================ */
 
 :root {
@@ -310,6 +310,35 @@ a {
   font-size: 0.82rem;
   overflow: hidden;
   cursor: text;
+}
+
+/* Hero from-state, kept in sync by hand with js/animations.js's hero tween
+   definitions (gsap.from(".hero-title-line", ...) etc.) — see the comment
+   there. Prevents a flash of the final layout before the deferred module
+   script runs its gsap.from() tweens. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-title-line,
+  .hero-eyebrow,
+  .hero-tagline,
+  .hero-actions,
+  .hero-terminal {
+    opacity: 0;
+  }
+  .hero-title-line {
+    transform: translateY(60%);
+  }
+  .hero-eyebrow,
+  .hero-tagline,
+  .hero-actions {
+    transform: translateY(24px);
+  }
+  .hero-terminal {
+    /* Composes with the base .hero-terminal rule's rotate(-1.5deg) above — a
+       plain translateY/scale here would win the cascade and drop the rotation.
+       This block must stay AFTER that base rule: media queries add no
+       specificity, so whichever .hero-terminal transform comes last wins. */
+    transform: rotate(-1.5deg) translateY(48px) scale(0.96);
+  }
 }
 
 .term-bar {
@@ -1353,5 +1382,17 @@ a {
 
   .build-card {
     position: static;
+  }
+
+  /* --- added: reduced-motion desktop fix for the pinned .builds gallery --- */
+  .builds {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .builds-track-wrap {
+    overflow-x: auto;
+  }
+  .builds-progress {
+    display: none; /* driven by the GSAP onUpdate that no longer runs */
   }
 }

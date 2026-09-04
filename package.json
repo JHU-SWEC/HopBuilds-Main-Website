@@ -5,17 +5,22 @@
   "description": "HopBuilds homepage plus the serverless leaderboard API for the speed-math bonus round.",
   "type": "module",
   "engines": {
-    "node": ">=18"
+    "node": "22.x"
   },
   "scripts": {
-    "dev": "node scripts/dev-server.js",
+    "dev": "vite",
     "dev:vercel": "vercel dev",
+    "build": "vite build",
+    "preview": "vite preview",
     "export-emails": "node scripts/export-emails.js"
   },
   "dependencies": {
+    "gsap": "3.12.5",
+    "lenis": "1.1.14",
     "mongodb": "^6.8.0"
   },
   "devDependencies": {
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "vite": "^8.2.2"
   }
 }
