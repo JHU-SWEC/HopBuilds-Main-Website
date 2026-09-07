@@ -27,6 +27,11 @@
 
 html {
   scroll-behavior: smooth;
+  /* Global type scale. Every size in this file is in rem, so lowering the root
+     shrinks the whole page proportionally. The vw terms inside the clamp()
+     font sizes below are hand-scaled by the same factor so headlines shrink in
+     the fluid range too, not just at the clamp ceilings. */
+  font-size: 93.75%; /* 15px */
 }
 
 body {
@@ -60,7 +65,7 @@ a {
   background-image:
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 72px 72px;
+  background-size: 68px 68px;
 }
 
 /* ---------- shared primitives ---------- */
@@ -96,7 +101,7 @@ a {
 .section-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  font-size: clamp(2.25rem, 5.15vw, 4rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
 }
@@ -265,7 +270,7 @@ a {
 .hero-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(3rem, 7.5vw, 6.75rem);
+  font-size: clamp(3rem, 7vw, 6.75rem);
   line-height: 0.98;
   letter-spacing: -0.03em;
   text-wrap: balance;
@@ -288,7 +293,7 @@ a {
 .hero-tagline {
   max-width: 34rem;
   margin-top: 1.75rem;
-  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
   color: var(--slate);
 }
 
@@ -516,7 +521,7 @@ a {
 .story-line {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(1.75rem, 4.5vw, 3.5rem);
+  font-size: clamp(1.75rem, 4.2vw, 3.5rem);
   line-height: 1.15;
   letter-spacing: -0.02em;
   max-width: 20ch;
@@ -583,7 +588,7 @@ a {
 }
 
 .builds-title {
-  font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+  font-size: clamp(1.9rem, 3.2vw, 2.9rem);
 }
 
 .builds-stats {
@@ -595,7 +600,7 @@ a {
   display: block;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-size: clamp(1.6rem, 2.8vw, 2.25rem);
   color: var(--spirit);
 }
 
@@ -619,7 +624,7 @@ a {
 .build-card {
   position: relative;
   overflow: hidden;
-  width: min(74vw, 1040px);
+  width: min(70vw, 980px);
   min-height: 54vh;
   background: #fff;
   color: var(--ink);
@@ -637,7 +642,7 @@ a {
   right: 0.5rem;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(7rem, 16vw, 13rem);
+  font-size: clamp(7rem, 15vw, 13rem);
   line-height: 1;
   color: rgba(0, 45, 114, 0.06);
   user-select: none;
@@ -655,7 +660,7 @@ a {
 .build-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-size: clamp(2rem, 3.75vw, 3.25rem);
   letter-spacing: -0.02em;
   line-height: 1.05;
   margin-bottom: 1rem;
@@ -747,18 +752,43 @@ a {
 
 .gain-list {
   list-style: none;
-  margin-top: clamp(3rem, 8vh, 5rem);
-  border-bottom: 1px solid var(--line);
+  margin-top: clamp(2.5rem, 6vh, 4rem);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
 }
 
+/* blueprint card: icon, headline, annotation — stacked, no 46vh scroll runway */
 .gain-row {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* small line-art mark so each card leads with a graphic, not a paragraph */
+.gain-icon {
+  display: inline-flex;
   align-items: center;
-  gap: clamp(2rem, 5vw, 5rem);
-  min-height: 46vh;
-  padding: clamp(2rem, 5vh, 3.5rem) 0;
-  border-top: 1px solid var(--line);
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+.gain-icon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 /* headline: stroke-only layer underneath, ink layer clipped on top.
@@ -767,15 +797,15 @@ a {
   position: relative;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+  font-size: clamp(1.75rem, 2.8vw, 2.5rem);
   letter-spacing: -0.02em;
-  line-height: 1.02;
+  line-height: 1.05;
 }
 
 .gain-line-stroke {
   display: block;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(0, 45, 114, 0.32);
+  -webkit-text-stroke: 1px rgba(0, 45, 114, 0.32);
 }
 
 .gain-line-fill {
@@ -785,19 +815,20 @@ a {
   color: var(--ink);
 }
 
-/* blueprint annotation callout — bare text with a leader line, no card */
+/* blueprint annotation callout — bare text under the headline, no nested card */
 .gain-note {
   position: relative;
-  max-width: 26rem;
+  margin-top: 1.1rem;
 }
 
-/* thin leader line reaching back toward the headline, node dot at its far end */
+/* leader line now rules off the headline above it, node dot at its left end */
 .gain-leader {
-  position: absolute;
-  top: 0.5em;
-  right: calc(100% + 0.9rem);
+  display: block;
+  position: relative; /* anchors the ::before node dot, which is absolute */
   width: clamp(1.5rem, 3.5vw, 3.5rem);
   height: 1.5px;
+  margin-bottom: 0.9rem;
+  transform-origin: left center;
   background: var(--ink);
 }
 
@@ -839,14 +870,8 @@ a {
 }
 
 @media (max-width: 767px) {
-  .gain-row {
+  .gain-list {
     grid-template-columns: 1fr;
-    min-height: 0;
-    gap: 1.5rem;
-  }
-
-  .gain-leader {
-    display: none;
   }
 }
 
@@ -888,7 +913,7 @@ a {
 .social-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(2.5rem, 5.6vw, 5rem);
   letter-spacing: -0.02em;
   line-height: 1.02;
   margin-bottom: 1rem;
@@ -897,7 +922,7 @@ a {
 
 .social-copy {
   max-width: 36rem;
-  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
   color: #fff;
   font-weight: 500;
   text-shadow: 0 1px 18px rgba(0, 10, 30, 0.75);
@@ -910,12 +935,42 @@ a {
   padding: clamp(5rem, 12vh, 8rem) var(--gutter) clamp(4rem, 10vh, 7rem);
 }
 
+/* ---------- 05 + 06 as one two-column row ---------- */
+.pair-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+  padding: 0 var(--gutter);
+  border-top: 1px solid var(--line);
+}
+
+/* gutters and the top rule belong to the wrapper now, so the columns drop
+   their own — otherwise the inner edges get double padding and the sponsors
+   rule cuts halfway across the row. Equal vertical padding keeps the two
+   chapter labels on the same baseline. */
+.pair-row > .sponsors,
+.pair-row > .join {
+  padding: clamp(4rem, 10vh, 7rem) 0;
+  border-top: 0;
+}
+
+/* the join column is narrower than a full-bleed section, so its display
+   headline and role cards need to come down a step to fit */
+.pair-row .join-title {
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
+}
+
+.pair-row .join-roles {
+  gap: 1rem;
+}
+
 .join-head {
   max-width: 46rem;
 }
 
 .join-title {
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: clamp(3rem, 7.5vw, 6rem);
 }
 
 .join-sub {
@@ -972,7 +1027,7 @@ a {
 }
 
 .sponsor-logo {
-  height: clamp(2.5rem, 6vw, 4rem);
+  height: clamp(2.5rem, 5.6vw, 4rem);
   width: auto;
   object-fit: contain;
 }
@@ -980,6 +1035,18 @@ a {
 @media (max-width: 767px) {
   .join-roles {
     grid-template-columns: 1fr;
+  }
+
+  /* too narrow to sit side by side — unstack back into two full-width sections */
+  .pair-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+  }
+
+  .pair-row > .sponsors,
+  .pair-row > .join {
+    padding: clamp(4rem, 10vh, 7rem) var(--gutter);
   }
 }
 
@@ -1089,7 +1156,7 @@ a {
 .arcade-panel-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  font-size: clamp(1.6rem, 3.75vw, 2.25rem);
   line-height: 1.15;
   color: #fff;
 }
@@ -1122,7 +1189,7 @@ a {
 .arcade-problem {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(2.25rem, 7vw, 3.5rem);
+  font-size: clamp(2.25rem, 6.6vw, 3.5rem);
   letter-spacing: -0.01em;
   color: #fff;
   font-variant-numeric: tabular-nums;
@@ -1140,7 +1207,7 @@ a {
   text-align: center;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-size: clamp(1.75rem, 4.7vw, 2.5rem);
   color: var(--spirit);
   caret-color: var(--spirit);
   font-variant-numeric: tabular-nums;

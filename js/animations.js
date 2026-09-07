@@ -161,6 +161,14 @@ export default function initAnimations() {
       }
     );
 
+    gsap.from(row.querySelector(".gain-icon"), {
+      scale: 0.7,
+      opacity: 0,
+      duration: 0.6,
+      ease: "back.out(1.6)",
+      scrollTrigger: { trigger: row, start: "top 82%" },
+    });
+
     gsap.from(row.querySelector(".gain-leader"), {
       scaleX: 0,
       transformOrigin: "left center",
