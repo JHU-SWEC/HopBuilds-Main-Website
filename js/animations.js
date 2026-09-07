@@ -147,35 +147,26 @@ export default function initAnimations() {
     });
   });
 
-  /* ---------- gains: headlines fill with ink, annotations draw in ---------- */
-  gsap.utils.toArray(".gain-row").forEach((row) => {
-    const fill = row.querySelector(".gain-line-fill");
-
-    gsap.fromTo(
-      fill,
-      { clipPath: "inset(0 100% 0 0)" },
-      {
-        clipPath: "inset(0 0% 0 0)",
-        ease: "none",
-        scrollTrigger: { trigger: row, start: "top 78%", end: "top 32%", scrub: true },
-      }
-    );
-
-    gsap.from(row.querySelector(".gain-leader"), {
+  /* ---------- gains: connector line draws in, per breakpoint ----------
+     Desktop and tablet share identical single-row connector behavior, so
+     they're one bucket; mobile's vertical rail draws on the other axis. */
+  mm.add("(min-width: 768px)", () => {
+    gsap.from(".gain-connector-primary", {
       scaleX: 0,
       transformOrigin: "left center",
       duration: 0.7,
       ease: "power2.out",
-      scrollTrigger: { trigger: row, start: "top 58%" },
+      scrollTrigger: { trigger: ".gain-graphic", start: "top 75%" },
     });
+  });
 
-    gsap.from(row.querySelectorAll(".gain-kicker, .gain-note-copy"), {
-      x: 32,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.08,
-      ease: "back.out(1.4)",
-      scrollTrigger: { trigger: row, start: "top 58%" },
+  mm.add("(max-width: 767px)", () => {
+    gsap.from(".gain-connector-primary", {
+      scaleY: 0,
+      transformOrigin: "top center",
+      duration: 0.7,
+      ease: "power2.out",
+      scrollTrigger: { trigger: ".gain-graphic", start: "top 75%" },
     });
   });
 
@@ -193,7 +184,9 @@ export default function initAnimations() {
     });
   };
 
-  reveal(".builds-head, .gains .section-title, .join-head, .role-card, .arcade-head, .arcade-game");
+  reveal(
+    ".builds-head, .gains .section-title, .join-head, .role-card, .arcade-head, .arcade-game, .gain-node"
+  );
 
   /* mobile: story lines reveal in normal flow instead of pinning */
   mm.add("(max-width: 767px)", () => {

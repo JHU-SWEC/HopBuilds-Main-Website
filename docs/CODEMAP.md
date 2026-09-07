@@ -78,7 +78,7 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 | reduced-motion early return | 40 | everything after skipped if `prefers-reduced-motion`; nav/progress-bar block above always runs |
 | desktop pinned story chapter | 99 | |
 | desktop pinned horizontal project gallery | 121 | |
-| gains ink-fill headlines | 150 | |
+| gains connector draw (2 `gsap.matchMedia()` buckets: desktop+tablet share one `min-width: 768px` `scaleX` bucket since the grid is now unqueried across both, mobile `scaleY` at `max-width: 767px`) | 150-171 | |
 | shared reveals + `reveal()` helper | 182-183 | |
 | social photo parallax | 203 | |
 
@@ -136,8 +136,8 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 | 319-342 | hero animation from-state, inside `@media (prefers-reduced-motion: no-preference)` |
 | 504-554 | story |
 | 555-743 | builds (horizontal gallery) |
-| 744-855 | gains |
-| 856-908 | social |
+| 744-896 | gains |
+| 897-908 | social |
 | 909-952 | join |
 | 953-988 | sponsors |
 | 989-1349 | arcade / speed math |
