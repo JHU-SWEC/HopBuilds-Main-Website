@@ -7,7 +7,7 @@ export default function initTerminal() {
   if (!term || !linesEl || !input) return;
 
   const FORM_URL =
-    "https://docs.google.com/forms/d/e/1FAIpQLScCDca0vhUvHgQoS_NWhagKkoFUA1jHvasKyQlkR4wZK1cF2w/viewform?usp=dialog";
+    "https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog";
   const MAX_LINES = 10;
   let userActive = false;
 
