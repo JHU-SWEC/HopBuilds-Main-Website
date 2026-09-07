@@ -756,11 +756,11 @@ a {
    convention (no min-width query exists anywhere else in this file). */
 .gain-graphic {
   display: grid;
-  --gain-icon-h: 4.5rem;
-  margin-top: clamp(3rem, 8vh, 5rem);
+  --gain-icon-h: 3.25rem;
+  margin-top: clamp(2.25rem, 5vh, 3.5rem);
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: auto;
-  gap: 2rem 1.25rem;
+  gap: 1.5rem 1rem;
 }
 
 .gain-nodes {
@@ -772,7 +772,7 @@ a {
   position: relative;
   min-width: 0;
   z-index: 1;
-  padding-left: 1.25rem;
+  padding-left: 1rem;
 }
 
 .gain-node:nth-child(1) {
@@ -797,8 +797,8 @@ a {
   top: calc(var(--gain-icon-h) / 2);
   left: 0;
   transform: translateY(-50%);
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.4rem;
+  height: 0.4rem;
   border-radius: 50%;
   background: var(--spirit);
 }
@@ -807,7 +807,7 @@ a {
   display: inline-block;
   height: var(--gain-icon-h);
   width: var(--gain-icon-h);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
   /* opaque backdrop so the connector's z-index: 0 actually has pixels to
      occlude behind each stroke-only, fill-less icon */
   background: var(--paper);
@@ -822,9 +822,9 @@ a {
 .gain-node-title {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
   line-height: 1.15;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -832,7 +832,7 @@ a {
 
 .gain-node-copy {
   color: var(--slate);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   line-height: 1.4;
   min-height: calc(1.4em * 2);
 }
@@ -855,7 +855,7 @@ a {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--slate);
-  margin-bottom: 0.9rem;
+  margin-bottom: 0.7rem;
 }
 
 @media (max-width: 767px) {
@@ -880,7 +880,7 @@ a {
   }
 
   .gain-node-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   /* axes swap for the vertical rail: thickness moves from height to width,
@@ -1003,23 +1003,23 @@ a {
 .join-roles {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: clamp(3rem, 7vh, 5rem);
+  gap: 1.15rem;
+  margin-top: clamp(2.25rem, 5vh, 3.5rem);
 }
 
 .role-card {
   background: #fff;
   border: 1px solid var(--slate);
-  border-radius: 14px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 1.15rem;
   box-shadow: 0 2px 8px rgba(0, 45, 114, 0.08);
 }
 
 .role-icon {
   display: inline-block;
-  width: 2.25rem;
-  height: 2.25rem;
-  margin-bottom: 1rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .role-icon svg {
@@ -1031,12 +1031,13 @@ a {
 .role-card h4 {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.35rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+  margin-bottom: 0.35rem;
 }
 
 .role-card p {
   color: var(--slate);
+  font-size: 0.9rem;
 }
 
 /* ============================================================
