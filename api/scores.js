@@ -8,11 +8,14 @@
  * explicitly so a new field can never leak by accident.
  *
  * Scores are calculated in the browser, so treat the board as a friendly
- * ranking rather than a verified competition. The checks here keep casual
- * nonsense out; they do not stop someone determined with devtools open.
+ * ranking rather than a verified competition. POST requires a session token
+ * minted by POST /api/session and only claimable once a real round's worth
+ * of time has passed (see claimSession below) -- this stops a bare console
+ * POST with no session, but a scripted attacker who waits out the timer can
+ * still submit a plausible-but-inflated score. It is a deterrent, not proof.
  */
 
-import { getScores, getRateLimits } from "./_lib/db.js";
+import { getScores, getRateLimits, getSessions } from "./_lib/db.js";
 import {
   BOARD_LIMIT,
   SCORE_MAX,
@@ -24,8 +27,13 @@ import {
 const RATE_WINDOW_SECONDS = 300;
 const RATE_MAX_POSTS = 10;
 
+/* The drill is a fixed 30s round; require the token be at least this old
+   before it can be redeemed, so a token can't be minted and immediately
+   spent. Slightly under 30000 to leave room for real network/UI latency. */
+const MIN_SESSION_AGE_MS = 27000;
+
 /** Vercel sits behind a proxy, so the client address arrives in a header. */
-const clientIp = (req) => {
+export const clientIp = (req) => {
   const forwarded = req.headers["x-forwarded-for"];
   if (typeof forwarded === "string" && forwarded) return forwarded.split(",")[0].trim();
   return req.socket?.remoteAddress || "unknown";
@@ -35,7 +43,7 @@ const clientIp = (req) => {
  * Per-IP limiter backed by Mongo, because serverless containers do not share
  * memory. A TTL index expires the rows, so nothing needs cleaning up.
  */
-const rateLimited = async (ip) => {
+export const rateLimited = async (ip) => {
   const limits = await getRateLimits();
   await limits.createIndex({ createdAt: 1 }, { expireAfterSeconds: RATE_WINDOW_SECONDS });
 
@@ -45,6 +53,28 @@ const rateLimited = async (ip) => {
 
   await limits.insertOne({ ip, createdAt: new Date() });
   return false;
+};
+
+/**
+ * Atomically redeems a session token: it must exist, be unused, and be old
+ * enough to correspond to a real round. findOneAndUpdate is atomic, so two
+ * concurrent requests for the same token cannot both succeed (no
+ * read-then-write race). Returns true iff the token was successfully claimed.
+ */
+const claimSession = async (token) => {
+  if (typeof token !== "string" || !token) return false;
+
+  const sessions = await getSessions();
+  const cutoff = new Date(Date.now() - MIN_SESSION_AGE_MS);
+  const result = await sessions.findOneAndUpdate(
+    { _id: token, used: false, createdAt: { $lte: cutoff } },
+    { $set: { used: true, usedAt: new Date() } },
+    /* Pinned explicitly: mongodb driver v6 returns the matched document
+       directly (or null) by default, while older majors wrapped it as
+       { value }. Setting this removes the ambiguity instead of guessing. */
+    { includeResultMetadata: false }
+  );
+  return Boolean(result);
 };
 
 const handleGet = async (req, res) => {
@@ -77,6 +107,10 @@ const handlePost = async (req, res) => {
     } catch (err) {
       return res.status(400).json({ error: "Malformed request." });
     }
+  }
+
+  if (!(await claimSession(body?.token))) {
+    return res.status(400).json({ error: "Session expired or invalid. Play another round to submit a score." });
   }
 
   const name = cleanName(body?.name);

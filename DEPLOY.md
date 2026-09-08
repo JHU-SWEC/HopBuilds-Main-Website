@@ -98,5 +98,9 @@ node scripts/export-emails.js > emails.csv
 - The Mongo client is cached on `globalThis` so warm invocations reuse one
   connection pool instead of exhausting Atlas connection limits.
 - Scores are computed in the browser, so the board is a friendly ranking rather
-  than a verified competition. Making it tamper-proof would mean having the
-  server generate the problems and grade the answers.
+  than a verified competition. `POST /api/scores` requires a one-time session
+  token minted by `POST /api/session` and claimable only after a real round's
+  worth of time has passed, which blocks a bare console POST made with no
+  session -- but the score value itself is still self-reported by the client.
+  Making it fully tamper-proof would mean having the server generate the
+  problems and grade the answers.

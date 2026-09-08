@@ -201,7 +201,9 @@ export default function initAnimations() {
     });
   };
 
-  reveal(".builds-head, .gains .section-title, .join-head, .role-card, .arcade-head, .arcade-game");
+  reveal(
+    ".builds-head, .gains .section-title, .join-head, .role-card, .arcade-head, .arcade-game, .arcade-board"
+  );
 
   /* mobile: story lines reveal in normal flow instead of pinning */
   mm.add("(max-width: 767px)", () => {

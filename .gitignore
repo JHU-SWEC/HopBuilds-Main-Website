@@ -17,6 +17,7 @@ node_modules/
 # AI
 .claude/
 .tokensave
+.codex/
 
 # Build output
 dist/

@@ -982,24 +982,41 @@ a {
 .join-roles {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: clamp(3rem, 7vh, 5rem);
+  gap: 1.15rem;
+  margin-top: clamp(2.25rem, 5vh, 3.5rem);
 }
 
 .role-card {
-  border-top: 2px solid var(--ink);
-  padding-top: 1.25rem;
+  background: #fff;
+  border: 1px solid var(--slate);
+  border-radius: 12px;
+  padding: 1.15rem;
+  box-shadow: 0 2px 8px rgba(0, 45, 114, 0.08);
+}
+
+.role-icon {
+  display: inline-block;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.role-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .role-card h4 {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 1.35rem;
-  margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+  margin-bottom: 0.35rem;
 }
 
 .role-card p {
   color: var(--slate);
+  font-size: 0.9rem;
 }
 
 /* ============================================================
@@ -1362,6 +1379,17 @@ a {
   list-style: none;
 }
 
+@keyframes arcade-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .arcade-row {
   display: grid;
   grid-template-columns: 2.25rem 1fr auto;
@@ -1370,6 +1398,8 @@ a {
   padding: 0.7rem 0;
   border-bottom: 1px solid var(--line);
   font-family: var(--font-mono);
+  animation: arcade-row-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 0.05s);
 }
 
 .arcade-row:last-child {
@@ -1409,6 +1439,10 @@ a {
 
 @media (prefers-reduced-motion: reduce) {
   .arcade-play.is-wrong .arcade-input {
+    animation: none;
+  }
+
+  .arcade-row {
     animation: none;
   }
 }
