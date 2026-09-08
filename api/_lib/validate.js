@@ -2,7 +2,7 @@
 
 export const NAME_MAX = 16;
 export const EMAIL_MAX = 254; /* RFC 5321 upper bound on a full address */
-export const SCORE_MAX = 500; /* a 30-second run realistically tops out near 100 */
+export const SCORE_MAX = 150; /* a 30-second run realistically tops out near 100; this leaves headroom without accepting absurd values */
 export const BOARD_LIMIT = 10;
 
 /** Strip control characters and collapse whitespace, then cap the length. */

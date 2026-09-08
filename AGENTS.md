@@ -79,11 +79,14 @@ npm run dev                  # http://localhost:8000
 - The hero terminal is `display: none` below 1024px
   (`css/home/redesign.css:420-422`), but `initTerminal()` still runs
   underneath it. Known, deliberately deferred.
-- Scores are computed client-side (`js/arcade.js`) and trusted by the server.
-  This is a documented, accepted limitation (see `DEPLOY.md`), not a bug to
-  fix.
+- Scores are computed client-side (`js/arcade.js`). `POST /api/scores`
+  requires a one-time session token from `POST /api/session`, claimable only
+  after ~27s, which blocks a bare console POST with no session -- but the
+  score value itself is still client-reported and not graded server-side.
+  See `DEPLOY.md`. Making it fully tamper-proof is a documented, accepted
+  non-goal, not a bug to fix.
 - The Vite dev server (`scripts/vite-api-plugin.js`/`vite`) never sets
-  `x-forwarded-for` on local requests, so `clientIp()` (`api/scores.js:28-32`)
+  `x-forwarded-for` on local requests, so `clientIp()` (`api/scores.js:36-40`)
   resolves every local request to the same rate-limit bucket. Expected
   locally; only matters behind Vercel's proxy in production.
 - The hero intro animation's "from-state" is duplicated across two files with

@@ -50,3 +50,8 @@ export const getRateLimits = async () => {
   const db = await getDb();
   return db.collection("arcade_rate_limits");
 };
+
+export const getSessions = async () => {
+  const db = await getDb();
+  return db.collection("arcade_sessions");
+};

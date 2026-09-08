@@ -26,6 +26,7 @@ export default function initArcade() {
   /* The API ships with the site as a Vercel function, so this is same-origin
      and needs no host or CORS. Run `vercel dev` locally to serve both. */
   const API = "/api/scores";
+  const API_SESSION = "/api/session";
 
   const DURATION = 30000;
   const BEST_KEY = "hopbuilds:arcade-best";
@@ -40,6 +41,7 @@ export default function initArcade() {
   let lowestOnBoard = 0;
   let boardFull = false;
   let highlight = null;
+  let sessionToken = null;
 
   const readStore = (key, fallback) => {
     try {
@@ -247,12 +249,26 @@ export default function initArcade() {
     score = 0;
     scoreEl.textContent = "0";
     highlight = null;
+    sessionToken = null;
     showPanel("play");
     endsAt = Date.now() + DURATION;
     nextProblem();
     input.focus();
     tick();
     ticker = setInterval(tick, 100);
+
+    /* Fire-and-forget: the round is fully playable even if this fails or is
+       slow. It only gates saving the score to the leaderboard afterward. */
+    fetch(API_SESSION, { method: "POST" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.token) sessionToken = data.token;
+      })
+      .catch(() => {
+        /* No token: the save-score POST will fail with a clear error and the
+           existing saveError UI will show it. The 30s drill itself is
+           unaffected. */
+      });
   };
 
   /* zetamac advances the moment the typed value matches, no Enter needed */
@@ -288,6 +304,7 @@ export default function initArcade() {
 
     const payload = { name: name, score: pendingScore };
     if (email) payload.email = email;
+    if (sessionToken) payload.token = sessionToken;
 
     try {
       const res = await fetch(API, {
