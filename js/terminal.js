@@ -46,7 +46,6 @@ export default function initTerminal() {
     ],
     projects: () => [
       "lost@jhu       · live · lostatjhu.org",
-      "hopparlays     · in progress",
       "jhu-rideshare  · in progress",
       "club-board     · in progress",
     ],
