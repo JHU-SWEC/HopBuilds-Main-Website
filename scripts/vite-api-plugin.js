@@ -1,5 +1,6 @@
+import { existsSync } from "node:fs";
 import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -29,19 +30,26 @@ export default function apiPlugin() {
     configureServer(server) {
       // Registering here (not returning a function) runs this middleware
       // BEFORE Vite's own internal middlewares, matching dev-server.js's
-      // routing priority of checking /api/scores first.
+      // routing priority of checking /api/* first.
       server.middlewares.use(async (req, res, next) => {
         const url = new URL(req.url, "http://localhost");
-        if (url.pathname !== "/api/scores") {
-          if (url.pathname.startsWith("/api/")) {
-            res.statusCode = 404;
-            return res.end("Not found");
-          }
+        if (!url.pathname.startsWith("/api/")) {
           return next();
         }
+        const name = url.pathname.slice("/api/".length);
+        // Only top-level api/<name>.js files are routable; reject anything
+        // with a "/" (including reaching into api/_lib/) or ".." segments.
+        if (!name || name.includes("/") || name.includes("..")) {
+          res.statusCode = 404;
+          return res.end("Not found");
+        }
+        const modulePath = path.join(ROOT, "api", `${name}.js`);
+        if (!existsSync(modulePath)) {
+          res.statusCode = 404;
+          return res.end("Not found");
+        }
         try {
-          const modulePath = pathToFileURL(path.join(ROOT, "api", "scores.js"));
-          const { default: handler } = await import(`${modulePath.href}?t=${Date.now()}`);
+          const { default: handler } = await server.ssrLoadModule(`/api/${name}.js`);
           // Ported unchanged from dev-server.js:79, including its known gap: Object.fromEntries
           // collapses a repeated query key to its last value, where Vercel's Node runtime gives
           // an array for repeated keys. This plugin does not fully match Vercel's req.query
