@@ -1,3 +1,5 @@
+> **Stale — historical record.** This doc describes the `.gain-node` connected-icon-node redesign for the "what you gain" section. That design was superseded and reverted: the site now ships main's `.gain-row`/`.gain-line`/`.gain-note` "what you gain" section instead. Left here for historical reference only, not a standing plan.
+
 # What You Gain + Build With Us: Icon-Graphic Redesign
 
 ## The Problem
