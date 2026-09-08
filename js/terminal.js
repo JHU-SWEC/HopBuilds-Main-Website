@@ -46,7 +46,6 @@ export default function initTerminal() {
     ],
     projects: () => [
       "lost@jhu       · live · lostatjhu.org",
-      "hopparlays     · in progress",
       "jhu-rideshare  · in progress",
       "club-board     · in progress",
     ],
@@ -55,7 +54,7 @@ export default function initTerminal() {
       return ["opening the application form…"];
     },
     whoami: () => ["future hopbuilds member"],
-    madooei: () => ["professor madooei: mentor, course-credit-granter, legend."],
+    madooei: () => ["professor madooei: mentor, guide, legend."],
     clear: () => {
       linesEl.innerHTML = "";
       return [];

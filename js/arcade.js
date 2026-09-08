@@ -80,6 +80,7 @@ export default function initArcade() {
       const isNew =
         highlight && row.name === highlight.name && row.score === highlight.score;
       li.className = "arcade-row" + (isNew ? " arcade-row-new" : "");
+      li.style.setProperty("--i", i);
 
       const rank = document.createElement("span");
       rank.className = "arcade-row-rank";
