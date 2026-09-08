@@ -54,7 +54,7 @@ export default function initTerminal() {
       return ["opening the application form…"];
     },
     whoami: () => ["future hopbuilds member"],
-    madooei: () => ["professor madooei: mentor, course-credit-granter, legend."],
+    madooei: () => ["professor madooei: mentor, guide, legend."],
     clear: () => {
       linesEl.innerHTML = "";
       return [];
