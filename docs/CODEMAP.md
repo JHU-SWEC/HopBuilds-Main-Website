@@ -16,18 +16,20 @@ calls `initTerminal()` → `initArcade()` → `initAnimations()` in that order.
 
 | Path | LOC | Role | Open it when... |
 |---|---|---|---|
-| `css/home/redesign.css` | 1398 | All page styling | changing layout, section styling, responsive/reduced-motion behavior |
-| `index.html` | 483 | Page markup, section structure | adding/reordering sections, changing copy/markup |
-| `js/arcade.js` | 320 | Speed-math game + leaderboard UI | touching the arcade game or leaderboard rendering |
-| `js/animations.js` | 217 | Scroll/entry animations (GSAP/ScrollTrigger/Lenis) | changing hero/scroll animation behavior |
-| `api/scores.js` | 120 | Leaderboard API handler (GET/POST) | changing leaderboard API behavior, rate limiting, ranking |
+| `css/home/redesign.css` | 1499 | All page styling | changing layout, section styling, responsive/reduced-motion behavior |
+| `index.html` | 558 | Page markup, section structure | adding/reordering sections, changing copy/markup |
+| `js/arcade.js` | 349 | Speed-math game + leaderboard UI | touching the arcade game or leaderboard rendering |
+| `js/animations.js` | 227 | Scroll/entry animations (GSAP/ScrollTrigger/Lenis) | changing hero/scroll animation behavior |
+| `api/scores.js` | 214 | Leaderboard API handler (GET/POST) | changing leaderboard API behavior, rate limiting, ranking, one-row-per-email |
+| `api/session.js` | 44 | Mints the one-time token POST /api/scores requires | changing score-submission gating |
 | `js/terminal.js` | 114 | Hero fake-terminal widget | changing terminal commands/typing demo |
-| `scripts/vite-api-plugin.js` | 64 | Dev-server middleware wiring `/api/scores` into Vite | changing how the API is served in dev |
-| `api/_lib/db.js` | 52 | MongoDB client/collection helpers | changing DB connection/caching |
+| `scripts/vite-api-plugin.js` | 72 | Dev-server middleware wiring `/api/scores` into Vite | changing how the API is served in dev |
+| `api/_lib/db.js` | 57 | MongoDB client/collection helpers | changing DB connection/caching |
+| `scripts/dedupe-scores.js` | 106 | One-time collapse of pre-rule duplicate board rows | cleaning up legacy duplicate entries |
 | `scripts/export-emails.js` | 51 | Exports collected emails | exporting emails |
-| `api/_lib/validate.js` | 38 | Input validation + limits for scores API | changing validation limits |
+| `api/_lib/validate.js` | 40 | Input validation + limits for scores API | changing validation limits |
 | `vite.config.js` | 32 | Build/dev-server config | changing build output, dev port, `server.fs.deny` |
-| `package.json` | 26 | Scripts, deps, Node engine pin | changing npm scripts/deps |
+| `package.json` | 27 | Scripts, deps, Node engine pin | changing npm scripts/deps |
 | `js/main.js` | 7 | Entry point, calls the three init functions | rare — only to change init order |
 | `vercel.json` | 6 | Vercel deploy config | changing deploy/build settings |
 
@@ -51,22 +53,22 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 | Symbol | Line | Note |
 |---|---|---|
 | `export default function initArcade()` | 1 | |
-| `readStore` | 44 | |
-| `writeStore` | 52 | |
-| `readBest` | 60 | |
-| `writeBest` | 61 | |
-| `showPanel` | 66 | |
-| leaderboard block | 72 | start |
-| `renderBoard` | 74 | |
-| `readJson` | 109 | |
-| `loadBoard` | 117 | |
-| `qualifies` | 149 | |
-| `rand` | 154 | |
-| `nextProblem` | 157 | |
-| `showResult` | 187 | |
-| `stop` | 203 | |
-| `tick` | 238 | |
-| `start` | 246 | |
+| `readStore` | 46 | |
+| `writeStore` | 54 | |
+| `readBest` | 62 | |
+| `writeBest` | 63 | |
+| `showPanel` | 68 | |
+| leaderboard block | 74 | start |
+| `renderBoard` | 76 | |
+| `readJson` | 112 | |
+| `loadBoard` | 120 | |
+| `qualifies` | 152 | |
+| `rand` | 157 | |
+| `nextProblem` | 160 | |
+| `showResult` | 190 | |
+| `stop` | 206 | |
+| `tick` | 241 | |
+| `start` | 249 | requests a session token for the round |
 
 ### js/animations.js
 | Symbol | Line | Note |
@@ -85,13 +87,15 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 ### api/scores.js
 | Symbol | Line | Note |
 |---|---|---|
-| `clientIp` | 28 | |
-| `rateLimited` | 38 | |
-| `handleGet` | 50 | |
-| GET projection | 56 | explicit field list |
-| `handlePost` | 66 | |
-| rank computation | 98 | |
-| `export default async function handler` | 102 | |
+| `clientIp` | 57 | trusts only `x-vercel-forwarded-for`; never `x-forwarded-for` |
+| `rateLimited` | 67 | |
+| `claimSession` | 85 | redeems the one-time token from `api/session.js` |
+| `recordBest` | 114 | one row per email, holding that player's highest score |
+| `handleGet` | 156 | |
+| GET projection | 162 | explicit field list |
+| `handlePost` | 172 | validates first, then claims the token |
+| rank computation | 211 | |
+| `export default async function handler` | 215 | |
 
 ### api/_lib/db.js
 | Symbol | Line | Note |
@@ -100,13 +104,14 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 | `export getDb` | 39 | |
 | `getScores` | 44 | |
 | `getRateLimits` | 49 | |
+| `getSessions` | 54 | |
 
 ### api/_lib/validate.js
 | Symbol | Line | Note |
 |---|---|---|
 | `NAME_MAX = 16` | 3 | |
 | `EMAIL_MAX = 254` | 4 | |
-| `SCORE_MAX = 500` | 5 | |
+| `SCORE_MAX = 150` | 5 | |
 | `BOARD_LIMIT = 10` | 6 | |
 | `cleanName` | 9 | |
 | `cleanScore` | 19 | |
@@ -170,14 +175,16 @@ collapses `.hero-inner` to one column); `prefers-reduced-motion: reduce` at
 1. **Page load**: `index.html` → module `js/main.js` → `initTerminal()` →
    `initArcade()` → `initAnimations()` in order. GSAP/ScrollTrigger/Lenis are
    npm ES module imports, no globals, no extra script tags.
-2. **Leaderboard read**: `loadBoard()` (js/arcade.js:117) → `GET
-   /api/scores?limit=10` → `handleGet` (api/scores.js:50) → `getScores()`
+2. **Leaderboard read**: `loadBoard()` (js/arcade.js:120) → `GET
+   /api/scores?limit=10` → `handleGet` (api/scores.js:137) → `getScores()`
    (api/_lib/db.js:44) → MongoDB. Rendered by `renderBoard`
-   (js/arcade.js:74) via `createElement`/`textContent`.
-3. **Score submit**: form submit in js/arcade.js → `POST /api/scores` →
-   `handler` (api/scores.js:102) → `rateLimited` (api/scores.js:38) →
-   validators in api/_lib/validate.js → insert → rank computed at
-   api/scores.js:98.
+   (js/arcade.js:76) via `createElement`/`textContent`.
+3. **Score submit**: starting a round requests a token from `POST /api/session`
+   (js/arcade.js:249). Form submit in js/arcade.js → `POST /api/scores` →
+   `handler` (api/scores.js:196) → `rateLimited` (api/scores.js:51) →
+   validators in api/_lib/validate.js → `claimSession` (api/scores.js:69) →
+   `recordBest` (api/scores.js:98), which writes the player's single row →
+   rank computed at api/scores.js:192.
 4. **Dev vs prod serving**: dev — `scripts/vite-api-plugin.js` dispatches
    `/api/scores` inside Vite's dev server (one process, one port). Prod —
    Vercel compiles `api/` as a serverless function independently of
@@ -192,10 +199,13 @@ collapses `.hero-inner` to one column); `prefers-reduced-motion: reduce` at
 | Adding/altering a page section | `index.html` (section landmarks above) + matching region in `css/home/redesign.css` |
 | Touching the leaderboard API | `api/scores.js`, `api/_lib/db.js` |
 | Changing validation limits | `api/_lib/validate.js:3-6` |
-| Changing rate limiting | `api/scores.js:38` |
+| Changing rate limiting | `api/scores.js:51` |
+| Changing one-row-per-email or best-score behavior | `api/scores.js:98` (`recordBest`) |
+| Changing score-submission gating | `api/session.js`, `api/scores.js:69` (`claimSession`) |
 | Changing the dev server or API dev proxy | `vite.config.js`, `scripts/vite-api-plugin.js` |
 | Changing build/deploy config | `vite.config.js`, `vercel.json`, `package.json` |
 | Exporting emails | `scripts/export-emails.js` |
+| Cleaning up legacy duplicate board rows | `scripts/dedupe-scores.js` |
 | Adjusting responsive behavior | `css/home/redesign.css` breakpoint list above |
 | Adjusting reduced-motion behavior | `js/animations.js:40` (JS early return); `css/home/redesign.css:493,1343,1378,319` |
 

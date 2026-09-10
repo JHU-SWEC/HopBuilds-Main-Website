@@ -298,13 +298,21 @@ export default function initArcade() {
       nameInput.focus();
       return;
     }
+    /* The board holds one row per email, so an address is what keeps a repeat
+       player from filling it with several entries. The server checks the shape
+       too; this only saves an obviously doomed round trip. */
+    if (!email) {
+      saveError.textContent = "Enter your email so your score stays on one line.";
+      saveError.hidden = false;
+      emailInput.focus();
+      return;
+    }
 
     submitBtn.disabled = true;
     submitBtn.textContent = "Saving…";
     saveError.hidden = true;
 
-    const payload = { name: name, score: pendingScore };
-    if (email) payload.email = email;
+    const payload = { name: name, score: pendingScore, email: email };
     if (sessionToken) payload.token = sessionToken;
 
     try {
@@ -320,8 +328,11 @@ export default function initArcade() {
       if (!res.ok) throw new Error(data.error || "Could not save (" + res.status + ").");
 
       writeStore(NAME_KEY, name);
-      if (email) writeStore(EMAIL_KEY, email);
-      highlight = { name: data.name || name, score: pendingScore };
+      writeStore(EMAIL_KEY, email);
+      /* A run that does not beat this player's own record leaves their row at
+         the older, higher score, so highlight what the server actually stored
+         rather than what was just played. */
+      highlight = { name: data.name || name, score: data.score ?? pendingScore };
       await loadBoard();
       showResult();
     } catch (err) {

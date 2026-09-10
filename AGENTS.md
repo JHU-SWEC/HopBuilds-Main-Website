@@ -34,6 +34,10 @@ npm run dev                  # http://localhost:8000
   the Vercel CLI and a login.
 - `npm run export-emails` — `node scripts/export-emails.js`, dumps leaderboard
   emails to CSV.
+- `npm run dedupe-scores` — `node scripts/dedupe-scores.js`, reports the
+  leaderboard rows left over from before the board enforced one entry per
+  player. Reports only; pass `-- --apply` to actually collapse them. A one-time
+  backfill, not part of any routine workflow.
 - There is no lint/test command in `package.json`.
 - Node 22.x is required (`package.json` `engines`, `.nvmrc`) — Vite requires
   Node `^20.19.0 || >=22.12.0`.
@@ -58,7 +62,7 @@ npm run dev                  # http://localhost:8000
   `css/home/redesign.css` (`--ink`, `--spirit`, `--slate`, etc.).
 - DOM nodes carrying user- or player-supplied data are built with
   `document.createElement` + `.textContent`, never `innerHTML`. This is
-  deliberate, not incidental: see `js/arcade.js:74-98` (`renderBoard`, which
+  deliberate, not incidental: see `js/arcade.js:76-100` (`renderBoard`, which
   writes leaderboard names) and the API response shaping in `api/scores.js`.
   Do not introduce `innerHTML` for anything that touches player-supplied
   strings.
@@ -70,9 +74,11 @@ npm run dev                  # http://localhost:8000
 - In production, MongoDB credentials live in the Vercel dashboard
   (Project Settings → Environment Variables), not in a committed file.
 - Never log or return the `email` field from `api/scores.js`. The GET
-  projection (`api/scores.js:56`) lists fields explicitly (`name`, `score`,
+  projection (`api/scores.js:143`) lists fields explicitly (`name`, `score`,
   `createdAt`) so a new field can't leak by accident — keep that pattern if
-  you touch the projection.
+  you touch the projection. The same rule covers error logging: a Mongo
+  duplicate-key error quotes the offending key back, so the unique-email index
+  in `recordBest` logs `err.code` and never `err.message`.
 
 ## Known gotchas — do not "fix" without being asked
 
@@ -85,10 +91,12 @@ npm run dev                  # http://localhost:8000
   score value itself is still client-reported and not graded server-side.
   See `DEPLOY.md`. Making it fully tamper-proof is a documented, accepted
   non-goal, not a bug to fix.
-- The Vite dev server (`scripts/vite-api-plugin.js`/`vite`) never sets
-  `x-forwarded-for` on local requests, so `clientIp()` (`api/scores.js:36-40`)
-  resolves every local request to the same rate-limit bucket. Expected
-  locally; only matters behind Vercel's proxy in production.
+- `clientIp()` (`api/scores.js`, search for `export const clientIp`) reads only
+  `x-vercel-forwarded-for` and otherwise falls back to the socket address. Do
+  not "fix" it to read `x-forwarded-for`: that header is client-writable, and
+  keying the rate limiter on it lets a script rotate a fake address per request
+  and post without any ceiling. Locally there is no Vercel proxy, so every
+  request resolves to the same loopback bucket -- expected, not a bug.
 - The hero intro animation's "from-state" is duplicated across two files with
   nothing enforcing they agree: `css/home/redesign.css:319-342` (inside
   `@media (prefers-reduced-motion: no-preference)`) sets `opacity: 0` plus

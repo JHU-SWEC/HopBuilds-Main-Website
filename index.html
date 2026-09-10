@@ -439,8 +439,9 @@
             Thirty seconds of mental math, the same drill quants and engineers
             use to warm up. No calculator. Correct answers advance on their own.
             The top two scorers get an automatic interview if they apply to
-            HopBuilds, so leave your email when you save your score. That's how
-            we reach you.
+            HopBuilds, so saving a score takes an email &mdash; that's how we
+            reach you, and it keeps you to one line on the board with your best
+            run on it.
           </p>
         </div>
 
@@ -491,7 +492,7 @@
               <p class="arcade-hint">Type the answer &middot; Esc to stop</p>
             </div>
 
-            <!-- name entry after a qualifying run -->
+            <!-- name and email entry after a qualifying run -->
             <form class="arcade-save" id="arcade-save" hidden>
               <p class="arcade-panel-title" id="arcade-save-title">You made the board.</p>
               <p class="arcade-panel-sub">Add your name to the global leaderboard.</p>
@@ -513,14 +514,15 @@
                   maxlength="254"
                   autocomplete="email"
                   spellcheck="false"
-                  placeholder="Email (optional)"
-                  aria-label="Your email, optional"
+                  required
+                  placeholder="Email"
+                  aria-label="Your email for the leaderboard"
                 />
               </div>
               <p class="arcade-privacy">
-                Top two scorers get an automatic interview, so add your email if
-                you want us to be able to reach you. Only your name and score
-                appear on the board.
+                Your email keeps you to one spot on the board, holding your best
+                score, and lets us reach you &mdash; the top two scorers get an
+                automatic interview. Only your name and score appear on the board.
               </p>
               <p class="arcade-save-error" id="arcade-save-error" role="alert" hidden></p>
               <div class="arcade-save-actions">

@@ -23,8 +23,10 @@ export const cleanScore = (value) => {
 };
 
 /**
- * Email is optional. Returns the normalized address, null when absent, or the
- * string "invalid" so the caller can tell "not given" from "given badly".
+ * Returns the normalized address, null when absent, or the string "invalid" so
+ * the caller can tell "not given" from "given badly". The leaderboard endpoint
+ * requires an address — it is the identity a board entry is keyed on — but the
+ * distinction still matters for the error message the player sees.
  */
 export const cleanEmail = (value) => {
   if (value === undefined || value === null || value === "") return null;

@@ -2,7 +2,12 @@
  * Leaderboard endpoint for the homepage speed-math bonus round.
  *
  *   GET  /api/scores?limit=10   top scores, ties broken by who got there first
- *   POST /api/scores            body { name, score, email? }
+ *   POST /api/scores            body { name, score, email }
+ *
+ * The board holds one row per email address: a repeat submission updates that
+ * player's single row rather than adding another, and the row keeps their
+ * highest score. Email is therefore required, and is the identity the board is
+ * keyed on — a name alone is neither unique nor stable.
  *
  * Emails are stored but never returned: the GET projection lists fields
  * explicitly so a new field can never leak by accident.
@@ -32,10 +37,26 @@ const RATE_MAX_POSTS = 10;
    spent. Slightly under 30000 to leave room for real network/UI latency. */
 const MIN_SESSION_AGE_MS = 27000;
 
-/** Vercel sits behind a proxy, so the client address arrives in a header. */
+/**
+ * The rate-limit bucket key.
+ *
+ * Deliberately does NOT read `x-forwarded-for`. That header is a client-writable
+ * request header, and its leftmost entry -- the conventional "original client"
+ * slot -- is exactly the part an attacker controls. Keying the limiter on it let
+ * a script rotate a fake address per request and post without any ceiling, which
+ * turns two unauthenticated endpoints into unbounded row inserts against Atlas.
+ *
+ * `x-vercel-forwarded-for` is set by Vercel's proxy and overwritten on every
+ * inbound request, so a client cannot forge it. When it is absent there is no
+ * trusted proxy in front of us (the Vite dev server, a direct hit), and the
+ * socket address is then the only honest answer -- so fall through to it rather
+ * than believing a header. Behind some other reverse proxy this collapses every
+ * caller into that proxy's single bucket; that fails closed, and adding a new
+ * deployment target means adding its trusted header here explicitly.
+ */
 export const clientIp = (req) => {
-  const forwarded = req.headers["x-forwarded-for"];
-  if (typeof forwarded === "string" && forwarded) return forwarded.split(",")[0].trim();
+  const vercel = req.headers["x-vercel-forwarded-for"];
+  if (typeof vercel === "string" && vercel) return vercel.split(",")[0].trim();
   return req.socket?.remoteAddress || "unknown";
 };
 
@@ -77,6 +98,61 @@ const claimSession = async (token) => {
   return Boolean(result);
 };
 
+/**
+ * Write this run into the player's single board row and return what the board
+ * will show for them.
+ *
+ * A lower run never displaces a higher one, so `score` and `createdAt` move
+ * only on a new personal best; `createdAt` breaks ties on the board, and
+ * keeping the earlier one means a player who re-ties their own best does not
+ * lose the position they already earned. The name always follows the latest
+ * submission, so a typo can be corrected by playing again.
+ *
+ * Rows predating the one-per-email rule can leave several rows on one address;
+ * the extras are folded into the best one the first time that player returns.
+ */
+const recordBest = async ({ scores, name, email, score }) => {
+  const previous = await scores.find({ email }).sort({ score: -1, createdAt: 1 }).toArray();
+  const champion = previous[0] || null;
+  const isPersonalBest = !champion || score > champion.score;
+
+  const entry = {
+    name,
+    score: isPersonalBest ? score : champion.score,
+    createdAt: isPersonalBest ? new Date() : champion.createdAt,
+  };
+
+  if (!champion) {
+    await scores.insertOne({ ...entry, email });
+  } else {
+    await scores.updateOne({ _id: champion._id }, { $set: { ...entry, email } });
+    if (previous.length > 1) {
+      await scores.deleteMany({ email, _id: { $ne: champion._id } });
+    }
+  }
+
+  /* Best effort: the guarantee above is enforced in code, and this index only
+     backs it up at the storage layer. It is created here rather than at deploy
+     time because there is no migration step, and it throws while duplicate
+     rows from before the rule still exist elsewhere in the collection — which
+     must not fail an otherwise valid submission. The partial filter leaves any
+     legacy row that has no email alone instead of collapsing them all into one
+     "missing email" conflict. */
+  try {
+    await scores.createIndex(
+      { email: 1 },
+      { unique: true, partialFilterExpression: { email: { $type: "string" } } }
+    );
+  } catch (err) {
+    /* Only the code, never the message: a duplicate-key error quotes the
+       offending key back, which for this index is somebody's email address,
+       and emails must not reach the logs. */
+    console.warn("Could not create the unique email index. Mongo code:", err?.code);
+  }
+
+  return entry;
+};
+
 const handleGet = async (req, res) => {
   const requested = parseInt(req.query?.limit, 10);
   const limit = Math.min(Number.isInteger(requested) && requested > 0 ? requested : BOARD_LIMIT, 50);
@@ -109,10 +185,6 @@ const handlePost = async (req, res) => {
     }
   }
 
-  if (!(await claimSession(body?.token))) {
-    return res.status(400).json({ error: "Session expired or invalid. Play another round to submit a score." });
-  }
-
   const name = cleanName(body?.name);
   const score = cleanScore(body?.score);
   const email = cleanEmail(body?.email);
@@ -124,12 +196,19 @@ const handlePost = async (req, res) => {
   if (email === "invalid") {
     return res.status(400).json({ error: "That email address does not look right." });
   }
+  if (!email) return res.status(400).json({ error: "Email is required." });
 
-  const entry = { name, score, createdAt: new Date() };
+  /* Claimed after validation, never before: claiming consumes the token, and a
+     fixable mistake in the form should not cost the player the round they just
+     played. Nothing above this line touches the database or has side effects. */
+  if (!(await claimSession(body?.token))) {
+    return res.status(400).json({ error: "Session expired or invalid. Play another round to submit a score." });
+  }
+
   const scores = await getScores();
-  await scores.insertOne(email ? { ...entry, email } : { ...entry });
+  const entry = await recordBest({ scores, name, email, score });
 
-  const rank = (await scores.countDocuments({ score: { $gt: score } })) + 1;
+  const rank = (await scores.countDocuments({ score: { $gt: entry.score } })) + 1;
   return res.status(201).json({ ...entry, rank });
 };
 

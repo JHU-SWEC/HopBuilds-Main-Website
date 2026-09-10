@@ -12,7 +12,8 @@
     "dev:vercel": "vercel dev",
     "build": "vite build",
     "preview": "vite preview",
-    "export-emails": "node scripts/export-emails.js"
+    "export-emails": "node scripts/export-emails.js",
+    "dedupe-scores": "node scripts/dedupe-scores.js"
   },
   "dependencies": {
     "gsap": "3.12.5",
