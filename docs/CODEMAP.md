@@ -18,9 +18,9 @@ calls `initTerminal()` → `initArcade()` → `initAnimations()` in that order.
 |---|---|---|---|
 | `css/home/redesign.css` | 1499 | All page styling | changing layout, section styling, responsive/reduced-motion behavior |
 | `index.html` | 558 | Page markup, section structure | adding/reordering sections, changing copy/markup |
-| `js/arcade.js` | 349 | Speed-math game + leaderboard UI | touching the arcade game or leaderboard rendering |
+| `js/arcade.js` | 367 | Speed-math game + leaderboard UI | touching the arcade game or leaderboard rendering |
 | `js/animations.js` | 227 | Scroll/entry animations (GSAP/ScrollTrigger/Lenis) | changing hero/scroll animation behavior |
-| `api/scores.js` | 214 | Leaderboard API handler (GET/POST) | changing leaderboard API behavior, rate limiting, ranking, one-row-per-email |
+| `api/scores.js` | 238 | Leaderboard API handler (GET/POST) | changing leaderboard API behavior, rate limiting, ranking, one-row-per-email |
 | `api/session.js` | 44 | Mints the one-time token POST /api/scores requires | changing score-submission gating |
 | `js/terminal.js` | 114 | Hero fake-terminal widget | changing terminal commands/typing demo |
 | `scripts/vite-api-plugin.js` | 72 | Dev-server middleware wiring `/api/scores` into Vite | changing how the API is served in dev |
@@ -28,7 +28,7 @@ calls `initTerminal()` → `initArcade()` → `initAnimations()` in that order.
 | `scripts/test-leaderboard.js` | 210 | End-to-end checks for the one-row-per-player rule | changing scoring, dedupe, or submission gating |
 | `scripts/dedupe-scores.js` | 106 | One-time collapse of pre-rule duplicate board rows | cleaning up legacy duplicate entries |
 | `scripts/export-emails.js` | 51 | Exports collected emails | exporting emails |
-| `api/_lib/validate.js` | 40 | Input validation + limits for scores API | changing validation limits |
+| `api/_lib/validate.js` | 41 | Input validation + limits for scores API | changing validation limits, board size |
 | `vite.config.js` | 32 | Build/dev-server config | changing build output, dev port, `server.fs.deny` |
 | `package.json` | 29 | Scripts, deps, Node engine pin | changing npm scripts/deps |
 | `js/main.js` | 7 | Entry point, calls the three init functions | rare — only to change init order |
@@ -54,22 +54,21 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 | Symbol | Line | Note |
 |---|---|---|
 | `export default function initArcade()` | 1 | |
-| `readStore` | 46 | |
-| `writeStore` | 54 | |
-| `readBest` | 62 | |
-| `writeBest` | 63 | |
-| `showPanel` | 68 | |
-| leaderboard block | 74 | start |
-| `renderBoard` | 76 | |
-| `readJson` | 112 | |
-| `loadBoard` | 120 | |
-| `qualifies` | 152 | |
-| `rand` | 157 | |
-| `nextProblem` | 160 | |
-| `showResult` | 190 | |
-| `stop` | 206 | |
-| `tick` | 241 | |
-| `start` | 249 | requests a session token for the round |
+| `readStore` | 54 | |
+| `writeStore` | 62 | |
+| `readBest` | 70 | |
+| `writeBest` | 71 | |
+| `showPanel` | 76 | |
+| leaderboard block | 82 | start |
+| `renderBoard` | 84 | caps the row stagger; scrolls the saved row into the list's own box |
+| `readJson` | 130 | |
+| `loadBoard` | 138 | asks for `?limit=BOARD_MAX`, i.e. the whole board |
+| `rand` | 171 | |
+| `nextProblem` | 174 | |
+| `showResult` | 204 | |
+| `stop` | 220 | offers the save form for any finished round, whatever the score |
+| `tick` | 259 | |
+| `start` | 267 | requests a session token for the round |
 
 ### js/animations.js
 | Symbol | Line | Note |
@@ -88,15 +87,15 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 ### api/scores.js
 | Symbol | Line | Note |
 |---|---|---|
-| `clientIp` | 57 | trusts only `x-vercel-forwarded-for`; never `x-forwarded-for` |
-| `rateLimited` | 67 | |
-| `claimSession` | 85 | redeems the one-time token from `api/session.js` |
-| `recordBest` | 114 | one row per email, holding that player's highest score |
-| `handleGet` | 156 | |
-| GET projection | 162 | explicit field list |
-| `handlePost` | 172 | validates first, then claims the token |
-| rank computation | 211 | |
-| `export default async function handler` | 215 | |
+| `clientIp` | 58 | trusts only `x-vercel-forwarded-for`; never `x-forwarded-for` |
+| `rateLimited` | 68 | |
+| `claimSession` | 86 | redeems the one-time token from `api/session.js` |
+| `recordBest` | 115 | one row per email, holding that player's highest score |
+| `handleGet` | 157 | `?limit=` capped at `BOARD_MAX`, defaults to `BOARD_LIMIT` |
+| GET projection | 167 | explicit field list |
+| `handlePost` | 177 | validates first, then claims the token |
+| rank computation | 216 | |
+| `export default async function handler` | 220 | |
 
 ### api/_lib/db.js
 | Symbol | Line | Note |
@@ -113,7 +112,8 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 | `NAME_MAX = 16` | 3 | |
 | `EMAIL_MAX = 254` | 4 | |
 | `SCORE_MAX = 150` | 5 | |
-| `BOARD_LIMIT = 10` | 6 | |
+| `BOARD_LIMIT = 10` | 6 | rows a bare GET returns |
+| `BOARD_MAX = 500` | 7 | ceiling on `?limit=`; the page asks for this to get the whole board |
 | `cleanName` | 9 | |
 | `cleanScore` | 19 | |
 | `cleanEmail` | 29 | |

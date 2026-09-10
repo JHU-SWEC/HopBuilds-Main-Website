@@ -1377,6 +1377,30 @@ a {
 
 .arcade-board-list {
   list-style: none;
+  /* The board lists every player, so it scrolls inside a fixed box instead of
+     stretching the section. `position: relative` makes it the offsetParent the
+     highlight-scrolling in js/arcade.js measures against. */
+  position: relative;
+  max-height: 22rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.arcade-board-list:focus-visible {
+  outline: 2px solid var(--spirit);
+  outline-offset: 4px;
+}
+
+/* Standard properties only. The `::-webkit-scrollbar` pseudo-elements are
+   ignored by any browser that supports these two, so pairing them buys nothing
+   here -- and on macOS neither approach yields a scrollbar that sits there at
+   rest, because the OS uses overlay scrollbars. The affordance that actually
+   reads on every platform is the row clipped at the boundary, which the
+   max-height is chosen to leave visible. */
+.arcade-board-list {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
 }
 
 @keyframes arcade-row-in {
@@ -1392,7 +1416,8 @@ a {
 
 .arcade-row {
   display: grid;
-  grid-template-columns: 2.25rem 1fr auto;
+  /* Wide enough for a three-digit rank once the board runs past 99. */
+  grid-template-columns: 2.75rem 1fr auto;
   align-items: center;
   gap: 1rem;
   padding: 0.7rem 0;

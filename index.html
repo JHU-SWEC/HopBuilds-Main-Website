@@ -494,7 +494,7 @@
 
             <!-- name and email entry after a qualifying run -->
             <form class="arcade-save" id="arcade-save" hidden>
-              <p class="arcade-panel-title" id="arcade-save-title">You made the board.</p>
+              <p class="arcade-panel-title" id="arcade-save-title">Put it on the board.</p>
               <p class="arcade-panel-sub">Add your name to the global leaderboard.</p>
               <div class="arcade-fields">
                 <input
@@ -538,7 +538,16 @@
             <p class="arcade-board-title">Global leaderboard</p>
             <button class="arcade-board-refresh" type="button" id="arcade-refresh">Refresh</button>
           </div>
-          <ol class="arcade-board-list" id="arcade-board-list"></ol>
+          <!-- data-lenis-prevent: Lenis owns the wheel globally, and without this
+               it swallows wheel events over the list and scrolls the page instead.
+               tabindex makes the scroll box reachable by keyboard. -->
+          <ol
+            class="arcade-board-list"
+            id="arcade-board-list"
+            data-lenis-prevent
+            tabindex="0"
+            aria-label="Leaderboard entries, scrollable"
+          ></ol>
           <p class="arcade-board-empty" id="arcade-board-empty">Loading scores&hellip;</p>
         </div>
       </section>

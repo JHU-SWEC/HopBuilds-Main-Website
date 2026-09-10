@@ -94,6 +94,15 @@ npm run dev                  # http://localhost:8000
 - The hero terminal is `display: none` below 1024px
   (`css/home/redesign.css:420-422`), but `initTerminal()` still runs
   underneath it. Known, deliberately deferred.
+- The leaderboard lists every player, not a top ten: any finished round is
+  offered the save form whatever the score, and the page pulls the whole board
+  in one request (`?limit=BOARD_MAX`) into a `max-height` scroll box. One row
+  per email still holds, and that row keeps the player's highest score -- a
+  worse run never displaces a better one. Two things this depends on: the list
+  carries `data-lenis-prevent` (Lenis owns the wheel globally and will scroll
+  the page instead otherwise), and `renderBoard` caps the CSS stagger index,
+  because rows animate `backwards` and an uncapped delay leaves the tail of a
+  long board invisible.
 - Scores are computed client-side (`js/arcade.js`). `POST /api/scores`
   requires a one-time session token from `POST /api/session`, claimable only
   after ~27s, which blocks a bare console POST with no session -- but the

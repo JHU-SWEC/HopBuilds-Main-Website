@@ -3,7 +3,8 @@
 export const NAME_MAX = 16;
 export const EMAIL_MAX = 254; /* RFC 5321 upper bound on a full address */
 export const SCORE_MAX = 150; /* a 30-second run realistically tops out near 100; this leaves headroom without accepting absurd values */
-export const BOARD_LIMIT = 10;
+export const BOARD_LIMIT = 10; /* rows a bare GET returns when no limit is asked for */
+export const BOARD_MAX = 500;  /* ceiling on ?limit=, so one request can pull the whole board */
 
 /** Strip control characters and collapse whitespace, then cap the length. */
 export const cleanName = (value) => {

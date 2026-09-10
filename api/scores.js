@@ -23,6 +23,7 @@
 import { getScores, getRateLimits, getSessions } from "./_lib/db.js";
 import {
   BOARD_LIMIT,
+  BOARD_MAX,
   SCORE_MAX,
   cleanName,
   cleanScore,
@@ -154,8 +155,12 @@ const recordBest = async ({ scores, name, email, score }) => {
 };
 
 const handleGet = async (req, res) => {
+  /* The board is one row per player, so "every entry" is a bounded set and the
+     page can pull it in a single request and scroll it. BOARD_MAX is still a
+     hard ceiling: an unbounded limit would let one request ask Atlas for the
+     whole collection. */
   const requested = parseInt(req.query?.limit, 10);
-  const limit = Math.min(Number.isInteger(requested) && requested > 0 ? requested : BOARD_LIMIT, 50);
+  const limit = Math.min(Number.isInteger(requested) && requested > 0 ? requested : BOARD_LIMIT, BOARD_MAX);
 
   const scores = await getScores();
   const rows = await scores

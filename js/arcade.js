@@ -28,6 +28,16 @@ export default function initArcade() {
   const API = "/api/scores";
   const API_SESSION = "/api/session";
 
+  /* Matches BOARD_MAX in api/_lib/validate.js. The board holds one row per
+     player, so asking for this many is asking for all of them; the list
+     element scrolls rather than the page growing without end. */
+  const BOARD_MAX = 500;
+
+  /* Rows animate in on a stagger. Past a dozen the delay is longer than anyone
+     waits, and rows animate `backwards` -- invisible until their turn -- so the
+     tail of a long board would simply be missing. Cap the delay, not the rows. */
+  const MAX_STAGGER = 12;
+
   const DURATION = 30000;
   const BEST_KEY = "hopbuilds:arcade-best";
   const NAME_KEY = "hopbuilds:arcade-name";
@@ -38,8 +48,6 @@ export default function initArcade() {
   let endsAt = 0;
   let ticker = null;
   let pendingScore = 0;
-  let lowestOnBoard = 0;
-  let boardFull = false;
   let highlight = null;
   let sessionToken = null;
 
@@ -75,12 +83,15 @@ export default function initArcade() {
 
   const renderBoard = (rows) => {
     boardList.textContent = "";
+    let newRow = null;
+
     rows.forEach((row, i) => {
       const li = document.createElement("li");
       const isNew =
         highlight && row.name === highlight.name && row.score === highlight.score;
       li.className = "arcade-row" + (isNew ? " arcade-row-new" : "");
-      li.style.setProperty("--i", i);
+      li.style.setProperty("--i", Math.min(i, MAX_STAGGER));
+      if (isNew && !newRow) newRow = li;
 
       const rank = document.createElement("span");
       rank.className = "arcade-row-rank";
@@ -98,6 +109,13 @@ export default function initArcade() {
       li.append(rank, name, points);
       boardList.appendChild(li);
     });
+
+    /* A saved run can land anywhere on a long board, so bring it into the
+       list's own scroll box. Deliberately not scrollIntoView(): that walks up
+       and scrolls ancestors too, which fights Lenis and yanks the page. */
+    boardList.scrollTop = newRow
+      ? Math.max(0, newRow.offsetTop - (boardList.clientHeight - newRow.offsetHeight) / 2)
+      : 0;
   };
 
   /* Set once the board has loaded, so a failed fetch does not offer to save
@@ -119,7 +137,7 @@ export default function initArcade() {
 
   const loadBoard = async () => {
     try {
-      const res = await fetch(API + "?limit=10");
+      const res = await fetch(API + "?limit=" + BOARD_MAX);
 
       if (!res.ok) {
         /* Surface what actually went wrong. A 404 means the function is not
@@ -135,8 +153,6 @@ export default function initArcade() {
       const rows = await readJson(res);
 
       boardReady = true;
-      boardFull = rows.length >= 10;
-      lowestOnBoard = rows.length ? rows[rows.length - 1].score : 0;
 
       renderBoard(rows);
       boardEmpty.hidden = rows.length > 0;
@@ -148,8 +164,6 @@ export default function initArcade() {
       boardEmpty.textContent = err.message || "Could not reach the leaderboard.";
     }
   };
-
-  const qualifies = (value) => value > 0 && (!boardFull || value > lowestOnBoard);
 
   loadBoard();
   refreshBtn.addEventListener("click", loadBoard);
@@ -220,11 +234,15 @@ export default function initArcade() {
       return;
     }
 
-    if (boardReady && qualifies(pendingScore)) {
+    /* Every finished round is offered a place on the board, whatever the
+       score -- the board keeps one row per player rather than a top ten, so a
+       low run costs nobody else their spot. Skip is still there for anyone who
+       would rather not be listed. */
+    if (boardReady) {
       saveTitle.textContent =
         pendingScore +
         (pendingScore === 1 ? " problem. " : " problems. ") +
-        "You made the board.";
+        "Put it on the board.";
       nameInput.value = readStore(NAME_KEY, "");
       emailInput.value = readStore(EMAIL_KEY, "");
       saveError.hidden = true;
