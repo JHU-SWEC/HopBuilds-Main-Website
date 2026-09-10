@@ -38,14 +38,23 @@ npm run dev                  # http://localhost:8000
   leaderboard rows left over from before the board enforced one entry per
   player. Reports only; pass `-- --apply` to actually collapse them. A one-time
   backfill, not part of any routine workflow.
-- There is no lint/test command in `package.json`.
+- `npm run test-leaderboard:serve` then, in a second terminal,
+  `npm run test-leaderboard` — end-to-end checks that the board keeps one row
+  per player at their best score. Both commands point the board, session, and
+  rate-limit collections at throwaway names and drop them afterward, so a run
+  touches no production data. Needs `MONGODB_URI`.
+- There is no lint command, and `test-leaderboard` is the only test; there is
+  no framework behind it, just a script that exits non-zero on failure.
 - Node 22.x is required (`package.json` `engines`, `.nvmrc`) — Vite requires
   Node `^20.19.0 || >=22.12.0`.
 - `vite.config.js` configures the dev server, the `vite-api-plugin.js`
   middleware, and the `dist/` build.
 - Env vars: `MONGODB_URI` (required), `MONGODB_DB` (defaults `hopbuilds`),
-  `MONGODB_COLLECTION` (defaults `arcade_scores`). See `.env.example` and
-  `DEPLOY.md`.
+  `MONGODB_COLLECTION` (defaults `arcade_scores`). `MONGODB_SESSION_COLLECTION`
+  and `MONGODB_RATE_LIMIT_COLLECTION` (defaulting to `arcade_sessions` and
+  `arcade_rate_limits`) exist so the leaderboard test can run without spending
+  the live rate-limit budget; leave them unset everywhere else. See
+  `.env.example` and `DEPLOY.md`.
 
 ## Code conventions
 

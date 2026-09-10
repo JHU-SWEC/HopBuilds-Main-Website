@@ -13,7 +13,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "export-emails": "node scripts/export-emails.js",
-    "dedupe-scores": "node scripts/dedupe-scores.js"
+    "dedupe-scores": "node scripts/dedupe-scores.js",
+    "test-leaderboard:serve": "MONGODB_COLLECTION=arcade_scores_test MONGODB_SESSION_COLLECTION=arcade_sessions_test MONGODB_RATE_LIMIT_COLLECTION=arcade_rate_limits_test vite --port 8001",
+    "test-leaderboard": "MONGODB_COLLECTION=arcade_scores_test MONGODB_SESSION_COLLECTION=arcade_sessions_test MONGODB_RATE_LIMIT_COLLECTION=arcade_rate_limits_test node scripts/test-leaderboard.js"
   },
   "dependencies": {
     "gsap": "3.12.5",

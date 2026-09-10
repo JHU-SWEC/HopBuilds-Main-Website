@@ -46,12 +46,16 @@ export const getScores = async () => {
   return db.collection(process.env.MONGODB_COLLECTION || "arcade_scores");
 };
 
+/* The collection names are overridable for the same reason MONGODB_COLLECTION
+   is: scripts/test-leaderboard.js drives the real endpoints and must not spend
+   the live rate-limit budget or write tokens into the collection production
+   reads from. Unset, they resolve to the production names. */
 export const getRateLimits = async () => {
   const db = await getDb();
-  return db.collection("arcade_rate_limits");
+  return db.collection(process.env.MONGODB_RATE_LIMIT_COLLECTION || "arcade_rate_limits");
 };
 
 export const getSessions = async () => {
   const db = await getDb();
-  return db.collection("arcade_sessions");
+  return db.collection(process.env.MONGODB_SESSION_COLLECTION || "arcade_sessions");
 };

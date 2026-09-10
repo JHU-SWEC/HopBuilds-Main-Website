@@ -24,12 +24,13 @@ calls `initTerminal()` → `initArcade()` → `initAnimations()` in that order.
 | `api/session.js` | 44 | Mints the one-time token POST /api/scores requires | changing score-submission gating |
 | `js/terminal.js` | 114 | Hero fake-terminal widget | changing terminal commands/typing demo |
 | `scripts/vite-api-plugin.js` | 72 | Dev-server middleware wiring `/api/scores` into Vite | changing how the API is served in dev |
-| `api/_lib/db.js` | 57 | MongoDB client/collection helpers | changing DB connection/caching |
+| `api/_lib/db.js` | 61 | MongoDB client/collection helpers | changing DB connection/caching |
+| `scripts/test-leaderboard.js` | 210 | End-to-end checks for the one-row-per-player rule | changing scoring, dedupe, or submission gating |
 | `scripts/dedupe-scores.js` | 106 | One-time collapse of pre-rule duplicate board rows | cleaning up legacy duplicate entries |
 | `scripts/export-emails.js` | 51 | Exports collected emails | exporting emails |
 | `api/_lib/validate.js` | 40 | Input validation + limits for scores API | changing validation limits |
 | `vite.config.js` | 32 | Build/dev-server config | changing build output, dev port, `server.fs.deny` |
-| `package.json` | 27 | Scripts, deps, Node engine pin | changing npm scripts/deps |
+| `package.json` | 29 | Scripts, deps, Node engine pin | changing npm scripts/deps |
 | `js/main.js` | 7 | Entry point, calls the three init functions | rare — only to change init order |
 | `vercel.json` | 6 | Vercel deploy config | changing deploy/build settings |
 
@@ -103,8 +104,8 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 | `getClient` | 19 | cached on `globalThis` for warm reuse |
 | `export getDb` | 39 | |
 | `getScores` | 44 | |
-| `getRateLimits` | 49 | |
-| `getSessions` | 54 | |
+| `getRateLimits` | 53 | collection name overridable for tests |
+| `getSessions` | 58 | collection name overridable for tests |
 
 ### api/_lib/validate.js
 | Symbol | Line | Note |
@@ -206,6 +207,7 @@ collapses `.hero-inner` to one column); `prefers-reduced-motion: reduce` at
 | Changing build/deploy config | `vite.config.js`, `vercel.json`, `package.json` |
 | Exporting emails | `scripts/export-emails.js` |
 | Cleaning up legacy duplicate board rows | `scripts/dedupe-scores.js` |
+| Testing the leaderboard end to end | `scripts/test-leaderboard.js` |
 | Adjusting responsive behavior | `css/home/redesign.css` breakpoint list above |
 | Adjusting reduced-motion behavior | `js/animations.js:40` (JS early return); `css/home/redesign.css:493,1343,1378,319` |
 
