@@ -46,8 +46,8 @@ export default function initTerminal() {
     ],
     projects: () => [
       "lost@jhu       · live · lostatjhu.org",
-      "jhu-rideshare  · in progress",
-      "club-board     · in progress",
+      "slopkins       · in progress",
+      "bark-off       · in progress",
     ],
     join: () => {
       window.open(FORM_URL, "_blank", "noopener");
