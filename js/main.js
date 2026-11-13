@@ -1,7 +1,9 @@
+import initNav from "./nav.js";
 import initTerminal from "./terminal.js";
 import initArcade from "./arcade.js";
-import initAnimations from "./animations.js";
+import initEffects from "./effects.js";
 
+initNav();
 initTerminal();
 initArcade();
-initAnimations();
+initEffects();

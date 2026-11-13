@@ -3,563 +3,542 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HopBuilds — We build software for Hopkins</title>
+    <title>HopBuilds — the student software team at Johns Hopkins</title>
     <meta
       name="description"
-      content="HopBuilds is JHU's fun, no-pressure software engineering club. Ship real products for the Hopkins community with mentorship from Professor Madooei and alumni working in the industry."
+      content="HopBuilds is the student software team at Johns Hopkins. Teams of 3–4 build and ship apps for Hopkins students, mentored by Professor Madooei and alumni in industry."
     />
+    <meta name="theme-color" content="#002d72" />
+    <meta property="og:title" content="HopBuilds — the student software team at Johns Hopkins" />
+    <meta
+      property="og:description"
+      content="Teams of 3–4 build and ship apps for Hopkins students, mentored by Professor Madooei and alumni in industry."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/assets/web/team-rainier.jpg" />
     <link rel="icon" href="./Blue_Jay_Coding_Icon.png" />
 
-    <link rel="preconnect" href="https://api.fontshare.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://api.fontshare.com/v2/css?f[]=clash-display@500,600,700&f[]=satoshi@400,500,700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="./css/home/redesign.css" />
+    <link rel="stylesheet" href="./css/site.css" />
   </head>
   <body>
-    <div class="progress-bar" aria-hidden="true"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-    <nav class="site-nav">
-      <a class="nav-wordmark" href="#top">HopBuilds</a>
-      <div class="nav-links">
-        <a href="#story">Story</a>
-        <a href="#builds">Projects</a>
-        <a href="#gains">What You Gain</a>
-        <a href="#social">Social</a>
-        <a class="nav-cta" href="#join">Join us</a>
+    <!-- ============ NAV: a floating glass pill ============ -->
+    <header class="nav" id="nav">
+      <div class="nav-pill">
+        <a class="brand" href="#top" aria-label="HopBuilds, back to top">
+          <img class="brand-mark" src="./assets/web/swec-logo.png" alt="" width="34" height="34" />
+          <span class="brand-name">HopBuilds</span>
+        </a>
+        <nav class="nav-links" aria-label="Sections">
+          <a href="#projects">Projects</a>
+          <a href="#semester">Semester</a>
+          <a href="#mentors">Mentors</a>
+          <a href="#life">Team life</a>
+          <a href="#drill">Drill</a>
+        </nav>
+        <a class="btn btn-accent btn-sm nav-action" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">Apply to HopBuilds</a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet">
+          <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span></span>
+          <span class="visually-hidden">Menu</span>
+        </button>
       </div>
-    </nav>
+      <div class="nav-sheet" id="nav-sheet" hidden>
+        <nav class="nav-sheet-links" aria-label="Sections">
+          <a href="#projects">Projects</a>
+          <a href="#semester">Semester</a>
+          <a href="#mentors">Mentors</a>
+          <a href="#life">Team life</a>
+          <a href="#drill">Drill</a>
+        </nav>
+      </div>
+    </header>
 
-    <main id="top">
-      <!-- ================= HERO ================= -->
-      <header class="hero chapter-grid">
-        <div class="hero-inner">
-          <div class="hero-copy">
-            <p class="eyebrow hero-eyebrow">Johns Hopkins University &middot; Software Engineering Club</p>
-            <h1 class="hero-title">
-              <span class="hero-title-line">We build</span>
-              <span class="hero-title-line">software <em>for</em></span>
-              <span class="hero-title-line">Hopkins<span class="hero-period">.</span></span>
-            </h1>
-            <p class="hero-tagline">
-              HopBuilds is the #1 place to build software at JHU, a fun,
-              no-pressure team shipping real products for real students.
+    <main id="main">
+      <!-- ============ 1 · HERO: aurora night sky, the terminal as the product ============ -->
+      <section class="hero dark" id="top">
+        <div class="aurora" aria-hidden="true">
+          <span class="aurora-blob a1"></span>
+          <span class="aurora-blob a2"></span>
+          <span class="aurora-blob a3"></span>
+        </div>
+        <div class="grid-lines" aria-hidden="true"></div>
+        <div class="grain" aria-hidden="true"></div>
+
+        <div class="wrap hero-grid">
+          <div class="hero-text">
+            <p class="eyebrow enter">
+              <span class="eyebrow-dot" aria-hidden="true"></span>
+              Johns Hopkins Software Engineering Club
             </p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="#join">Join HopBuilds</a>
-              <a class="btn btn-ghost" href="#builds">See what we've built</a>
+            <h1 class="hero-title enter">
+              The student <span class="serif">software</span> team at Johns&nbsp;Hopkins
+            </h1>
+            <p class="hero-lead enter">
+              We build and ship apps for Hopkins students, from a campus lost and found to a
+              rideshare service. The team is low-pressure and fun, and Professor Madooei mentors it.
+            </p>
+            <div class="hero-actions enter">
+              <a class="btn btn-accent btn-lg" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+                Apply to HopBuilds <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+              </a>
+              <a class="btn btn-glass btn-lg" href="#projects">See our projects</a>
             </div>
+            <dl class="hero-stats enter">
+              <div><dt>Students using our apps</dt><dd><span data-count="500">500</span>+</dd></div>
+              <div><dt>Products in flight</dt><dd><span data-count="4">4</span>+</dd></div>
+              <div><dt>Students per team</dt><dd>3–4</dd></div>
+            </dl>
           </div>
 
-          <div class="hero-terminal" role="group" aria-label="Interactive HopBuilds terminal — try typing 'help'">
-            <div class="term-bar">
-              <span class="term-dot"></span>
-              <span class="term-dot"></span>
-              <span class="term-dot"></span>
-              <span class="term-title">hopbuilds &mdash; zsh</span>
-            </div>
-            <div class="term-body">
-              <div class="term-lines" id="term-lines"></div>
-              <div class="term-input-row">
-                <span class="term-prompt">hopbuilds@jhu&nbsp;%</span>
-                <input
-                  id="term-input"
-                  type="text"
-                  autocomplete="off"
-                  autocapitalize="off"
-                  spellcheck="false"
-                  aria-label="Type a terminal command, e.g. help"
-                />
+          <div class="hero-stage enter">
+            <div class="hero-terminal" role="group" aria-label="Interactive HopBuilds terminal — try typing 'help'">
+              <div class="term-bar">
+                <span class="term-dot"></span>
+                <span class="term-dot"></span>
+                <span class="term-dot"></span>
+                <span class="term-title">hopbuilds &mdash; zsh</span>
+              </div>
+              <div class="term-body">
+                <div class="term-lines" id="term-lines"></div>
+                <div class="term-input-row">
+                  <span class="term-prompt">hopbuilds@jhu&nbsp;%</span>
+                  <input
+                    id="term-input"
+                    type="text"
+                    autocomplete="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    aria-label="Type a terminal command, e.g. help"
+                  />
+                </div>
               </div>
             </div>
+            <div class="chip chip-live" aria-hidden="true"><span class="chip-dot"></span>Lost@JHU is live</div>
+            <div class="chip chip-type" aria-hidden="true">try <kbd>help</kbd></div>
+            <img class="sticker" src="./assets/web/swec-logo.png" alt="" width="128" height="128" />
           </div>
         </div>
 
-        <div class="hero-foot">
-          <div class="outcomes" aria-label="Companies HopBuilds members are joining">
-            <div class="outcomes-topline">
-              <p class="outcomes-label">Where our members are headed</p>
-              <p class="hero-scroll-hint" aria-hidden="true">Scroll to explore &darr;</p>
-            </div>
-            <div class="outcomes-marquee">
-              <div class="outcomes-track">
-                <img src="./assets/home/logos/pg-logo.png" alt="Procter &amp; Gamble" />
-                <img src="./assets/home/logos/medtronic-logo.png" alt="Medtronic" />
-                <img src="./assets/home/logos/ibm-logo.svg" alt="IBM" />
-                <img src="./assets/home/logos/amazon-logo.png" alt="Amazon" />
-                <img src="./assets/home/logos/capital-one-logo.png" alt="Capital One" />
-                <img src="./assets/home/logos/microsoft-logo.png" alt="Microsoft" />
-                <img src="./assets/home/logos/pg-logo.png" alt="" aria-hidden="true" />
-                <img src="./assets/home/logos/medtronic-logo.png" alt="" aria-hidden="true" />
-                <img src="./assets/home/logos/ibm-logo.svg" alt="" aria-hidden="true" />
-                <img src="./assets/home/logos/amazon-logo.png" alt="" aria-hidden="true" />
-                <img src="./assets/home/logos/capital-one-logo.png" alt="" aria-hidden="true" />
-                <img src="./assets/home/logos/microsoft-logo.png" alt="" aria-hidden="true" />
-              </div>
-            </div>
+        <div class="ticker" aria-label="What HopBuilds does">
+          <div class="ticker-track">
+            <ul class="ticker-row">
+              <li>Lost@JHU</li><li>JHU Rideshare</li><li>JHU Club Board</li><li>Weekly builds</li>
+              <li>Weekend demos</li><li>Demo Day</li><li>Faculty mentorship</li><li>Recruiting help</li>
+            </ul>
+            <ul class="ticker-row" aria-hidden="true">
+              <li>Lost@JHU</li><li>JHU Rideshare</li><li>JHU Club Board</li><li>Weekly builds</li>
+              <li>Weekend demos</li><li>Demo Day</li><li>Faculty mentorship</li><li>Recruiting help</li>
+            </ul>
           </div>
-        </div>
-      </header>
-
-      <!-- ================= 01 · OUR STORY ================= -->
-      <section class="story chapter-grid" id="story">
-        <div class="chapter-label"><span>01</span> / OUR STORY</div>
-        <div class="story-pin">
-          <div class="story-lines">
-            <p class="story-line">We wanted a fun, no&#8209;pressure software engineering club&hellip;</p>
-            <p class="story-line">&hellip;where we could build software <em>for Hopkins</em>.</p>
-            <p class="story-line story-line-final">That's when <strong>HopBuilds</strong> was born.</p>
-          </div>
-          <p class="story-detail">
-            Hopkins is full of brilliant CS students, but not a lot of
-            great software built for the Hopkins community. We're changing
-            that: rebranding JHU's Software Engineering Club into a student
-            product team that designs and ships tools making student life more
-            connected and convenient.
-          </p>
+          <button class="ticker-pause" type="button" aria-pressed="false">Pause</button>
         </div>
       </section>
 
-      <!-- ================= 02 · WHAT WE BUILD (horizontal gallery) ================= -->
-      <section class="builds" id="builds">
-        <div class="builds-head chapter-grid">
-          <div class="chapter-label"><span>02</span> / WHAT WE BUILD</div>
-          <div class="builds-head-row">
-            <h2 class="section-title builds-title">Built for Hopkins,<br />by Hopkins students.</h2>
-            <div class="builds-stats" aria-label="HopBuilds statistics">
-              <div class="stat"><span class="stat-value">500+</span><span class="stat-label">student users</span></div>
-              <div class="stat"><span class="stat-value">4+</span><span class="stat-label">products in flight</span></div>
-            </div>
+      <!-- ============ 2 · STORY: a large statement on white ============ -->
+      <section class="story band-white" id="story">
+        <div class="wrap">
+          <p class="kicker reveal">Our story</p>
+          <h2 class="statement reveal">
+            Hopkins has brilliant CS students but little software made
+            <span class="serif">for</span> Hopkins. We're building it.
+          </h2>
+          <div class="story-cols">
+            <p class="reveal">
+              We wanted a fun, no-pressure club where we could build software for our own campus.
+              That's how HopBuilds started.
+            </p>
+            <p class="reveal">
+              We turned JHU's Software Engineering Club into a student product team that designs and
+              ships tools to make campus life more connected and convenient.
+            </p>
           </div>
         </div>
+      </section>
 
-        <div class="builds-track-wrap">
-          <div class="builds-track">
-            <article class="build-card">
-              <span class="build-num" aria-hidden="true">01</span>
-              <div class="build-copy">
-                <span class="badge badge-live">Live</span>
-                <h3 class="build-title">Lost@JHU</h3>
-                <p class="build-desc">
-                  Campus lost &amp; found, solved. No more asking on
-                  Sidechat.
-                </p>
-                <a class="btn btn-ghost build-link" href="https://www.lostatjhu.org/" target="_blank" rel="noopener">
-                  Visit lostatjhu.org &nearr;
-                </a>
+      <!-- ============ 3 · PROJECTS: bento ============ -->
+      <section class="projects band-tint" id="projects">
+        <div class="wrap">
+          <div class="head">
+            <p class="kicker reveal">Projects</p>
+            <h2 class="title reveal">Apps we ship <span class="serif">for campus</span></h2>
+            <p class="lead reveal">One is live and the rest are in progress. Student teams build every one.</p>
+          </div>
+
+          <div class="bento">
+            <article class="tile tile-lost spot reveal">
+              <div class="tile-art tile-art-peach">
+                <img src="./assets/web/lost-at-jhu.jpg" alt="The Lost@JHU blue jay searching with a magnifying glass" width="900" height="900" loading="lazy" />
               </div>
-              <div class="build-art">
-                <img src="./assets/project/LostandFoundBlueJay.png" alt="Lost@JHU blue jay illustration" loading="lazy" />
+              <div class="tile-body">
+                <span class="badge badge-live"><span class="badge-dot"></span>Live</span>
+                <h3>Lost@JHU</h3>
+                <p>Campus lost and found in one place, so nobody has to ask on Sidechat again.</p>
+                <a class="link" href="https://www.lostatjhu.org/" target="_blank" rel="noopener">Open lostatjhu.org <span aria-hidden="true">&nearr;</span></a>
               </div>
             </article>
 
-            <article class="build-card">
-              <span class="build-num" aria-hidden="true">02</span>
-              <div class="build-copy">
-                <span class="badge">In progress</span>
-                <h3 class="build-title">JHU Rideshare</h3>
-                <p class="build-desc">
-                  A ride-sharing platform designed specifically for the Hopkins
-                  community.
-                </p>
+            <article class="tile tile-ride spot reveal">
+              <div class="tile-body">
+                <span class="badge"><span class="badge-dot"></span>In progress</span>
+                <h3>JHU Rideshare</h3>
+                <p>A ride-sharing platform built only for the Hopkins community.</p>
               </div>
-              <div class="build-art">
-                <img src="./assets/project/drivingbluejay.png" alt="JHU Rideshare blue jay illustration" loading="lazy" />
+              <div class="browser">
+                <div class="browser-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+                <img src="./assets/web/jhu-rideshare.jpg" alt="JHU Rideshare screens: a trip search, a phone booking view and a route map" width="1600" height="1067" loading="lazy" />
               </div>
             </article>
 
-            <article class="build-card">
-              <span class="build-num" aria-hidden="true">03</span>
-              <div class="build-copy">
-                <span class="badge">In progress</span>
-                <h3 class="build-title">JHU Club Board</h3>
-                <p class="build-desc">Every Hopkins club, one board. Clubs, simplified.</p>
+            <article class="tile tile-stat tile-stat-blue spot reveal">
+              <p class="stat-num"><span data-count="500">500</span>+</p>
+              <p class="stat-label">Hopkins students use what we've shipped</p>
+            </article>
+
+            <article class="tile tile-stat tile-stat-sky spot reveal">
+              <p class="stat-num"><span data-count="4">4</span>+</p>
+              <p class="stat-label">products in flight right now</p>
+            </article>
+
+            <article class="tile tile-clubs spot reveal">
+              <div class="tile-body">
+                <span class="badge"><span class="badge-dot"></span>In progress</span>
+                <h3>JHU Club Board</h3>
+                <p>Every Hopkins club on one board, with their events in one list.</p>
               </div>
-              <div class="build-art">
-                <img src="./assets/project/Clubboardbluejay.png" alt="JHU Club Board blue jay illustration" loading="lazy" />
+              <div class="browser">
+                <div class="browser-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+                <img src="./assets/web/jhu-club-board.jpg" alt="JHU Club Board: popular organizations and upcoming events on one page" width="1600" height="1067" loading="lazy" />
               </div>
             </article>
           </div>
         </div>
-
-        <div class="builds-progress" aria-hidden="true">
-          <span class="builds-counter">01</span>
-          <span class="builds-total">/ 03</span>
-          <span class="builds-progress-line"><span class="builds-progress-fill"></span></span>
-        </div>
       </section>
 
-      <!-- ================= 03 · WHAT YOU GAIN (scroll-fill headlines) ================= -->
-      <section class="gains chapter-grid" id="gains">
-        <div class="chapter-label"><span>03</span> / WHAT YOU GAIN</div>
-        <h2 class="section-title">Leave with more than<br />a GitHub repo.</h2>
-
-        <ol class="gain-list">
-          <li class="gain-row">
-            <span class="gain-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32">
-                <path d="M16 5.5 30 11.5 16 17.5 2 11.5 16 5.5Z" />
-                <path d="M7.5 14v6.6c0 2.1 3.8 3.8 8.5 3.8s8.5-1.7 8.5-3.8V14" />
-                <path d="M30 11.5v7.2" />
-              </svg>
-            </span>
-            <h3 class="gain-line">
-              <span class="gain-line-stroke" aria-hidden="true">Direct mentorship.</span>
-              <span class="gain-line-fill">Direct mentorship.</span>
-            </h3>
-            <aside class="gain-note gain-note-featured">
-              <span class="gain-leader" aria-hidden="true"></span>
-              <p class="gain-kicker">01: Mentorship &amp; guidance</p>
-              <p class="gain-note-copy">
-                You build with mentorship and guidance from
-                <strong>Professor Madooei</strong> the whole way, someone who
-                teaches this for a living. And you get
-                <strong>SWE and big tech recruiting mentorship</strong> from
-                upperclassmen and alumni who have already been through the
-                process themselves.
-              </p>
-            </aside>
-          </li>
-
-          <li class="gain-row">
-            <span class="gain-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32">
-                <circle cx="16" cy="7.5" r="3.2" />
-                <circle cx="7" cy="23" r="3.2" />
-                <circle cx="25" cy="23" r="3.2" />
-                <path d="M13.6 10.2 9.4 19.9M18.4 10.2l4.2 9.7M10.2 23h11.6" />
-              </svg>
-            </span>
-            <h3 class="gain-line">
-              <span class="gain-line-stroke" aria-hidden="true">A real team.</span>
-              <span class="gain-line-fill">A real team.</span>
-            </h3>
-            <aside class="gain-note">
-              <span class="gain-leader" aria-hidden="true"></span>
-              <p class="gain-kicker">02: Real experience</p>
-              <p class="gain-note-copy">
-                Teams of 3&ndash;4, led by an experienced builder. You build
-                every week and demo your progress each weekend.
-              </p>
-            </aside>
-          </li>
-
-          <li class="gain-row">
-            <span class="gain-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32">
-                <path d="M16 3.5 28 9.2v13.6L16 28.5 4 22.8V9.2L16 3.5Z" />
-                <path d="M4 9.2 16 15l12-5.8" />
-                <path d="M16 15v13.5" />
-                <path d="M10 6.3l12 5.7" />
-              </svg>
-            </span>
-            <h3 class="gain-line">
-              <span class="gain-line-stroke" aria-hidden="true">Shipped work.</span>
-              <span class="gain-line-fill">Shipped work.</span>
-            </h3>
-            <aside class="gain-note">
-              <span class="gain-leader" aria-hidden="true"></span>
-              <p class="gain-kicker">03: Resume</p>
-              <p class="gain-note-copy">
-                Products used by 500+ Hopkins students, portfolio pieces
-                that actually stand out on a resume.
-              </p>
-            </aside>
-          </li>
-
-          <li class="gain-row">
-            <span class="gain-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32">
-                <rect x="3.5" y="5" width="25" height="16.5" rx="2" />
-                <path d="M16 21.5V26M11 26h10" />
-                <path d="M9.5 17.5v-3.2M14.5 17.5v-6.4M19.5 17.5v-4.4M24.5 17.5v-8" />
-              </svg>
-            </span>
-            <h3 class="gain-line">
-              <span class="gain-line-stroke" aria-hidden="true">A demo day.</span>
-              <span class="gain-line-fill">A demo day.</span>
-            </h3>
-            <aside class="gain-note">
-              <span class="gain-leader" aria-hidden="true"></span>
-              <p class="gain-kicker">04: Showcase</p>
-              <p class="gain-note-copy">
-                Every semester closes with a final presentation: your
-                team, your product, in front of the club and beyond.
-              </p>
-            </aside>
-          </li>
-        </ol>
-      </section>
-
-      <!-- ================= 04 · THE SOCIAL SIDE ================= -->
-      <section class="social" id="social">
-        <div class="social-media">
-          <img
-            src="./assets/home/social-rainier.jpg"
-            alt="Six HopBuilds members arm in arm on a mountain ridge above the clouds at Mount Rainier"
-          />
-        </div>
-        <div class="social-overlay chapter-grid">
-          <div class="chapter-label chapter-label-light"><span>04</span> / THE SOCIAL SIDE</div>
-          <h2 class="social-title">It's not all commits.</h2>
-          <p class="social-copy">
-            Hikes on Mount Rainier, late-night poker games, group food
-            runs, and a team that
-            actually likes each other. HopBuilds is not only about shipping
-            code but also about creating lifelong friendships and lasting
-            memories.
-          </p>
-        </div>
-      </section>
-
-      <!-- 05 + 06 sit side by side; the grid backdrop moves to the wrapper so
-           the blueprint lines run continuously across both columns. -->
-      <div class="pair-row chapter-grid">
-      <!-- ================= 05 · SPONSORS ================= -->
-      <section class="sponsors" id="sponsors">
-        <div class="chapter-label"><span>05</span> / OUR SPONSORS</div>
-        <div class="sponsors-head">
-          <h2 class="section-title">Backed by industry.</h2>
-          <p class="sponsors-copy">
-            HopBuilds is proudly sponsored by Visa. Our sponsorship gives
-            members direct access to industry connections and the chance to
-            work on real, industry-sponsored projects.
-          </p>
-        </div>
-        <div class="sponsors-logos">
-          <img class="sponsor-logo" src="./assets/home/logos/visa-logo.png" alt="Visa" />
-        </div>
-      </section>
-
-      <!-- ================= 06 · JOIN ================= -->
-      <section class="join" id="join">
-        <div class="chapter-label"><span>06</span> / JOIN US</div>
-        <div class="join-head">
-          <h2 class="section-title join-title">Build with us.</h2>
-          <p class="join-sub">
-            We're looking for 9&ndash;10 students who are passionate about
-            technology and design. You don't need to be a coding wizard,
-            just willing to learn and put in the work to make something great.
-          </p>
-          <a
-            class="btn btn-primary btn-large"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog"
-            target="_blank"
-            rel="noopener"
-          >
-            Apply now &rarr;
-          </a>
-        </div>
-
-        <div class="join-roles">
-          <div class="role-card">
-            <span class="role-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path d="M8 6l-5 6 5 6" vector-effect="non-scaling-stroke" />
-                <path d="M16 6l5 6-5 6" vector-effect="non-scaling-stroke" />
-              </svg>
-            </span>
-            <h4>Developers</h4>
-            <p>Build products used by thousands of students.</p>
+      <!-- ============ 4 · SEMESTER: glowing timeline on night ============ -->
+      <section class="semester dark" id="semester">
+        <div class="glow glow-left" aria-hidden="true"></div>
+        <div class="wrap">
+          <div class="head head-light">
+            <p class="kicker reveal">The semester</p>
+            <h2 class="title reveal">How a semester <span class="serif">runs</span></h2>
+            <p class="lead reveal">You work on a small team with an experienced lead and ship something real by the end of term.</p>
           </div>
-          <div class="role-card">
-            <span class="role-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path d="M18 3.5L11 10.5" vector-effect="non-scaling-stroke" />
-                <path
-                  d="M11 10.5c-2.5-.5-5.5.9-6.6 3.4-.7 1.6-.5 3.4.3 5 1.6-.6 3-1.7 3.8-3.2 1.2-2.4.9-4.4-1.5-5.2z"
-                  vector-effect="non-scaling-stroke"
-                />
-                <path d="M6 17.5l-2 2.5" vector-effect="non-scaling-stroke" />
-              </svg>
-            </span>
-            <h4>Designers</h4>
-            <p>Craft intuitive user experiences.</p>
-          </div>
-          <div class="role-card">
-            <span class="role-icon">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <path d="M3 10v4h3l6 4V6l-6 4H3z" vector-effect="non-scaling-stroke" />
-                <path d="M12 8.5c3-1 6.5-1 8.5 0" vector-effect="non-scaling-stroke" />
-                <path d="M12 15.5c3 1 6.5 1 8.5 0" vector-effect="non-scaling-stroke" />
-                <path
-                  d="M6 14v4c0 1 .8 1.5 1.7 1.2.9-.3 1.3-1.2 1-2l-.7-3.2"
-                  vector-effect="non-scaling-stroke"
-                />
-              </svg>
-            </span>
-            <h4>Strategists</h4>
-            <p>Drive marketing and product decisions.</p>
-          </div>
+
+          <ol class="timeline">
+            <li class="node reveal">
+              <span class="node-dot" aria-hidden="true">1</span>
+              <h3>Join a team of 3–4</h3>
+              <p>Each team is led by an experienced builder who has shipped before.</p>
+            </li>
+            <li class="node reveal">
+              <span class="node-dot" aria-hidden="true">2</span>
+              <h3>Build every week</h3>
+              <p>Your team picks up real work on its product each week of term.</p>
+            </li>
+            <li class="node reveal">
+              <span class="node-dot" aria-hidden="true">3</span>
+              <h3>Demo each weekend</h3>
+              <p>Show the club what changed that week, and use its feedback to plan the next one.</p>
+            </li>
+            <li class="node node-final reveal">
+              <span class="node-dot" aria-hidden="true">4</span>
+              <h3>Present at Demo Day</h3>
+              <p>The semester closes with your team presenting its product to the club and beyond.</p>
+            </li>
+          </ol>
         </div>
       </section>
-      </div>
 
-      <!-- ================= BONUS · SPEED MATH ================= -->
-      <section class="arcade chapter-grid" id="arcade">
-        <div class="chapter-label"><span>+</span> / BONUS ROUND</div>
-        <div class="arcade-head">
-          <h2 class="section-title">Think you're fast?</h2>
-          <p class="arcade-copy">
-            Thirty seconds of mental math, the same drill quants and engineers
-            use to warm up. No calculator. Correct answers advance on their own.
-            The top two scorers get an automatic interview if they apply to
-            HopBuilds, so saving a score takes an email &mdash; that's how we
-            reach you, and it keeps you to one line on the board with your best
-            run on it.
-          </p>
-        </div>
-
-        <div class="arcade-game" id="arcade-game">
-          <div class="arcade-hud">
-            <div class="arcade-stat">
-              <span class="arcade-stat-label">Score</span>
-              <span class="arcade-stat-value" id="arcade-score">0</span>
+      <!-- ============ 5 · MENTORS: orbit diagram + where members go ============ -->
+      <section class="mentors band-white" id="mentors">
+        <div class="wrap">
+          <div class="mentors-grid">
+            <div class="mentors-text">
+              <p class="kicker reveal">Mentorship</p>
+              <h2 class="title reveal">Mentored by <span class="serif">Professor Madooei</span> and alumni</h2>
+              <ul class="perks">
+                <li class="reveal">
+                  <span class="perk-icon" aria-hidden="true">
+                    <svg viewBox="0 0 32 32"><path d="M16 5.5 30 11.5 16 17.5 2 11.5 16 5.5Z" /><path d="M7.5 14v6.6c0 2.1 3.8 3.8 8.5 3.8s8.5-1.7 8.5-3.8V14" /><path d="M30 11.5v7.2" /></svg>
+                  </span>
+                  <div>
+                    <h3>Faculty guidance</h3>
+                    <p>Professor Madooei, who teaches software engineering, guides every team through the whole build.</p>
+                  </div>
+                </li>
+                <li class="reveal">
+                  <span class="perk-icon" aria-hidden="true">
+                    <svg viewBox="0 0 32 32"><circle cx="16" cy="7.5" r="3.2" /><circle cx="7" cy="23" r="3.2" /><circle cx="25" cy="23" r="3.2" /><path d="M13.6 10.2 9.4 19.9M18.4 10.2l4.2 9.7M10.2 23h11.6" /></svg>
+                  </span>
+                  <div>
+                    <h3>Recruiting help</h3>
+                    <p>Upperclassmen and alumni who have been through SWE and big-tech recruiting coach you through it.</p>
+                  </div>
+                </li>
+                <li class="reveal">
+                  <span class="perk-icon" aria-hidden="true">
+                    <svg viewBox="0 0 32 32"><path d="M16 3.5 28 9.2v13.6L16 28.5 4 22.8V9.2L16 3.5Z" /><path d="M4 9.2 16 15l12-5.8" /><path d="M16 15v13.5" /></svg>
+                  </span>
+                  <div>
+                    <h3>Work for your resume</h3>
+                    <p>Portfolio pieces that real students use, which stand out on a resume.</p>
+                  </div>
+                </li>
+              </ul>
             </div>
-            <div class="arcade-stat arcade-stat-time">
-              <span class="arcade-stat-label">Time</span>
-              <span class="arcade-stat-value" id="arcade-time">30</span>
-            </div>
-            <div class="arcade-stat">
-              <span class="arcade-stat-label">Best</span>
-              <span class="arcade-stat-value" id="arcade-best">&ndash;</span>
+
+            <div class="orbit reveal" aria-hidden="true">
+              <div class="orbit-ring orbit-ring-1">
+                <span class="orbit-node n1">Professor Madooei</span>
+                <span class="orbit-node n2">Team lead</span>
+              </div>
+              <div class="orbit-ring orbit-ring-2">
+                <span class="orbit-node n3">Alumni</span>
+                <span class="orbit-node n4">Upperclassmen</span>
+                <span class="orbit-node n5">Industry contacts</span>
+              </div>
+              <div class="orbit-core">
+                <img src="./assets/web/swec-logo.png" alt="" width="128" height="128" />
+                <span>You</span>
+              </div>
             </div>
           </div>
 
-          <div class="arcade-timer-line" aria-hidden="true">
-            <span class="arcade-timer-fill" id="arcade-timer-fill"></span>
+          <div class="alumni reveal">
+            <p class="alumni-label">Where members have gone</p>
+            <ul class="alumni-logos">
+              <li><img src="./assets/home/logos/pg-logo.png" alt="Procter &amp; Gamble" loading="lazy" /></li>
+              <li><img src="./assets/home/logos/medtronic-logo.png" alt="Medtronic" loading="lazy" /></li>
+              <li><img src="./assets/home/logos/ibm-logo.svg" alt="IBM" loading="lazy" /></li>
+              <li><img src="./assets/home/logos/amazon-logo.png" alt="Amazon" loading="lazy" /></li>
+              <li><img class="logo-padded" src="./assets/home/logos/capital-one-logo.png" alt="Capital One" loading="lazy" /></li>
+              <li><img class="logo-padded" src="./assets/home/logos/microsoft-logo.png" alt="Microsoft" loading="lazy" /></li>
+            </ul>
           </div>
+        </div>
+      </section>
 
-          <div class="arcade-stage">
-            <!-- idle / game-over panel -->
-            <div class="arcade-panel" id="arcade-panel">
-              <p class="arcade-panel-title" id="arcade-panel-title">30 seconds on the clock.</p>
-              <p class="arcade-panel-sub" id="arcade-panel-sub">
-                Addition and subtraction to 100, multiplication and division
-                through the 10s.
-              </p>
-              <button class="btn btn-primary" type="button" id="arcade-start">Start drill</button>
-            </div>
-
-            <!-- live play -->
-            <div class="arcade-play" id="arcade-play" hidden>
-              <p class="arcade-problem" id="arcade-problem" aria-live="polite">2 + 2</p>
-              <input
-                class="arcade-input"
-                id="arcade-input"
-                type="text"
-                inputmode="numeric"
-                autocomplete="off"
-                autocapitalize="off"
-                spellcheck="false"
-                aria-label="Your answer"
+      <!-- ============ 6 · TEAM LIFE: photo with tags ============ -->
+      <section class="life dark" id="life">
+        <div class="wrap life-grid">
+          <div class="life-text">
+            <p class="kicker reveal">Team life</p>
+            <h2 class="title reveal">It's not all <span class="serif">commits</span></h2>
+            <p class="lead reveal">
+              From Mount Rainier to late-night poker, the team spends time together away from the
+              keyboard. Members leave with lifelong friendships as well as shipped code.
+            </p>
+            <ul class="tags reveal">
+              <li>Hikes on Mount Rainier</li>
+              <li>Late-night poker</li>
+              <li>Group food runs</li>
+            </ul>
+          </div>
+          <figure class="polaroid reveal">
+            <span class="tape" aria-hidden="true"></span>
+            <div class="polaroid-photo">
+              <img
+                src="./assets/web/team-rainier.jpg"
+                alt="Six HopBuilds members arm in arm on a mountain ridge above the clouds at Mount Rainier"
+                width="1800"
+                height="1350"
+                loading="lazy"
               />
-              <p class="arcade-hint">Type the answer &middot; Esc to stop</p>
             </div>
+          </figure>
+        </div>
+      </section>
 
-            <!-- name and email entry after a qualifying run -->
-            <form class="arcade-save" id="arcade-save" hidden>
-              <p class="arcade-panel-title" id="arcade-save-title">Put it on the board.</p>
-              <p class="arcade-panel-sub">Add your name to the global leaderboard.</p>
-              <div class="arcade-fields">
-                <input
-                  class="arcade-name-input"
-                  id="arcade-name"
-                  type="text"
-                  maxlength="16"
-                  autocomplete="off"
-                  spellcheck="false"
-                  placeholder="Your name"
-                  aria-label="Your name for the leaderboard"
-                />
-                <input
-                  class="arcade-name-input"
-                  id="arcade-email"
-                  type="email"
-                  maxlength="254"
-                  autocomplete="email"
-                  spellcheck="false"
-                  required
-                  placeholder="Email"
-                  aria-label="Your email for the leaderboard"
-                />
-              </div>
-              <p class="arcade-privacy">
-                Your email keeps you to one spot on the board, holding your best
-                score, and lets us reach you &mdash; the top two scorers get an
-                automatic interview. Only your name and score appear on the board.
+      <!-- ============ 7 · SPONSOR + 8 · ROLES ============ -->
+      <section class="join band-white" id="join">
+        <div class="wrap">
+          <div class="sponsor reveal">
+            <div class="sponsor-text">
+              <p class="kicker">Sponsor</p>
+              <h2 class="title title-sm">Sponsored by <span class="serif">Visa</span></h2>
+              <p>
+                Visa's sponsorship gives members direct access to industry connections and the
+                chance to work on real, industry-sponsored projects.
               </p>
-              <p class="arcade-save-error" id="arcade-save-error" role="alert" hidden></p>
-              <div class="arcade-save-actions">
-                <button class="btn btn-primary" type="submit" id="arcade-submit">Save score</button>
-                <button class="btn btn-ghost arcade-skip" type="button" id="arcade-skip">Skip</button>
-              </div>
-            </form>
+            </div>
+            <div class="sponsor-card">
+              <img src="./assets/home/logos/visa-logo.png" alt="Visa" width="659" height="202" loading="lazy" />
+            </div>
+          </div>
+
+          <div class="head roles-head">
+            <p class="kicker reveal">Roles</p>
+            <h2 class="title reveal">Three roles on <span class="serif">every</span> team</h2>
+            <p class="lead reveal">
+              You don't need to be a coding wizard. We want people who care about technology and
+              design and will put in the work.
+            </p>
+          </div>
+          <div class="roles">
+            <article class="role spot reveal">
+              <span class="role-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6l-5 6 5 6" /><path d="M16 6l5 6-5 6" /></svg></span>
+              <h3>Developers</h3>
+              <p>Build the products that thousands of students open.</p>
+            </article>
+            <article class="role spot reveal">
+              <span class="role-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M18 3.5L11 10.5" /><path d="M11 10.5c-2.5-.5-5.5.9-6.6 3.4-.7 1.6-.5 3.4.3 5 1.6-.6 3-1.7 3.8-3.2 1.2-2.4.9-4.4-1.5-5.2z" /><path d="M6 17.5l-2 2.5" /></svg>
+              </span>
+              <h3>Designers</h3>
+              <p>Shape how each app looks and how easy it is to use.</p>
+            </article>
+            <article class="role spot reveal">
+              <span class="role-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M3 10v4h3l6 4V6l-6 4H3z" /><path d="M12 8.5c3-1 6.5-1 8.5 0" /><path d="M12 15.5c3 1 6.5 1 8.5 0" /><path d="M6 14v4c0 1 .8 1.5 1.7 1.2.9-.3 1.3-1.2 1-2l-.7-3.2" /></svg>
+              </span>
+              <h3>Strategists</h3>
+              <p>Drive marketing and the product decisions behind each launch.</p>
+            </article>
           </div>
         </div>
+      </section>
 
-        <div class="arcade-board" id="arcade-board">
-          <div class="arcade-board-head">
-            <p class="arcade-board-title">Global leaderboard</p>
-            <button class="arcade-board-refresh" type="button" id="arcade-refresh">Refresh</button>
+      <!-- ============ 9 · DRILL (ids and state classes are read by js/arcade.js) ============ -->
+      <section class="drill dark" id="drill">
+        <div class="glow glow-right" aria-hidden="true"></div>
+        <div class="wrap">
+          <div class="head head-light">
+            <p class="kicker reveal">Bonus round</p>
+            <h2 class="title reveal">Top two drill scores <span class="serif">earn an interview</span></h2>
+            <p class="lead reveal">
+              The drill is thirty seconds of mental math, the same warm-up quants and engineers use.
+              There's no calculator, and each correct answer moves you to the next problem. Saving a
+              score takes an email so we can reach you. It also keeps you to one line on the board,
+              holding your best run.
+            </p>
           </div>
-          <!-- data-lenis-prevent: Lenis owns the wheel globally, and without this
-               it swallows wheel events over the list and scrolls the page instead.
-               tabindex makes the scroll box reachable by keyboard. -->
-          <ol
-            class="arcade-board-list"
-            id="arcade-board-list"
-            data-lenis-prevent
-            tabindex="0"
-            aria-label="Leaderboard entries, scrollable"
-          ></ol>
-          <p class="arcade-board-empty" id="arcade-board-empty">Loading scores&hellip;</p>
+
+          <div class="arcade reveal">
+            <div class="arcade-game" id="arcade-game">
+              <div class="arcade-hud">
+                <div class="arcade-stat">
+                  <span class="arcade-stat-label">Score</span>
+                  <span class="arcade-stat-value" id="arcade-score">0</span>
+                </div>
+                <div class="arcade-stat arcade-stat-time">
+                  <span class="arcade-stat-label">Time</span>
+                  <span class="arcade-stat-value" id="arcade-time">30</span>
+                </div>
+                <div class="arcade-stat">
+                  <span class="arcade-stat-label">Best</span>
+                  <span class="arcade-stat-value" id="arcade-best">&ndash;</span>
+                </div>
+              </div>
+
+              <div class="arcade-timer-line" aria-hidden="true">
+                <span class="arcade-timer-fill" id="arcade-timer-fill"></span>
+              </div>
+
+              <div class="arcade-stage">
+                <div class="arcade-panel" id="arcade-panel">
+                  <p class="arcade-panel-title" id="arcade-panel-title">30 seconds on the clock.</p>
+                  <p class="arcade-panel-sub" id="arcade-panel-sub">
+                    Addition and subtraction to 100, multiplication and division through the 10s.
+                  </p>
+                  <button class="btn btn-accent" type="button" id="arcade-start">Start drill</button>
+                </div>
+
+                <div class="arcade-play" id="arcade-play" hidden>
+                  <p class="arcade-problem" id="arcade-problem" aria-live="polite">2 + 2</p>
+                  <input
+                    class="arcade-input"
+                    id="arcade-input"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    aria-label="Your answer"
+                  />
+                  <p class="arcade-hint">Type the answer · Esc to stop</p>
+                </div>
+
+                <form class="arcade-save" id="arcade-save" hidden>
+                  <p class="arcade-panel-title" id="arcade-save-title">Put it on the board.</p>
+                  <p class="arcade-panel-sub">Add your name to the global leaderboard.</p>
+                  <div class="arcade-fields">
+                    <label class="arcade-field">
+                      <span>Name</span>
+                      <input class="arcade-name-input" id="arcade-name" type="text" maxlength="16" autocomplete="off" spellcheck="false" aria-label="Your name for the leaderboard" />
+                    </label>
+                    <label class="arcade-field">
+                      <span>Email</span>
+                      <input class="arcade-name-input" id="arcade-email" type="email" maxlength="254" autocomplete="email" spellcheck="false" required aria-label="Your email for the leaderboard" />
+                    </label>
+                  </div>
+                  <p class="arcade-privacy">
+                    Your email keeps you to one spot on the board, holding your best score, and lets
+                    us reach you: the top two scorers get an automatic interview. Only your name and
+                    score appear on the board.
+                  </p>
+                  <p class="arcade-save-error" id="arcade-save-error" role="alert" hidden></p>
+                  <div class="arcade-save-actions">
+                    <button class="btn btn-accent" type="submit" id="arcade-submit">Save score</button>
+                    <button class="btn btn-glass" type="button" id="arcade-skip">Skip</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="arcade-board" id="arcade-board">
+              <div class="arcade-board-head">
+                <h3 class="arcade-board-title">Global leaderboard</h3>
+                <button class="arcade-board-refresh" type="button" id="arcade-refresh">Refresh</button>
+              </div>
+              <ol class="arcade-board-list" id="arcade-board-list" tabindex="0" aria-label="Leaderboard entries, scrollable"></ol>
+              <p class="arcade-board-empty" id="arcade-board-empty">Loading scores…</p>
+            </div>
+          </div>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-links">
-        <a href="mailto:dguo10@jh.edu">dguo10@jh.edu</a>
-        <a href="https://www.instagram.com/jhuswec/" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://github.com/JHU-SWEC" target="_blank" rel="noopener">GitHub</a>
+    <!-- ============ CLOSE + FOOTER ============ -->
+    <footer class="closing">
+      <div class="wrap">
+        <div class="cta">
+          <div class="cta-shine" aria-hidden="true"></div>
+          <div class="cta-text">
+            <p class="kicker kicker-dark">Applications open</p>
+            <h2 class="cta-title">We're taking <span class="serif">9–10</span> new members</h2>
+            <p>We're looking for developers, designers and strategists who want to build for Hopkins.</p>
+          </div>
+          <a class="btn btn-night btn-lg" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+            Apply to HopBuilds <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+
+        <p class="giant" aria-hidden="true">Hop<span class="serif">Builds</span></p>
+
+        <div class="footer-row">
+          <a class="brand" href="#top" aria-label="HopBuilds, back to top">
+            <img class="brand-mark" src="./assets/web/swec-logo.png" alt="" width="30" height="30" />
+            <span class="brand-name">HopBuilds</span>
+          </a>
+          <nav class="footer-links" aria-label="Contact and social">
+            <a href="mailto:dguo10@jh.edu">Email the team</a>
+            <a href="https://www.instagram.com/jhuswec/" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://github.com/JHU-SWEC" target="_blank" rel="noopener">GitHub</a>
+          </nav>
+        </div>
+        <div class="legal-row">
+          <p>© 2026 HopBuilds · Johns Hopkins University</p>
+          <p>Company names and logos are trademarks of their owners.</p>
+        </div>
       </div>
-      <p class="footer-copy">&copy; 2026 HopBuilds &middot; Johns Hopkins University</p>
     </footer>
 
     <script type="module" src="./js/main.js"></script>

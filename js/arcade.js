@@ -125,7 +125,7 @@ export default function initArcade() {
 
     /* A saved run can land anywhere on a long board, so bring it into the
        list's own scroll box. Deliberately not scrollIntoView(): that walks up
-       and scrolls ancestors too, which fights Lenis and yanks the page. */
+       and scrolls ancestors too, which yanks the page. */
     boardList.scrollTop = newRow
       ? Math.max(0, newRow.offsetTop - (boardList.clientHeight - newRow.offsetHeight) / 2)
       : 0;

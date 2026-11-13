@@ -20,18 +20,16 @@ production deployment (Vercel) and environment variable details.
 
 ## How the page is built
 
-`index.html` links `css/home/redesign.css` for styling and loads a single ES
-module entry point, `js/main.js` (`index.html:481`), which imports GSAP,
-ScrollTrigger, and Lenis as real npm dependencies and initializes three
-sibling modules:
+`index.html` links `css/site.css` for styling and loads a single ES module
+entry point, `js/main.js`, which initializes four sibling modules. There are
+no runtime npm dependencies on the page.
 
+- **`js/nav.js`** — the phone menu (full-screen sheet, Escape to close).
 - **`js/terminal.js`** — the interactive fake-shell in the hero section.
 - **`js/arcade.js`** — the 30-second speed-math drill and its calls to
   `/api/scores`.
-- **`js/animations.js`** — GSAP/ScrollTrigger/Lenis scroll animations: pinned
-  sections, reveals, and the smooth-scroll setup. The hero intro's animation
-  from-state is split between this file and `css/home/redesign.css`, so the
-  two must be changed together.
+- **`js/effects.js`** — scroll reveals, the pointer spotlight on cards, the
+  count-up numbers and the ticker's pause button. The hero entrance is CSS.
 
 `npm run build` bundles this with Vite into `dist/`, and `vercel.json` points
 Vercel at that same `vite build` / `dist` output. See
@@ -46,7 +44,7 @@ migration, not a forward-looking plan, if you want the reasoning behind it.
 | `index.html`             | The entire live site: a single scroll-driven page.                                           |
 | `vite.config.js`         | Vite config: dev server, the `vite-api-plugin.js` middleware, and the `dist/` build.          |
 | `.nvmrc`                 | Pins local Node tooling to Node 22, matching `package.json`'s `engines.node`.                 |
-| `css/home/redesign.css`  | All homepage styling, self-contained.                                                        |
+| `css/site.css`           | All homepage styling, self-contained.                                                        |
 | `assets/`                | Images used by the site. `Blue_Jay_Coding_Icon.png` at the repo root is the favicon.          |
 | `api/scores.js`          | The one serverless function, served at `/api/scores`. GET returns top scores, POST submits one.|
 | `api/_lib/db.js`         | MongoDB client, cached on `globalThis` so warm invocations reuse the connection pool.         |

@@ -61,14 +61,17 @@ npm run dev                  # http://localhost:8000
 - Vanilla JS, no framework. Vite bundles real ES modules for production; there
   is no runtime framework doing rendering or state management.
 - `index.html` loads a single module entry point, `js/main.js`
-  (`index.html:481`), which imports `js/terminal.js`, `js/arcade.js`, and
-  `js/animations.js`. GSAP, ScrollTrigger, and Lenis are real npm dependencies,
-  imported as ES modules (`import gsap from "gsap"`, etc.) — not globals, not
-  classic script tags.
+  (the last `<script>` in `index.html`), which imports `js/nav.js`,
+  `js/terminal.js`, `js/arcade.js`, and `js/effects.js`. There are no runtime
+  npm dependencies on the page: GSAP and Lenis were removed in the redesign.
+  Every effect is CSS plus a few lines of vanilla JS.
 - CSS uses flat kebab-case class names (e.g. `.arcade-board-list`,
   `.hero-terminal`), not BEM.
 - Theming goes through CSS custom properties defined on `:root` in
-  `css/home/redesign.css` (`--ink`, `--spirit`, `--slate`, etc.).
+  `css/site.css` (`--night` deep Heritage Blue for the blue sections and frames, `--accent` Spirit Blue, `--surface` white and `--surface-2` cool tint for the light sections, `--warn` JHU Orange for the drill timer only, etc.). Every text pair is 7:1 or better; the design has no cream, by request.
+  Fonts: Bricolage Grotesque (display and text), Instrument Serif italic (one
+  accent word per heading, `.serif`), DM Mono (code, numbers), all from Google
+  Fonts, which the CSP in `vercel.json` allows.
 - DOM nodes carrying user- or player-supplied data are built with
   `document.createElement` + `.textContent`, never `innerHTML`. This is
   deliberate, not incidental: see `js/arcade.js:76-100` (`renderBoard`, which
@@ -92,15 +95,14 @@ npm run dev                  # http://localhost:8000
 ## Known gotchas — do not "fix" without being asked
 
 - The hero terminal is `display: none` below 1024px
-  (`css/home/redesign.css:420-422`), but `initTerminal()` still runs
+  (`css/site.css`, search for "deliberately deferred"), but `initTerminal()` still runs
   underneath it. Known, deliberately deferred.
 - The leaderboard lists every player, not a top ten: any finished round is
   offered the save form whatever the score, and the page pulls the whole board
   in one request (`?limit=BOARD_MAX`) into a `max-height` scroll box. One row
   per email still holds, and that row keeps the player's highest score -- a
-  worse run never displaces a better one. Two things this depends on: the list
-  carries `data-lenis-prevent` (Lenis owns the wheel globally and will scroll
-  the page instead otherwise), and `renderBoard` caps the CSS stagger index,
+  worse run never displaces a better one. This depends on `renderBoard`
+  capping the CSS stagger index,
   because rows animate `backwards` and an uncapped delay leaves the tail of a
   long board invisible.
 - Scores are graded server-side. `POST /api/session` generates the round's
@@ -129,32 +131,25 @@ npm run dev                  # http://localhost:8000
   keying the rate limiter on it lets a script rotate a fake address per request
   and post without any ceiling. Locally there is no Vercel proxy, so every
   request resolves to the same loopback bucket -- expected, not a bug.
-- The hero intro animation's "from-state" is duplicated across two files with
-  nothing enforcing they agree: `css/home/redesign.css:319-342` (inside
-  `@media (prefers-reduced-motion: no-preference)`) sets `opacity: 0` plus
-  transforms on `.hero-title-line`, `.hero-eyebrow`, `.hero-tagline`,
-  `.hero-actions`, and `.hero-terminal`, to prevent a flash of the final
-  layout before the deferred module script runs; `js/animations.js:43-96`
-  holds the matching GSAP hero tweens. Two production bugs have already come
-  out of this duplication, and neither was catchable by `npm run build` or by
-  code review — check the rendered hero in a browser after touching either
-  file.
-  - Tweens must use `gsap.fromTo`, never `gsap.from`. `gsap.from` animates
-    FROM the given values TO the element's current computed state, and the
-    CSS has already set that computed state to `opacity: 0` — so the hero
-    animated 0 to 0 and stayed permanently invisible.
-  - If a CSS from-state expresses an offset as a percentage, the tween must
-    explicitly name and zero `y`. GSAP decomposes the computed transform
-    matrix into a pixel `y`, not into `yPercent`, then composes the pixel
-    and percent translates together; a tween naming only `yPercent` leaves
-    that decomposed pixel offset in place forever, which is what pushed the
-    title lines down onto the tagline. The px-based from-states don't hit
-    this because their tweens already name `y`.
-  - That CSS block must stay after the base `.hero-terminal` rule at
-    `css/home/redesign.css:303`. Media queries add no specificity, so at
-    equal specificity source order decides the winner; the block was
-    originally placed above the base rule and the base rule's
-    `transform: rotate(-1.5deg)` silently won.
+- The hero entrance is CSS only (`@keyframes enter` / `enter-stage` in
+  `css/site.css`), so there is no JS from-state to keep in sync with it.
+- Scroll reveals (`.reveal`) only hide content once `js/effects.js` has added
+  `html.reveal-armed`, so without script, under reduced motion, or without
+  IntersectionObserver everything stays visible. They animate the `translate`
+  property, never `transform`: a reveal that sets `transform: none` cancels
+  any block's own transform (it broke the polaroid's tilt and the cards' hover
+  lift during the build).
+- Images with `width`/`height` attributes rely on the global `img { height:
+  auto }` rule. Without it the attribute height wins over `aspect-ratio`, and
+  the 1067px-tall screenshot attributes blew the bento tiles up.
+- Each `section` sets `overflow-x: clip` so the orbit's rotating labels and
+  the glow blobs never widen the page on a phone. `clip` does not create a
+  scroll container, so it is safe for future `position: sticky`.
+- The hero's word ticker loops forever, so it has a Pause button (WCAG 2.2.2);
+  keep one if the ticker changes.
+- Page images come from `assets/web/` (web-sized copies made with `sips`).
+  The originals under `assets/project/`, `assets/home/` and `assets/source/`
+  are the sources; re-export from them rather than editing the copies.
 
 ## Vite migration
 

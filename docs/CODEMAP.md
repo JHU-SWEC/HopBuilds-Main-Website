@@ -9,17 +9,19 @@ specific line number, and fix this map if a citation is wrong.
 
 Static single-page site (`index.html`) + one Vercel serverless function
 (`api/scores.js`) backed by MongoDB, built with Vite; no frontend framework.
-Entry point chain: `index.html:481` loads `js/main.js` as a module, which
-calls `initTerminal()` → `initArcade()` → `initAnimations()` in that order.
+Entry point chain: `index.html:543` loads `js/main.js` as a module, which
+calls `initNav()` → `initTerminal()` → `initArcade()` → `initEffects()` in
+that order.
 
 ## File map
 
 | Path | LOC | Role | Open it when... |
 |---|---|---|---|
-| `css/home/redesign.css` | 1499 | All page styling | changing layout, section styling, responsive/reduced-motion behavior |
-| `index.html` | 558 | Page markup, section structure | adding/reordering sections, changing copy/markup |
+| `css/site.css` | 2640 | All page styling, including the CSS-only hero entrance and effects | changing layout, section styling, responsive/reduced-motion behavior |
+| `index.html` | 545 | Page markup, section structure | adding/reordering sections, changing copy/markup |
 | `js/arcade.js` | 367 | Speed-math game + leaderboard UI | touching the arcade game or leaderboard rendering |
-| `js/animations.js` | 227 | Scroll/entry animations (GSAP/ScrollTrigger/Lenis) | changing hero/scroll animation behavior |
+| `js/effects.js` | 99 | Scroll reveal, card spotlight, count-up, ticker pause | changing any page effect |
+| `js/nav.js` | 33 | Phone menu sheet | changing the mobile menu |
 | `api/scores.js` | 238 | Leaderboard API handler (GET/POST) | changing leaderboard API behavior, rate limiting, ranking, one-row-per-email |
 | `api/session.js` | 44 | Mints the one-time token POST /api/scores requires | changing score-submission gating |
 | `js/terminal.js` | 114 | Hero fake-terminal widget | changing terminal commands/typing demo |
@@ -31,14 +33,15 @@ calls `initTerminal()` → `initArcade()` → `initAnimations()` in that order.
 | `api/_lib/validate.js` | 41 | Input validation + limits for scores API | changing validation limits, board size |
 | `vite.config.js` | 32 | Build/dev-server config | changing build output, dev port, `server.fs.deny` |
 | `package.json` | 29 | Scripts, deps, Node engine pin | changing npm scripts/deps |
-| `js/main.js` | 7 | Entry point, calls the three init functions | rare — only to change init order |
+| `js/main.js` | 9 | Entry point, calls the four init functions | rare — only to change init order |
 | `vercel.json` | 6 | Vercel deploy config | changing deploy/build settings |
 
 ## Symbol index
 
 ### js/main.js
-Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
-`initArcade()` (js/arcade.js), `initAnimations()` (js/animations.js).
+Entry point. Imports and calls, in order: `initNav()` (js/nav.js),
+`initTerminal()` (js/terminal.js), `initArcade()` (js/arcade.js),
+`initEffects()` (js/effects.js).
 
 ### js/terminal.js
 | Symbol | Line | Note |
@@ -70,19 +73,19 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 | `tick` | 259 | |
 | `start` | 267 | requests a session token for the round |
 
-### js/animations.js
+### js/effects.js
 | Symbol | Line | Note |
 |---|---|---|
-| `export default function initAnimations()` | 12 | |
-| Lenis smooth scroll | 15 | |
-| nav state + progress bar | 25 | runs on all viewports |
-| hero intro | 42 | |
-| reduced-motion early return | 40 | everything after skipped if `prefers-reduced-motion`; nav/progress-bar block above always runs |
-| desktop pinned story chapter | 99 | |
-| desktop pinned horizontal project gallery | 121 | |
-| gains connector draw (2 `gsap.matchMedia()` buckets: desktop+tablet share one `min-width: 768px` `scaleX` bucket since the grid is now unqueried across both, mobile `scaleY` at `max-width: 767px`) | 150-171 | |
-| shared reveals + `reveal()` helper | 182-183 | |
-| social photo parallax | 203 | |
+| `initReveal` | 17 | arms `html.reveal-armed`, staggers siblings via `--d`, IntersectionObserver adds `.is-in` |
+| `initSpotlight` | 42 | `.spot` cards: sets `--mx` / `--my` on pointermove (hover devices only) |
+| `initCountUp` | 53 | `[data-count]` rolls 0 to its value once in view |
+| `initTicker` | 83 | the hero ticker's Pause/Play button |
+| `export default function initEffects()` | 94 | |
+
+### js/nav.js
+| Symbol | Line | Note |
+|---|---|---|
+| `export default function initNav()` | 6 | toggle, Escape, close on link, close when widened past 960px |
 
 ### api/scores.js
 | Symbol | Line | Note |
@@ -129,53 +132,48 @@ Entry point. Imports and calls, in order: `initTerminal()` (js/terminal.js),
 `defineConfig` at line 8. Sets plugins (the API plugin), `build.outDir:
 "dist"`, `server.port` (8000, `strictPort`), `server.fs.deny`.
 
-## CSS region map — css/home/redesign.css
+## CSS region map — css/site.css
 
 | Lines | Region |
 |---|---|
-| 1-56 | header comment, `:root` custom properties, resets, base `html`/`body` |
-| 57-65 | blueprint grid backdrop |
-| 66-170 | shared primitives (`.eyebrow`, `.chapter-label`, buttons) |
-| 171-183 | progress bar |
-| 184-242 | nav |
-| 243-503 | HERO — `.hero` :245, `.hero-inner` :254, `.hero-title` :265, `.hero-title-line` :274, `.hero-tagline` :288, `.hero-terminal` base rule :303, terminal internals `.term-*` :344-424, `.hero-foot` :425 |
-| 319-342 | hero animation from-state, inside `@media (prefers-reduced-motion: no-preference)` |
-| 504-554 | story |
-| 555-743 | builds (horizontal gallery) |
-| 744-896 | gains |
-| 897-908 | social |
-| 909-952 | join |
-| 953-988 | sponsors |
-| 989-1349 | arcade / speed math |
-| 1350-1376 | footer |
-| 1377-1398 | reduced motion overrides |
+| 1-410 | header comment, `:root` tokens (palette, fonts, radii), resets, `.serif`, grounds (`.dark`, `.band-white`, `.band-tint`), heads, buttons, `.link` |
+| 411-571 | nav (floating glass pill, phone sheet) |
+| 572-1089 | 1 hero: aurora, grid lines, grain, terminal, chips, sticker, entrance keyframes, word ticker |
+| 1090-1136 | 2 story statement |
+| 1137-1438 | 3 projects bento (tiles, browser frames, stat tiles, `.spot`) |
+| 1439-1592 | 4 semester timeline |
+| 1593-1841 | 5 mentors: perks, orbit diagram, alumni logos |
+| 1842-1930 | 6 team life polaroid |
+| 1931-2104 | 7 sponsor (turning conic border) and 8 roles |
+| 2105-2459 | 9 drill (arcade game and leaderboard) |
+| 2460-2601 | close CTA band, giant wordmark, footer |
+| 2602-2620 | scroll reveal |
+| 2621-end | reduced motion |
 
-Responsive breakpoints: `max-width: 767px` blocks at 236, 544, 712, 841,
-980; `max-width: 1023px` at 415 (hides `.hero-terminal` at :420-422,
-collapses `.hero-inner` to one column); `prefers-reduced-motion: reduce` at
-493, 1343, 1378; `prefers-reduced-motion: no-preference` at 319.
+Breakpoints sit next to the rules they change: 1279px (hero sticker),
+1023px (hero terminal hides, grids stack), 959px (nav to menu), 899px,
+799px, 699px, 639px (phone), 479px.
 
 ## index.html landmarks
 
 | Landmark | Line |
 |---|---|
-| `<nav class="site-nav">` | 30 |
-| `header.hero` | 43 |
-| `section.story#story` | 113 |
-| `section.builds#builds` | 132 |
-| `section.gains#gains` | 215 |
-| `section.social#social` | 288 |
-| `section.sponsors#sponsors` | 309 |
-| `section.join#join` | 325 |
-| `section.arcade#arcade` | 361 |
-| `footer.site-footer` | 472 |
-| module script tag | 481 |
+| `header.nav` | 34 |
+| `section.hero#top` | 66 |
+| `section.story` | 146 |
+| `section.projects` | 167 |
+| `section.semester` | 226 |
+| `section.mentors` | 261 |
+| `section.life` | 330 |
+| `section.join` (sponsor + roles) | 361 |
+| `section.drill` | 410 |
+| `footer.closing` | 509 |
+| module script tag | 543 |
 
 ## Data flows
 
 1. **Page load**: `index.html` → module `js/main.js` → `initTerminal()` →
-   `initArcade()` → `initAnimations()` in order. GSAP/ScrollTrigger/Lenis are
-   npm ES module imports, no globals, no extra script tags.
+   `initArcade()` → `initEffects()` in order. No runtime npm dependencies.
 2. **Leaderboard read**: `loadBoard()` (js/arcade.js:120) → `GET
    /api/scores?limit=10` → `handleGet` (api/scores.js:137) → `getScores()`
    (api/_lib/db.js:44) → MongoDB. Rendered by `renderBoard`
@@ -195,9 +193,9 @@ collapses `.hero-inner` to one column); `prefers-reduced-motion: reduce` at
 
 | Task | File(s) |
 |---|---|
-| Changing hero copy | `index.html:43` (`header.hero`) |
-| Changing hero animation | `js/animations.js:42` (hero intro); `css/home/redesign.css:319-342` (from-state) |
-| Adding/altering a page section | `index.html` (section landmarks above) + matching region in `css/home/redesign.css` |
+| Changing hero copy | `index.html:66` (`section.hero`) |
+| Changing hero animation | `css/site.css` `@keyframes enter` / `enter-stage` (CSS only) |
+| Adding/altering a page section | `index.html` (section landmarks above) + matching region in `css/site.css` |
 | Touching the leaderboard API | `api/scores.js`, `api/_lib/db.js` |
 | Changing validation limits | `api/_lib/validate.js:3-6` |
 | Changing rate limiting | `api/scores.js:51` |
@@ -208,8 +206,8 @@ collapses `.hero-inner` to one column); `prefers-reduced-motion: reduce` at
 | Exporting emails | `scripts/export-emails.js` |
 | Cleaning up legacy duplicate board rows | `scripts/dedupe-scores.js` |
 | Testing the leaderboard end to end | `scripts/test-leaderboard.js` |
-| Adjusting responsive behavior | `css/home/redesign.css` breakpoint list above |
-| Adjusting reduced-motion behavior | `js/animations.js:40` (JS early return); `css/home/redesign.css:493,1343,1378,319` |
+| Adjusting responsive behavior | `css/site.css` breakpoint list above |
+| Adjusting reduced-motion behavior | `js/effects.js` (`reduced()`); the last block of `css/site.css` |
 
 ## Before you edit
 
