@@ -20,7 +20,8 @@
   "dependencies": {
     "gsap": "3.12.5",
     "lenis": "1.1.14",
-    "mongodb": "^6.8.0"
+    "mongodb": "^6.8.0",
+    "obscenity": "0.4.6"
   },
   "devDependencies": {
     "dotenv": "^16.4.5",
