@@ -1,5 +1,7 @@
 /** Input rules shared by the leaderboard endpoints. */
 
+import { RegExpMatcher, englishDataset, englishRecommendedTransformers } from "obscenity";
+
 export const NAME_MAX = 16;
 export const EMAIL_MAX = 254; /* RFC 5321 upper bound on a full address */
 export const SCORE_MAX = 150; /* a 30-second run realistically tops out near 100; this leaves headroom without accepting absurd values */
@@ -16,6 +18,32 @@ export const cleanName = (value) => {
   if (!stripped) return null;
   return stripped.slice(0, NAME_MAX);
 };
+
+/*
+ * Built once per container. The dataset covers slurs as well as profanity, and
+ * the transformers catch the usual disguises: leetspeak ("sh1t"), symbol swaps
+ * ("a$$"), and stretched letters ("fuuuck"). Its patterns are word-aware, so
+ * names like "Scunthorpe", "Dickens", or "Hancock" are not caught.
+ */
+const profanity = new RegExpMatcher({
+  ...englishDataset.build(),
+  ...englishRecommendedTransformers,
+});
+
+/**
+ * Collapse runs of single characters split by separators ("f u c k",
+ * "n-i-g-g-a") into one word. Only single-character runs are joined: removing
+ * every space instead would read "Ana Lee" as one word and reject a real name.
+ */
+const joinSpelledOut = (value) =>
+  value.replace(
+    /(?<![\p{L}\p{N}])\S(?:[^\p{L}\p{N}]+\S(?![\p{L}\p{N}]))+/gu,
+    (run) => run.replace(/[\s._\-~*+,:;'"/\\]/g, "")
+  );
+
+/** True when a (cleaned) name contains a slur or profanity. */
+export const isOffensiveName = (name) =>
+  profanity.hasMatch(name) || profanity.hasMatch(joinSpelledOut(name));
 
 export const cleanScore = (value) => {
   if (typeof value !== "number" || !Number.isInteger(value)) return null;

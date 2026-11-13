@@ -26,6 +26,7 @@ import {
   BOARD_MAX,
   SCORE_MAX,
   cleanName,
+  isOffensiveName,
   cleanScore,
   cleanEmail,
 } from "./_lib/validate.js";
@@ -195,6 +196,9 @@ const handlePost = async (req, res) => {
   const email = cleanEmail(body?.email);
 
   if (!name) return res.status(400).json({ error: "Name is required." });
+  if (isOffensiveName(name)) {
+    return res.status(400).json({ error: "That name is not allowed on the board. Please pick another." });
+  }
   if (score === null) {
     return res.status(400).json({ error: `Score must be a whole number from 0 to ${SCORE_MAX}.` });
   }
