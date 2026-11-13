@@ -74,11 +74,24 @@ const post = (path, body) =>
     body: JSON.stringify(body ?? {}),
   }).then(async (res) => ({ status: res.status, body: await res.json() }));
 
-const mintToken = async () => {
+const mintSession = async () => {
   const res = await post("/api/session");
-  if (!res.body?.token) throw new Error(`could not mint a session token: ${JSON.stringify(res)}`);
-  return res.body.token;
+  if (!res.body?.token || !Array.isArray(res.body.problems)) {
+    throw new Error(`could not mint a session: ${JSON.stringify(res)}`);
+  }
+  return res.body;
 };
+
+const answerOf = ({ a, b, op }) =>
+  op === "+" ? a + b : op === "-" ? a - b : op === "*" ? a * b : a / b;
+
+/* A correctly played run of `count` problems, one every `gap` ms, shaped the
+   way js/arcade.js submits it. The server grades this; it never sees a score. */
+const run = (session, count, gap = 300) =>
+  session.problems.slice(0, count).map((problem, i) => ({ value: answerOf(problem), t: (i + 1) * gap }));
+
+const submit = (session, fields, answers) =>
+  post("/api/scores", { ...fields, token: session.token, answers });
 
 const board = () => fetch(`${BASE}/api/scores?limit=50`).then((res) => res.json());
 const named = async (name) => (await board()).filter((row) => row.name === name);
@@ -113,30 +126,75 @@ try {
 
   const EMAIL = "repeat@example.test";
   await clearRateLimit();
-  const tokens = [await mintToken(), await mintToken(), await mintToken()];
-  console.log(`minted 3 session tokens, waiting ${TOKEN_WAIT_MS / 1000}s for them to become claimable...`);
+  const sessions = [];
+  for (let i = 0; i < 8; i += 1) sessions.push(await mintSession());
+  console.log(`minted ${sessions.length} sessions, waiting ${TOKEN_WAIT_MS / 1000}s for them to become claimable...`);
   await wait(TOKEN_WAIT_MS);
+  await clearRateLimit();
 
-  const first = await post("/api/scores", { name: "Runner One", score: 10, email: EMAIL, token: tokens[0] });
+  check("a session issues its round's problems", sessions[0].problems.length > 0, true);
+
+  const first = await submit(sessions[0], { name: "Runner One", email: EMAIL }, run(sessions[0], 10));
   check("first submission accepted", first.status, 201);
   check("first submission stores its score", first.body.score, 10);
+  check("first submission issues an owner key", /^[0-9a-f]{48}$/.test(first.body.ownerKey || ""), true);
+  const KEY = first.body.ownerKey;
   check("one row on the board", (await named("Runner One")).length, 1);
 
-  const higher = await post("/api/scores", { name: "Runner Two", score: 25, email: EMAIL, token: tokens[1] });
+  const higher = await submit(sessions[1], { name: "Runner Two", email: EMAIL, ownerKey: KEY }, run(sessions[1], 25));
   check("a better run is accepted", higher.status, 201);
   check("a better run replaces the old score", higher.body.score, 25);
   check("the name follows the latest submission", higher.body.name, "Runner Two");
   check("the old row is gone, not duplicated", (await named("Runner One")).length, 0);
   check("still exactly one row", (await named("Runner Two")).length, 1);
 
-  const lower = await post("/api/scores", { name: "Runner Two", score: 5, email: EMAIL, token: tokens[2] });
+  const lower = await submit(sessions[2], { name: "Runner Two", email: EMAIL, ownerKey: KEY }, run(sessions[2], 5));
   check("a weaker run is accepted", lower.status, 201);
   check("a weaker run does not displace the best", lower.body.score, 25);
   check("still exactly one row after a weaker run", (await named("Runner Two")).length, 1);
   check("the board still shows the best score", (await named("Runner Two"))[0].score, 25);
 
+  /* ---------- only the browser that owns a row can update it ---------- */
+
+  const noKey = await submit(sessions[7], { name: "Hijacker", email: EMAIL }, run(sessions[7], 30));
+  check("saving under someone else's email without their key is refused", noKey.status, 403);
+  const badKey = await submit(sessions[7], { name: "Hijacker", email: EMAIL, ownerKey: "0".repeat(48) }, run(sessions[7], 30));
+  check("a wrong owner key is refused", badKey.status, 403);
+  check("the owner's row keeps its name", (await named("Runner Two")).length, 1);
+  check("no hijacker row appeared", (await named("Hijacker")).length, 0);
+
+  /* ---------- the score is graded, never taken from the client ---------- */
+
+  await clearRateLimit();
+  const forged = await submit(sessions[3], { name: "Forger", email: "forger@example.test", score: 150 }, run(sessions[3], 3));
+  check("a client-sent score is ignored", forged.body.score, 3);
+
+  const replay = await submit(sessions[3], { name: "Forger", email: "forger@example.test", ownerKey: forged.body.ownerKey }, run(sessions[3], 20));
+  check("a spent session cannot be replayed", replay.status, 400);
+
+  const wrong = run(sessions[4], 10);
+  wrong[6].value += 1;
+  const wrongRes = await submit(sessions[4], { name: "Wrong", email: "wrong@example.test" }, wrong);
+  check("a run with a wrong answer is rejected", wrongRes.status, 400);
+
+  const fast = await submit(sessions[5], { name: "Fast", email: "fast@example.test" }, run(sessions[5], 100, 50));
+  check("a run answered faster than a person can is rejected", fast.status, 400);
+
+  const late = await submit(sessions[6], { name: "Late", email: "late@example.test" }, run(sessions[6], 5, 7000));
+  check("answers stamped after the 30s clock are rejected", late.status, 400);
+
+  const foreign = await submit(sessions[7], { name: "Foreign", email: "foreign@example.test" }, run(sessions[0], 10));
+  check("answers to another session's problems are rejected", foreign.status, 400);
+
+  check(
+    "no rejected run reached the board",
+    (await board()).filter((row) => ["Wrong", "Fast", "Late", "Foreign"].includes(row.name)).length,
+    0
+  );
+
   /* ---------- email is required, and never comes back out ---------- */
 
+  await clearRateLimit();
   const noEmail = await post("/api/scores", { name: "No Email", score: 9 });
   check("a submission without an email is rejected", noEmail.status, 400);
   check("the rejection names the missing field", noEmail.body.error, "Email is required.");
@@ -161,13 +219,14 @@ try {
   check("seeded the pre-rule duplicates", (await named("Legacy")).length, 3);
 
   await clearRateLimit();
-  const legacyToken = await mintToken();
+  const legacySession = await mintSession();
   console.log(`waiting ${TOKEN_WAIT_MS / 1000}s for the token to become claimable...`);
   await wait(TOKEN_WAIT_MS);
 
-  const fold = await post("/api/scores", { name: "Legacy", score: 4, email: LEGACY, token: legacyToken });
+  const fold = await submit(legacySession, { name: "Legacy", email: LEGACY }, run(legacySession, 4));
   check("the returning player's submission is accepted", fold.status, 201);
   check("their best old score survives a weaker new run", fold.body.score, 30);
+  check("a pre-key row is claimed by its next save", typeof fold.body.ownerKey, "string");
   check("their duplicates collapsed to one row", (await named("Legacy")).length, 1);
   check("the surviving row shows the best score", (await named("Legacy"))[0].score, 30);
 

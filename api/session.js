@@ -1,19 +1,20 @@
 /**
  * Issues a one-time play-session token for the speed-math drill.
  *
- *   POST /api/session   ->  { token }
+ *   POST /api/session   ->  { token, problems: [{ a, b, op }] }
  *
- * The token does not prove a score is correct -- it proves a round of
- * roughly the drill's real length elapsed before a score was submitted. See
- * api/scores.js for how it's redeemed and consumed. A TTL index expires
+ * The session is the round: it carries the problems the player will be asked,
+ * generated here so POST /api/scores can re-grade the run instead of trusting
+ * a score the browser reports (see api/_lib/drill.js). Its creation time also
+ * proves a round of roughly the drill's real length elapsed before a score was
+ * submitted. See api/scores.js for how it's redeemed and consumed. A TTL index expires
  * abandoned tokens so nothing needs manual cleanup.
  */
 
 import { getSessions } from "./_lib/db.js";
 import { clientIp, rateLimited } from "./scores.js";
+import { generateProblems, SESSION_TTL_SECONDS } from "./_lib/drill.js";
 import crypto from "node:crypto";
-
-const SESSION_TTL_SECONDS = 600; /* 10 min: covers a slow name-entry after the round ends */
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -31,9 +32,11 @@ export default async function handler(req, res) {
     await sessions.createIndex({ createdAt: 1 }, { expireAfterSeconds: SESSION_TTL_SECONDS });
 
     const token = crypto.randomBytes(24).toString("hex");
-    await sessions.insertOne({ _id: token, createdAt: new Date(), used: false });
+    const problems = generateProblems();
+    await sessions.insertOne({ _id: token, createdAt: new Date(), used: false, problems });
 
-    return res.status(201).json({ token });
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(201).json({ token, problems });
   } catch (err) {
     console.error("POST /api/session failed:", err);
     const message = /MONGODB_URI is not set/.test(err?.message)

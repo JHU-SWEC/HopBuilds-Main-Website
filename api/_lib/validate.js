@@ -12,7 +12,11 @@ export const BOARD_MAX = 500;  /* ceiling on ?limit=, so one request can pull th
 export const cleanName = (value) => {
   if (typeof value !== "string") return null;
   const stripped = value
-    .replace(/[\u0000-\u001F\u007F]/g, "")
+    /* Control characters, plus Unicode format characters (\p{Cf}): bidi
+       overrides like U+202E can flip how a name and the row around it render,
+       and zero-width characters make two names look identical or slip a
+       blocked word past the profanity check. */
+    .replace(/[\p{Cc}\p{Cf}]/gu, "")
     .replace(/\s+/g, " ")
     .trim();
   if (!stripped) return null;

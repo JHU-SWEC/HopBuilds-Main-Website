@@ -97,10 +97,8 @@ node scripts/export-emails.js > emails.csv
   containers do not share state. A TTL index expires the rows automatically.
 - The Mongo client is cached on `globalThis` so warm invocations reuse one
   connection pool instead of exhausting Atlas connection limits.
-- Scores are computed in the browser, so the board is a friendly ranking rather
-  than a verified competition. `POST /api/scores` requires a one-time session
-  token minted by `POST /api/session` and claimable only after a real round's
-  worth of time has passed, which blocks a bare console POST made with no
-  session -- but the score value itself is still self-reported by the client.
-  Making it fully tamper-proof would mean having the server generate the
-  problems and grade the answers.
+- Scores are graded on the server. `POST /api/session` generates and stores
+  the round's problems with a one-time token; `POST /api/scores` re-grades the
+  submitted answers and their timings against them and ignores any score the
+  client sends. A bot that solves the served arithmetic itself can still post
+  a fast round; the per-answer timing floor bounds it.

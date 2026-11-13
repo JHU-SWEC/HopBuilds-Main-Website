@@ -103,12 +103,26 @@ npm run dev                  # http://localhost:8000
   the page instead otherwise), and `renderBoard` caps the CSS stagger index,
   because rows animate `backwards` and an uncapped delay leaves the tail of a
   long board invisible.
-- Scores are computed client-side (`js/arcade.js`). `POST /api/scores`
-  requires a one-time session token from `POST /api/session`, claimable only
-  after ~27s, which blocks a bare console POST with no session -- but the
-  score value itself is still client-reported and not graded server-side.
-  See `DEPLOY.md`. Making it fully tamper-proof is a documented, accepted
-  non-goal, not a bug to fix.
+- Scores are graded server-side. `POST /api/session` generates the round's
+  problems (`api/_lib/drill.js`) and stores them with a one-time token,
+  claimable only after ~27s; the browser plays those problems and submits
+  `answers: [{ value, t }]`, and `gradeRun` recomputes the score. Any `score`
+  field in the body is ignored. The browser must still know each answer to
+  auto-advance, so a script that solves the served problems can post a
+  perfect round paced at `MIN_ANSWER_GAP_MS`; that residual is accepted.
+- A board row belongs to the browser that first saved it: the first save
+  returns an `ownerKey`, kept in localStorage and stored server-side only as a
+  SHA-256 hash, and later saves for that email must present it or get a 403.
+  This blocks renaming someone else's row by typing their email; the accepted
+  cost is that a player on a new device (or after clearing site data) cannot
+  update their row from there. Rows that predate the key are claimed by
+  whoever next saves under that email.
+- `vercel.json` sets a strict Content-Security-Policy (no inline scripts or
+  styles; fonts only from Fontshare and Google Fonts). Adding an inline
+  `<script>`, a `style="..."` attribute, `setAttribute("style", ...)`, or a
+  new third-party origin will be blocked in production but not in
+  `npm run dev`, which does not apply those headers. Update the policy with
+  the change.
 - `clientIp()` (`api/scores.js`, search for `export const clientIp`) reads only
   `x-vercel-forwarded-for` and otherwise falls back to the socket address. Do
   not "fix" it to read `x-forwarded-for`: that header is client-writable, and

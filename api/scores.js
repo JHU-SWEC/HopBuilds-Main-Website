@@ -2,7 +2,7 @@
  * Leaderboard endpoint for the homepage speed-math bonus round.
  *
  *   GET  /api/scores?limit=10   top scores, ties broken by who got there first
- *   POST /api/scores            body { name, score, email }
+ *   POST /api/scores            body { name, email, token, answers: [{ value, t }], ownerKey? }
  *
  * The board holds one row per email address: a repeat submission updates that
  * player's single row rather than adding another, and the row keeps their
@@ -12,24 +12,36 @@
  * Emails are stored but never returned: the GET projection lists fields
  * explicitly so a new field can never leak by accident.
  *
- * Scores are calculated in the browser, so treat the board as a friendly
- * ranking rather than a verified competition. POST requires a session token
- * minted by POST /api/session and only claimable once a real round's worth
- * of time has passed (see claimSession below) -- this stops a bare console
- * POST with no session, but a scripted attacker who waits out the timer can
- * still submit a plausible-but-inflated score. It is a deterrent, not proof.
+ * A row belongs to the browser that first saved it. Nothing proves who owns an
+ * email address, so without this anyone could post under someone else's email
+ * and rename their row. The first save issues an owner key (kept in that
+ * browser's localStorage, stored here only as a SHA-256 hash); later saves for
+ * the same email must present it. The cost: a player on a new device, or one
+ * who cleared site data, cannot update their row from there. Rows that predate
+ * this have no key yet and are claimed by whoever next saves under that email.
+ *
+ * The score is graded here, never taken from the browser. POST requires a
+ * session token minted by POST /api/session, which also generated and stored
+ * the round's problems; the browser submits what it typed for each problem and
+ * when, and gradeRun (api/_lib/drill.js) recomputes the score from that. Any
+ * `score` field in the body is ignored. The token is only claimable once a
+ * real round's worth of time has passed (see claimSession below).
+ *
+ * What this does not stop: a script that plays the served problems itself.
+ * The browser has to know the answers to advance instantly, so a solver bot
+ * can still post a perfect, correctly-paced round. Timing checks bound it.
  */
 
+import crypto from "node:crypto";
 import { getScores, getRateLimits, getSessions } from "./_lib/db.js";
 import {
   BOARD_LIMIT,
   BOARD_MAX,
-  SCORE_MAX,
   cleanName,
   isOffensiveName,
-  cleanScore,
   cleanEmail,
 } from "./_lib/validate.js";
+import { gradeRun, SESSION_TTL_SECONDS } from "./_lib/drill.js";
 
 const RATE_WINDOW_SECONDS = 300;
 const RATE_MAX_POSTS = 10;
@@ -79,25 +91,47 @@ export const rateLimited = async (ip) => {
 };
 
 /**
- * Atomically redeems a session token: it must exist, be unused, and be old
- * enough to correspond to a real round. findOneAndUpdate is atomic, so two
- * concurrent requests for the same token cannot both succeed (no
- * read-then-write race). Returns true iff the token was successfully claimed.
+ * Atomically redeems a session token: it must exist, be unused, be old enough
+ * to correspond to a real round, and not be past its TTL (Mongo's TTL monitor
+ * only sweeps about once a minute, so an expired row can briefly linger).
+ * findOneAndUpdate is atomic, so two concurrent requests for the same token
+ * cannot both succeed (no read-then-write race). Returns the session document
+ * -- which carries the round's problems -- or null if it could not be claimed.
  */
 const claimSession = async (token) => {
-  if (typeof token !== "string" || !token) return false;
+  if (typeof token !== "string" || !token) return null;
 
   const sessions = await getSessions();
-  const cutoff = new Date(Date.now() - MIN_SESSION_AGE_MS);
+  const now = Date.now();
   const result = await sessions.findOneAndUpdate(
-    { _id: token, used: false, createdAt: { $lte: cutoff } },
+    {
+      _id: token,
+      used: false,
+      createdAt: {
+        $lte: new Date(now - MIN_SESSION_AGE_MS),
+        $gt: new Date(now - SESSION_TTL_SECONDS * 1000),
+      },
+    },
     { $set: { used: true, usedAt: new Date() } },
     /* Pinned explicitly: mongodb driver v6 returns the matched document
        directly (or null) by default, while older majors wrapped it as
        { value }. Setting this removes the ambiguity instead of guessing. */
     { includeResultMetadata: false }
   );
-  return Boolean(result);
+  return result || null;
+};
+
+/* 24 random bytes as hex, the same shape as a session token. */
+const OWNER_KEY_PATTERN = /^[0-9a-f]{48}$/;
+
+const hashOwnerKey = (key) => crypto.createHash("sha256").update(key).digest("hex");
+
+/* Constant-time, so response timing cannot be used to guess a key byte by byte. */
+const ownerKeyMatches = (key, storedHash) => {
+  if (typeof key !== "string" || !OWNER_KEY_PATTERN.test(key)) return false;
+  const given = Buffer.from(hashOwnerKey(key), "hex");
+  const stored = Buffer.from(String(storedHash), "hex");
+  return given.length === stored.length && crypto.timingSafeEqual(given, stored);
 };
 
 /**
@@ -113,8 +147,7 @@ const claimSession = async (token) => {
  * Rows predating the one-per-email rule can leave several rows on one address;
  * the extras are folded into the best one the first time that player returns.
  */
-const recordBest = async ({ scores, name, email, score }) => {
-  const previous = await scores.find({ email }).sort({ score: -1, createdAt: 1 }).toArray();
+const recordBest = async ({ scores, previous, name, email, score, ownerKeyHash }) => {
   const champion = previous[0] || null;
   const isPersonalBest = !champion || score > champion.score;
 
@@ -125,9 +158,9 @@ const recordBest = async ({ scores, name, email, score }) => {
   };
 
   if (!champion) {
-    await scores.insertOne({ ...entry, email });
+    await scores.insertOne({ ...entry, email, ownerKeyHash });
   } else {
-    await scores.updateOne({ _id: champion._id }, { $set: { ...entry, email } });
+    await scores.updateOne({ _id: champion._id }, { $set: { ...entry, email, ownerKeyHash } });
     if (previous.length > 1) {
       await scores.deleteMany({ email, _id: { $ne: champion._id } });
     }
@@ -192,33 +225,61 @@ const handlePost = async (req, res) => {
   }
 
   const name = cleanName(body?.name);
-  const score = cleanScore(body?.score);
   const email = cleanEmail(body?.email);
 
   if (!name) return res.status(400).json({ error: "Name is required." });
   if (isOffensiveName(name)) {
     return res.status(400).json({ error: "That name is not allowed on the board. Please pick another." });
   }
-  if (score === null) {
-    return res.status(400).json({ error: `Score must be a whole number from 0 to ${SCORE_MAX}.` });
-  }
   if (email === "invalid") {
     return res.status(400).json({ error: "That email address does not look right." });
   }
   if (!email) return res.status(400).json({ error: "Email is required." });
 
-  /* Claimed after validation, never before: claiming consumes the token, and a
-     fixable mistake in the form should not cost the player the round they just
-     played. Nothing above this line touches the database or has side effects. */
-  if (!(await claimSession(body?.token))) {
+  /* Ownership is checked before the session is claimed, so a player who hits
+     this on a second device has not spent anything by trying. The message
+     deliberately does not repeat the address back. */
+  const scores = await getScores();
+  const previous = await scores.find({ email }).sort({ score: -1, createdAt: 1 }).toArray();
+  const owned = previous.find((row) => typeof row.ownerKeyHash === "string");
+  if (owned && !ownerKeyMatches(body?.ownerKey, owned.ownerKeyHash)) {
+    return res.status(403).json({
+      error: "That email is already on the board from another browser. Save from that browser, or use a different email.",
+    });
+  }
+
+  /* A browser keeps one key for every email it saves under. Reuse the one it
+     sent when it is well formed, otherwise issue a fresh one. */
+  const ownerKey =
+    typeof body?.ownerKey === "string" && OWNER_KEY_PATTERN.test(body.ownerKey)
+      ? body.ownerKey
+      : crypto.randomBytes(24).toString("hex");
+
+  /* Claimed after validation and the ownership check, never before: claiming
+     consumes the token, and a fixable mistake in the form should not cost the
+     player the round they just played. Nothing above this line writes to the
+     database except the rate limiter. */
+  const session = await claimSession(body?.token);
+  if (!session) {
     return res.status(400).json({ error: "Session expired or invalid. Play another round to submit a score." });
   }
 
-  const scores = await getScores();
-  const entry = await recordBest({ scores, name, email, score });
+  /* Graded after the claim, so a rejected run still burns its token and the
+     same problems cannot be retried with adjusted answers or timings. */
+  const graded = gradeRun({
+    problems: session.problems,
+    answers: body?.answers,
+    elapsedMs: Date.now() - new Date(session.createdAt).getTime(),
+  });
+  if (graded.error) {
+    return res.status(400).json({ error: "That run could not be verified. Play another round to submit a score." });
+  }
+  const score = graded.score;
+
+  const entry = await recordBest({ scores, previous, name, email, score, ownerKeyHash: hashOwnerKey(ownerKey) });
 
   const rank = (await scores.countDocuments({ score: { $gt: entry.score } })) + 1;
-  return res.status(201).json({ ...entry, rank });
+  return res.status(201).json({ ...entry, rank, ownerKey });
 };
 
 export default async function handler(req, res) {
@@ -228,7 +289,11 @@ export default async function handler(req, res) {
     res.setHeader("Allow", "GET, POST");
     return res.status(405).json({ error: "Method not allowed." });
   } catch (err) {
-    console.error(`${req.method} /api/scores failed:`, err);
+    /* A Mongo error's message can quote a document key back -- a duplicate
+       key on the unique email index names the address -- and emails must not
+       reach the logs. Log only the driver's name and code for those. */
+    const loggable = /^Mongo/.test(err?.name || "") ? { name: err.name, code: err.code } : err;
+    console.error(`${req.method} /api/scores failed:`, loggable);
 
     /* Configuration mistakes are worth naming: they are the difference between
        "the club needs to fix a setting" and "the database is down". The text
