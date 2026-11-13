@@ -1,10 +1,18 @@
-export default function initTerminal() {
+/* Options a page can pass; the live homepage passes none.
+   - extraProjects: [name, status] pairs listed after the three below.
+   - extraCommands: { "name": { help, run, aliases } }. `run` returns the
+     lines to print; `help` is its line in the help menu. */
+export default function initTerminal({ extraProjects = [], extraCommands = {} } = {}) {
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const term = document.querySelector(".hero-terminal");
   const linesEl = document.getElementById("term-lines");
   const input = document.getElementById("term-input");
   if (!term || !linesEl || !input) return;
+
+  /* The page may name the brand (data-brand on .hero-terminal); the live
+     homepage sets none and keeps "hopbuilds". */
+  const BRAND = (term.dataset.brand || "hopbuilds").toLowerCase();
 
   const FORM_URL =
     "https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog";
@@ -28,7 +36,7 @@ export default function initTerminal() {
     div.className = "term-line";
     const p = document.createElement("span");
     p.className = "term-prompt";
-    p.textContent = "hopbuilds@jhu % ";
+    p.textContent = `${BRAND}@jhu % `;
     const c = document.createElement("span");
     c.textContent = cmd;
     div.append(p, c);
@@ -40,7 +48,8 @@ export default function initTerminal() {
     help: () => [
       "help       : this menu",
       "projects   : what we're shipping",
-      "join       : apply to hopbuilds",
+      `join       : apply to ${BRAND}`,
+      ...Object.entries(extraCommands).map(([name, c]) => `${name.padEnd(11)}: ${c.help}`),
       "whoami     : ?",
       "clear      : clean slate",
     ],
@@ -48,12 +57,13 @@ export default function initTerminal() {
       "lost@jhu       · live · lostatjhu.org",
       "jhu-rideshare  · in progress",
       "club-board     · in progress",
+      ...extraProjects.map(([name, status]) => `${name.padEnd(15)}· ${status}`),
     ],
     join: () => {
       window.open(FORM_URL, "_blank", "noopener");
       return ["opening the application form…"];
     },
-    whoami: () => ["future hopbuilds member"],
+    whoami: () => [`future ${BRAND} member`],
     madooei: () => ["professor madooei: mentor, guide, legend."],
     clear: () => {
       linesEl.innerHTML = "";
@@ -61,8 +71,14 @@ export default function initTerminal() {
     },
   };
 
+  Object.entries(extraCommands).forEach(([name, c]) => {
+    [name, ...(c.aliases || [])].forEach((key) => {
+      COMMANDS[key] = c.run;
+    });
+  });
+
   const run = (raw) => {
-    const cmd = raw.trim().toLowerCase();
+    const cmd = raw.trim().toLowerCase().replace(/\s+/g, " ");
     if (!cmd) return;
     printCmd(raw.trim());
     if (COMMANDS[cmd]) {
@@ -87,7 +103,7 @@ export default function initTerminal() {
   });
   term.addEventListener("click", () => input.focus());
 
-  printOut("welcome to hopbuilds.sh, built at 3410 N Charles St.");
+  printOut(`welcome to ${BRAND}.sh, built at 3410 N Charles St.`);
 
   /* auto-type 'help' once as a demo, unless the visitor beats us to it */
   if (reduceMotion) {

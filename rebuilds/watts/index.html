@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SWEC @ JHU — the student software team at Johns Hopkins</title>
+    <meta
+      name="description"
+      content="SWEC @ JHU is the student software team at Johns Hopkins. Teams of 3–4 build and ship apps for Hopkins students, mentored by Professor Madooei and alumni in industry."
+    />
+    <meta name="theme-color" content="#08090f" />
+    <link rel="icon" href="../../Blue_Jay_Coding_Icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Unbounded:wght@900&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./watts.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- ============ ANNOUNCEMENT ============ -->
+    <div class="announce px">
+      <p class="announce__pill">Applications open. We're taking 9–10 new members.</p>
+    </div>
+
+    <!-- ============ HEADER: sticky rounded bar, centred mark ============ -->
+    <header class="hdr px" id="hdr">
+      <div class="hdr__bar">
+        <button class="hdr__toggle" type="button" aria-expanded="false" aria-controls="nav-sheet">
+          <span class="hdr__toggle-bars" aria-hidden="true"></span>
+          <span class="hdr__toggle-x" aria-hidden="true">
+            <svg viewBox="0 0 10 10"><path d="M1 1l8 8M9 1L1 9" /></svg>
+          </span>
+          <span class="sr-only">Menu</span>
+        </button>
+
+        <nav class="hdr__nav" aria-label="Sections">
+          <ul class="hdr__links">
+            <li><a class="u-link" href="#projects">Projects</a></li>
+            <li><a class="u-link" href="#semester">Semester</a></li>
+            <li><a class="u-link" href="#mentors">Mentors</a></li>
+            <li><a class="u-link" href="#life">Team life</a></li>
+          </ul>
+        </nav>
+
+        <a class="hdr__logo" href="#top" aria-label="SWEC @ JHU, back to top">
+          <img class="hdr__logo-mark" src="../../assets/web/swec-logo.png" alt="" width="36" height="36" />
+          <span class="hdr__logo-word" aria-hidden="true">SWEC</span>
+        </a>
+
+        <div class="hdr__actions">
+          <a class="u-link hdr__drill" href="#drill">Drill</a>
+          <a class="btn btn--paper btn--sm" data-magnetic href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+            <span>Apply<span class="hdr__apply-long"> to SWEC</span></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hdr__sheet" id="nav-sheet" data-lenis-prevent>
+        <nav class="hdr__sheet-nav" aria-label="Sections">
+          <ul class="hdr__sheet-list">
+            <li><a class="hdr__sheet-item" href="#top">Home</a></li>
+            <li><a class="hdr__sheet-item" href="#projects">Projects</a></li>
+            <li><a class="hdr__sheet-item" href="#semester">Semester</a></li>
+            <li><a class="hdr__sheet-item" href="#mentors">Mentors</a></li>
+            <li><a class="hdr__sheet-item" href="#life">Team life</a></li>
+            <li><a class="hdr__sheet-item" href="#drill">Drill</a></li>
+            <li>
+              <a class="hdr__sheet-item hdr__sheet-item--dark" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">Apply to SWEC</a>
+            </li>
+          </ul>
+        </nav>
+        <a class="hdr__sheet-cta" href="https://www.instagram.com/jhuswec/" target="_blank" rel="noopener">Follow us on Instagram @jhuswec</a>
+        <p class="hdr__sheet-word wordmark" aria-hidden="true">SWEC@JHU</p>
+      </div>
+
+      <span class="hdr__corner hdr__corner--l" aria-hidden="true"></span>
+      <span class="hdr__corner hdr__corner--r" aria-hidden="true"></span>
+    </header>
+
+    <main id="main">
+      <!-- ============ 1 · HERO ============ -->
+      <section class="s-hero px" id="top">
+        <div class="hero card">
+          <div class="hero__media" aria-hidden="true">
+            <img src="../../assets/web/team-rainier.jpg" alt="" width="1800" height="1350" />
+            <div class="hero__sky" data-vanta></div>
+          </div>
+
+          <div class="hero__content">
+            <div class="hero__title">
+              <p class="t-l-2 hero__eyebrow"><span class="line"><span class="line-in">Johns Hopkins Software Engineering Club</span></span></p>
+              <h1 class="t-h-2">
+                <span class="line"><span class="line-in">The student</span></span>
+                <span class="line"><span class="line-in">software team at</span></span>
+                <span class="line"><span class="line-in">Johns&nbsp;Hopkins.</span></span>
+              </h1>
+            </div>
+            <div class="hero__copy">
+              <p class="t-b-1 hero__lead">
+                We build and ship apps for Hopkins students, from a campus lost and found to a
+                rideshare service. The team is low-pressure and fun, and Professor Madooei mentors it.
+              </p>
+              <div class="hero__actions">
+                <a class="btn" data-magnetic href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+                  <span>Apply to SWEC</span>
+                </a>
+                <a class="btn btn--ghost" href="#projects"><span>See our projects</span></a>
+              </div>
+            </div>
+          </div>
+
+          <p class="hero__word wordmark" aria-hidden="true">
+            <span>S</span><span>W</span><span>E</span><span>C</span><span>@</span><span>J</span><span>H</span><span>U</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ MARQUEE ============ -->
+      <section class="s-marquee px" aria-label="What SWEC does">
+        <div class="marquee ticker">
+          <div class="marquee__viewport">
+            <ul class="marquee__row">
+              <li>Lost@JHU</li><li>JHU Rideshare</li><li>JHU Club Board</li><li>Weekly builds</li>
+              <li>Weekend demos</li><li>Demo Day</li><li>Faculty mentorship</li><li>Recruiting help</li>
+            </ul>
+            <ul class="marquee__row" aria-hidden="true">
+              <li>Lost@JHU</li><li>JHU Rideshare</li><li>JHU Club Board</li><li>Weekly builds</li>
+              <li>Weekend demos</li><li>Demo Day</li><li>Faculty mentorship</li><li>Recruiting help</li>
+            </ul>
+            <ul class="marquee__row" aria-hidden="true">
+              <li>Lost@JHU</li><li>JHU Rideshare</li><li>JHU Club Board</li><li>Weekly builds</li>
+              <li>Weekend demos</li><li>Demo Day</li><li>Faculty mentorship</li><li>Recruiting help</li>
+            </ul>
+          </div>
+          <button class="marquee__pause ticker-pause" type="button" aria-pressed="false">Pause</button>
+        </div>
+      </section>
+
+      <!-- ============ 2 · STORY: terminal as the product shot + story card ============ -->
+      <section class="s-feature px" id="story">
+        <div class="feature js-animate">
+          <div class="feature__media card">
+            <div class="hero-terminal animate" data-brand="swec" role="group" aria-label="Interactive SWEC terminal — try typing 'help'">
+              <div class="term-bar">
+                <span class="term-dot"></span>
+                <span class="term-dot"></span>
+                <span class="term-dot"></span>
+                <span class="term-title">swec &mdash; zsh</span>
+              </div>
+              <div class="term-body">
+                <div class="term-lines" id="term-lines"></div>
+                <div class="term-input-row">
+                  <span class="term-prompt">swec@jhu&nbsp;%</span>
+                  <input
+                    id="term-input"
+                    type="text"
+                    autocomplete="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    aria-label="Type a terminal command, e.g. help"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="chip chip--live animate" aria-hidden="true">Lost@JHU is live</div>
+            <div class="chip chip--type animate" aria-hidden="true">try <kbd>help</kbd></div>
+          </div>
+
+          <div class="feature__content card">
+            <div class="feature__info">
+              <p class="t-l-1 animate">Our story</p>
+              <h2 class="t-h-2 feature__title animate">
+                Hopkins has brilliant CS students but little software made for Hopkins.
+                <span class="t-accent">We're building it.</span>
+              </h2>
+              <div class="feature__body">
+                <p class="animate">
+                  We wanted a fun, no-pressure club where we could build software for our own campus.
+                  That's how SWEC @ JHU started.
+                </p>
+                <p class="animate">
+                  We turned JHU's Software Engineering Club into a student product team that designs and
+                  ships tools to make campus life more connected and convenient.
+                </p>
+              </div>
+              <dl class="stats animate">
+                <div><dd><span data-count="500">500</span>+</dd><dt>Students using our apps</dt></div>
+                <div><dd><span data-count="4">4</span>+</dd><dt>Products in flight</dt></div>
+                <div><dd>3–4</dd><dt>Students per team</dt></div>
+              </dl>
+            </div>
+            <div class="feature__footer">
+              <img class="feature__jay animate" src="../../assets/web/swec-logo.png" alt="" width="320" height="249" loading="lazy" />
+              <div class="feature__cta">
+                <a class="btn" data-magnetic href="#projects"><span>See our projects</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 3 · PROJECTS: expandable cards ============ -->
+      <section class="s-projects px" id="projects">
+        <div class="projects card js-animate">
+          <div class="projects__head">
+            <div>
+              <h2 class="t-h-2 animate">Apps we ship for campus</h2>
+              <p class="t-l-1 animate">One is live and the rest are in progress.</p>
+            </div>
+            <p class="t-b-1 projects__lead animate">Student teams build every one.</p>
+          </div>
+
+          <div class="projects__rail" tabindex="0" role="group" aria-label="Projects, scrollable">
+            <article class="pcard animate" data-card>
+              <div class="pcard__image">
+                <img src="../../assets/web/lost-at-jhu.jpg" alt="The Lost@JHU blue jay searching with a magnifying glass" width="900" height="900" loading="lazy" />
+              </div>
+              <div class="pcard__content" id="pcard-lost">
+                <p class="t-l-2 pcard__label pcard__label--live">Live</p>
+                <p class="pcard__text">Campus lost and found in one place, so nobody has to ask on Sidechat again.</p>
+                <a class="u-link u-link--on pcard__link" href="https://www.lostatjhu.org/" target="_blank" rel="noopener">Open lostatjhu.org <span aria-hidden="true">&nearr;</span></a>
+              </div>
+              <h3 class="pcard__title">Lost@JHU</h3>
+              <button class="pcard__toggle" type="button" aria-expanded="false" aria-controls="pcard-lost">
+                <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 0v10M0 5h10" /></svg>
+                <span class="sr-only">About Lost@JHU</span>
+              </button>
+            </article>
+
+            <article class="pcard animate" data-card>
+              <div class="pcard__image">
+                <img src="../../assets/web/jhu-rideshare.jpg" alt="JHU Rideshare screens: a trip search, a phone booking view and a route map" width="1600" height="1067" loading="lazy" />
+              </div>
+              <div class="pcard__content" id="pcard-ride">
+                <p class="t-l-2 pcard__label">In progress</p>
+                <p class="pcard__text">A ride-sharing platform built only for the Hopkins community.</p>
+              </div>
+              <h3 class="pcard__title">JHU Rideshare</h3>
+              <button class="pcard__toggle" type="button" aria-expanded="false" aria-controls="pcard-ride">
+                <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 0v10M0 5h10" /></svg>
+                <span class="sr-only">About JHU Rideshare</span>
+              </button>
+            </article>
+
+            <article class="pcard animate" data-card>
+              <div class="pcard__image">
+                <img src="../../assets/web/jhu-club-board.jpg" alt="JHU Club Board: popular organizations and upcoming events on one page" width="1600" height="1067" loading="lazy" />
+              </div>
+              <div class="pcard__content" id="pcard-clubs">
+                <p class="t-l-2 pcard__label">In progress</p>
+                <p class="pcard__text">Every Hopkins club on one board, with their events in one list.</p>
+              </div>
+              <h3 class="pcard__title">JHU Club Board</h3>
+              <button class="pcard__toggle" type="button" aria-expanded="false" aria-controls="pcard-clubs">
+                <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M5 0v10M0 5h10" /></svg>
+                <span class="sr-only">About JHU Club Board</span>
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 4 · SEMESTER: stacked cards + scrubber ============ -->
+      <section class="s-steps px" id="semester">
+        <div class="steps card js-animate" data-steps>
+          <p class="t-l-1 animate">The semester</p>
+          <h2 class="t-h-1 steps__title animate">How a semester runs</h2>
+          <p class="t-b-1 steps__lead animate">You work on a small team with an experienced lead and ship something real by the end of term.</p>
+
+          <div class="steps__slider animate">
+            <p class="steps__count t-h-3" aria-hidden="true">
+              <span class="steps__count-label">Step</span>
+              <span class="steps__roll">
+                <em data-roll>01</em><em data-roll>02</em><em data-roll>03</em><em data-roll>04</em>
+              </span>
+            </p>
+
+            <ol class="steps__list">
+              <li class="steps__item" data-step>
+                <div class="steps__card" data-stack-card aria-hidden="true"><span class="steps__face steps__face--a"><b>1</b><i>Team</i></span></div>
+                <h3 class="t-h-3 steps__name" data-roll>Join a team of 3–4</h3>
+                <p class="t-b-1 steps__text">Each team is led by an experienced builder who has shipped before.</p>
+              </li>
+              <li class="steps__item" data-step>
+                <div class="steps__card" data-stack-card aria-hidden="true"><span class="steps__face steps__face--b"><b>2</b><i>Build</i></span></div>
+                <h3 class="t-h-3 steps__name" data-roll>Build every week</h3>
+                <p class="t-b-1 steps__text">Your team picks up real work on its product each week of term.</p>
+              </li>
+              <li class="steps__item" data-step>
+                <div class="steps__card" data-stack-card aria-hidden="true"><span class="steps__face steps__face--c"><b>3</b><i>Demo</i></span></div>
+                <h3 class="t-h-3 steps__name" data-roll>Demo each weekend</h3>
+                <p class="t-b-1 steps__text">Show the club what changed that week, and use its feedback to plan the next one.</p>
+              </li>
+              <li class="steps__item" data-step>
+                <div class="steps__card" data-stack-card aria-hidden="true"><span class="steps__face steps__face--d"><b>4</b><i>Demo Day</i></span></div>
+                <h3 class="t-h-3 steps__name" data-roll>Present at Demo Day</h3>
+                <p class="t-b-1 steps__text">The semester closes with your team presenting its product to the club and beyond.</p>
+              </li>
+            </ol>
+          </div>
+
+          <div class="steps__bar animate">
+            <span class="t-l-2 steps__bar-label">Week&nbsp;01</span>
+            <div class="steps__track" data-track>
+              <span class="steps__ticks" aria-hidden="true"></span>
+              <div class="steps__stops">
+                <button type="button" class="steps__stop" data-goto="0"><span class="sr-only">Step 1: Join a team of 3–4</span></button>
+                <button type="button" class="steps__stop" data-goto="1"><span class="sr-only">Step 2: Build every week</span></button>
+                <button type="button" class="steps__stop" data-goto="2"><span class="sr-only">Step 3: Demo each weekend</span></button>
+                <button type="button" class="steps__stop" data-goto="3"><span class="sr-only">Step 4: Present at Demo Day</span></button>
+              </div>
+              <span class="steps__runner" data-runner aria-hidden="true"><span class="steps__thumb" data-thumb></span></span>
+            </div>
+            <span class="t-l-2 steps__bar-label">Demo&nbsp;Day.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 5 · MENTORS: floating chips on the accent panel ============ -->
+      <section class="s-values px" id="mentors">
+        <div class="values card js-animate" data-parallax>
+          <div class="values__content">
+            <p class="t-l-1 values__label animate">Mentorship</p>
+            <h2 class="t-h-2 values__title" data-split>Mentored by Professor Madooei and alumni</h2>
+            <ul class="values__chips" aria-label="Who is around you">
+              <li class="values__chip" data-depth="26"><span>Professor Madooei</span></li>
+              <li class="values__chip" data-depth="-18"><span>Team lead</span></li>
+              <li class="values__chip" data-depth="14"><span>Alumni</span></li>
+              <li class="values__chip" data-depth="-30"><span>Upperclassmen</span></li>
+              <li class="values__chip" data-depth="20"><span>Industry contacts</span></li>
+            </ul>
+            <a class="btn btn--dark values__cta animate" data-magnetic href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+              <span>Apply to SWEC</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PERKS: slider with the icon wheel ============ -->
+      <section class="s-perks px" aria-label="What mentorship gets you">
+        <div class="perks js-animate" data-perks>
+          <svg class="perks__deco" viewBox="0 0 248 300" aria-hidden="true">
+            <path d="M124 20l22 62 66 4-52 40 18 64-54-38-54 38 18-64-52-40 66-4z" />
+            <circle cx="124" cy="228" r="46" />
+          </svg>
+
+          <div class="perks__wheel" aria-hidden="true">
+            <div class="perks__ring" data-ring>
+              <span class="perks__icon">
+                <svg viewBox="0 0 32 32"><path d="M16 5.5 30 11.5 16 17.5 2 11.5 16 5.5Z" /><path d="M7.5 14v6.6c0 2.1 3.8 3.8 8.5 3.8s8.5-1.7 8.5-3.8V14" /><path d="M30 11.5v7.2" /></svg>
+              </span>
+              <span class="perks__icon">
+                <svg viewBox="0 0 32 32"><circle cx="16" cy="7.5" r="3.2" /><circle cx="7" cy="23" r="3.2" /><circle cx="25" cy="23" r="3.2" /><path d="M13.6 10.2 9.4 19.9M18.4 10.2l4.2 9.7M10.2 23h11.6" /></svg>
+              </span>
+              <span class="perks__icon">
+                <svg viewBox="0 0 32 32"><path d="M16 3.5 28 9.2v13.6L16 28.5 4 22.8V9.2L16 3.5Z" /><path d="M4 9.2 16 15l12-5.8" /><path d="M16 15v13.5" /></svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="perks__body">
+            <ul class="perks__slides animate">
+              <li class="perks__slide" data-slide>
+                <h3 class="t-h-3">Faculty guidance</h3>
+                <p class="t-b-1">Professor Madooei, who teaches software engineering, guides every team through the whole build.</p>
+              </li>
+              <li class="perks__slide" data-slide>
+                <h3 class="t-h-3">Recruiting help</h3>
+                <p class="t-b-1">Upperclassmen and alumni who have been through SWE and big-tech recruiting coach you through it.</p>
+              </li>
+              <li class="perks__slide" data-slide>
+                <h3 class="t-h-3">Work for your resume</h3>
+                <p class="t-b-1">Portfolio pieces that real students use, which stand out on a resume.</p>
+              </li>
+            </ul>
+            <div class="perks__buttons animate">
+              <button type="button" class="btn-icon" data-prev aria-label="Previous perk">
+                <svg viewBox="0 0 17 15" aria-hidden="true"><path d="M8 1L1.5 7.5 8 14M2 7.5h15" /></svg>
+              </button>
+              <button type="button" class="btn-icon" data-next aria-label="Next perk">
+                <svg viewBox="0 0 17 15" aria-hidden="true"><path d="M9 1l6.5 6.5L9 14M15 7.5H0" /></svg>
+              </button>
+              <p class="t-l-2 perks__status" aria-live="polite" data-status></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ALUMNI + SPONSOR: two-up ============ -->
+      <section class="s-proof px" aria-label="Alumni and sponsor">
+        <div class="proof js-animate">
+          <div class="proof__alumni card">
+            <p class="t-l-1 animate">Where members have gone</p>
+            <ul class="proof__logos">
+              <li class="animate"><img src="../../assets/home/logos/pg-logo.png" alt="Procter &amp; Gamble" loading="lazy" /></li>
+              <li class="animate"><img src="../../assets/home/logos/medtronic-logo.png" alt="Medtronic" loading="lazy" /></li>
+              <li class="animate"><img src="../../assets/home/logos/ibm-logo.svg" alt="IBM" loading="lazy" /></li>
+              <li class="animate"><img src="../../assets/home/logos/amazon-logo.png" alt="Amazon" loading="lazy" /></li>
+              <li class="animate"><img class="logo-padded" src="../../assets/home/logos/capital-one-logo.png" alt="Capital One" loading="lazy" /></li>
+              <li class="animate"><img class="logo-padded" src="../../assets/home/logos/microsoft-logo.png" alt="Microsoft" loading="lazy" /></li>
+            </ul>
+          </div>
+          <div class="proof__sponsor card">
+            <div class="proof__sponsor-text">
+              <p class="t-l-1 animate">Sponsor</p>
+              <h2 class="t-h-2 animate">Sponsored by Visa</h2>
+              <p class="t-b-1 animate">
+                Visa's sponsorship gives members direct access to industry connections and the
+                chance to work on real, industry-sponsored projects.
+              </p>
+            </div>
+            <div class="proof__visa animate">
+              <img src="../../assets/home/logos/visa-logo.png" alt="Visa" width="659" height="202" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 6 · ROLES: big type with drifting cut-outs ============ -->
+      <section class="s-roles px" id="join">
+        <div class="roles card js-animate">
+          <div class="roles__float" aria-hidden="true">
+            <span class="cut cut--1" data-depth="far"><svg viewBox="0 0 24 24"><path d="M8 6l-5 6 5 6" /><path d="M16 6l5 6-5 6" /></svg></span>
+            <span class="cut cut--2" data-depth="near"><svg viewBox="0 0 24 24"><path d="M18 3.5L11 10.5" /><path d="M11 10.5c-2.5-.5-5.5.9-6.6 3.4-.7 1.6-.5 3.4.3 5 1.6-.6 3-1.7 3.8-3.2 1.2-2.4.9-4.4-1.5-5.2z" /><path d="M6 17.5l-2 2.5" /></svg></span>
+            <span class="cut cut--3" data-depth="mid"><svg viewBox="0 0 24 24"><path d="M3 10v4h3l6 4V6l-6 4H3z" /><path d="M12 8.5c3-1 6.5-1 8.5 0" /><path d="M12 15.5c3 1 6.5 1 8.5 0" /><path d="M6 14v4c0 1 .8 1.5 1.7 1.2.9-.3 1.3-1.2 1-2l-.7-3.2" /></svg></span>
+            <span class="cut cut--4" data-depth="near"><img src="../../assets/web/swec-logo.png" alt="" width="320" height="249" loading="lazy" /></span>
+            <span class="cut cut--5" data-depth="far"><svg viewBox="0 0 24 24"><path d="M18 3.5L11 10.5" /><path d="M11 10.5c-2.5-.5-5.5.9-6.6 3.4-.7 1.6-.5 3.4.3 5 1.6-.6 3-1.7 3.8-3.2 1.2-2.4.9-4.4-1.5-5.2z" /><path d="M6 17.5l-2 2.5" /></svg></span>
+            <span class="cut cut--6" data-depth="mid"><svg viewBox="0 0 24 24"><path d="M8 6l-5 6 5 6" /><path d="M16 6l5 6-5 6" /></svg></span>
+          </div>
+
+          <div class="roles__head">
+            <p class="t-l-1 animate">Three roles on every team</p>
+            <h2 class="t-h-1 roles__title">
+              <span class="animate">Developers.</span>
+              <span class="animate">Designers.</span>
+              <span class="animate">Strategists.</span>
+            </h2>
+            <p class="t-b-1 roles__lead animate">
+              You don't need to be a coding wizard. We want people who care about technology and
+              design and will put in the work.
+            </p>
+          </div>
+
+          <div class="roles__grid">
+            <article class="role animate">
+              <span class="role__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6l-5 6 5 6" /><path d="M16 6l5 6-5 6" /></svg></span>
+              <h3 class="t-h-4">Developers</h3>
+              <p class="t-b-1">Build the products that thousands of students open.</p>
+            </article>
+            <article class="role animate">
+              <span class="role__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 3.5L11 10.5" /><path d="M11 10.5c-2.5-.5-5.5.9-6.6 3.4-.7 1.6-.5 3.4.3 5 1.6-.6 3-1.7 3.8-3.2 1.2-2.4.9-4.4-1.5-5.2z" /><path d="M6 17.5l-2 2.5" /></svg></span>
+              <h3 class="t-h-4">Designers</h3>
+              <p class="t-b-1">Shape how each app looks and how easy it is to use.</p>
+            </article>
+            <article class="role animate">
+              <span class="role__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 10v4h3l6 4V6l-6 4H3z" /><path d="M12 8.5c3-1 6.5-1 8.5 0" /><path d="M12 15.5c3 1 6.5 1 8.5 0" /><path d="M6 14v4c0 1 .8 1.5 1.7 1.2.9-.3 1.3-1.2 1-2l-.7-3.2" /></svg></span>
+              <h3 class="t-h-4">Strategists</h3>
+              <p class="t-b-1">Drive marketing and the product decisions behind each launch.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 7 · TEAM LIFE: dark panel, card rail ============ -->
+      <section class="s-life px" id="life">
+        <div class="life card js-animate">
+          <div class="life__head">
+            <div class="life__heading">
+              <svg class="life__ig" viewBox="0 0 64 64" aria-hidden="true">
+                <rect x="6" y="6" width="52" height="52" rx="15" /><circle cx="32" cy="32" r="12" /><circle cx="46.5" cy="17.5" r="2.6" class="life__ig-dot" />
+              </svg>
+              <div>
+                <h2 class="t-h-2 animate">It's not all commits</h2>
+                <p class="t-l-1 animate">Off the clock with the team.</p>
+              </div>
+            </div>
+            <p class="t-b-1 life__lead animate">
+              From Mount Rainier to late-night poker, the team spends time together away from the
+              keyboard. Members leave with lifelong friendships as well as shipped code.
+            </p>
+          </div>
+
+          <div class="life__rail" tabindex="0" role="group" aria-label="Team life, scrollable">
+            <a class="lcard lcard--brand animate" href="https://www.instagram.com/jhuswec/" target="_blank" rel="noopener">
+              <span class="lcard__word wordmark" aria-hidden="true">SWEC@JHU</span>
+              <svg class="lcard__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 8v10H8" /></svg>
+              <span class="lcard__foot">Follow @jhuswec on Instagram</span>
+            </a>
+
+            <button class="lcard lcard--photo life-open animate" type="button" aria-label="Open the Team Life photo board" aria-haspopup="dialog" aria-controls="life-board">
+              <img
+                src="../../assets/web/team-rainier.jpg"
+                alt="Six SWEC members arm in arm on a mountain ridge above the clouds at Mount Rainier"
+                width="1800"
+                height="1350"
+                loading="lazy"
+              />
+              <span class="lcard__invite">click me! <span aria-hidden="true">&nearr;</span></span>
+            </button>
+
+            <div class="lcard lcard--text animate">
+              <p class="lcard__title">Hikes on Mount Rainier</p>
+              <p class="lcard__num" aria-hidden="true">01</p>
+            </div>
+
+            <div class="lcard lcard--photo animate">
+              <img src="../../assets/web/team-life/img_2731.jpg" alt="The team together outdoors at night" width="1200" height="1600" loading="lazy" />
+            </div>
+
+            <div class="lcard lcard--text lcard--gray animate">
+              <p class="lcard__title">Late-night poker</p>
+              <p class="lcard__num" aria-hidden="true">02</p>
+            </div>
+
+            <div class="lcard lcard--photo animate">
+              <img src="../../assets/web/team-life/swec_celly.jpg" alt="Friends gathered around the table for a celebration" width="1086" height="1448" loading="lazy" />
+            </div>
+
+            <div class="lcard lcard--text animate">
+              <p class="lcard__title">Group food runs</p>
+              <p class="lcard__num" aria-hidden="true">03</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 8 · DRILL (ids and state classes are read by js/arcade.js) ============ -->
+      <section class="s-drill px" id="drill">
+        <div class="drill card js-animate">
+          <div class="drill__head">
+            <div>
+              <p class="t-l-1 animate">Bonus round</p>
+              <h2 class="t-h-2 animate">Top two drill scores earn an interview</h2>
+            </div>
+            <p class="t-b-1 drill__lead animate">
+              The drill is thirty seconds of mental math, the same warm-up quants and engineers use.
+              There's no calculator, and each correct answer moves you to the next problem. Saving a
+              score takes an email so we can reach you. It also keeps you to one line on the board,
+              holding your best run.
+            </p>
+          </div>
+
+          <div class="arcade">
+            <div class="arcade-game animate" id="arcade-game">
+              <div class="arcade-hud">
+                <div class="arcade-stat">
+                  <span class="arcade-stat-label">Score</span>
+                  <span class="arcade-stat-value" id="arcade-score">0</span>
+                </div>
+                <div class="arcade-stat arcade-stat-time">
+                  <span class="arcade-stat-label">Time</span>
+                  <span class="arcade-stat-value" id="arcade-time">30</span>
+                </div>
+                <div class="arcade-stat">
+                  <span class="arcade-stat-label">Best</span>
+                  <span class="arcade-stat-value" id="arcade-best">&ndash;</span>
+                </div>
+              </div>
+
+              <div class="arcade-timer-line" aria-hidden="true">
+                <span class="arcade-timer-fill" id="arcade-timer-fill"></span>
+              </div>
+
+              <div class="arcade-stage">
+                <div class="arcade-panel" id="arcade-panel">
+                  <p class="arcade-panel-title" id="arcade-panel-title">30 seconds on the clock.</p>
+                  <p class="arcade-panel-sub" id="arcade-panel-sub">
+                    Addition and subtraction to 100, multiplication and division through the 10s.
+                  </p>
+                  <button class="btn" data-magnetic type="button" id="arcade-start">Start drill</button>
+                </div>
+
+                <div class="arcade-play" id="arcade-play" hidden>
+                  <p class="arcade-problem" id="arcade-problem" aria-live="polite">2 + 2</p>
+                  <input
+                    class="arcade-input"
+                    id="arcade-input"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    aria-label="Your answer"
+                  />
+                  <p class="arcade-hint">Type the answer · Esc to stop</p>
+                </div>
+
+                <form class="arcade-save" id="arcade-save" hidden>
+                  <p class="arcade-panel-title" id="arcade-save-title">Put it on the board.</p>
+                  <p class="arcade-panel-sub">Add your name to the global leaderboard.</p>
+                  <div class="arcade-fields">
+                    <label class="arcade-field">
+                      <span>Name</span>
+                      <input class="arcade-name-input" id="arcade-name" type="text" maxlength="16" autocomplete="off" spellcheck="false" aria-label="Your name for the leaderboard" />
+                    </label>
+                    <label class="arcade-field">
+                      <span>Email</span>
+                      <input class="arcade-name-input" id="arcade-email" type="email" maxlength="254" autocomplete="email" spellcheck="false" required aria-label="Your email for the leaderboard" />
+                    </label>
+                  </div>
+                  <p class="arcade-privacy">
+                    Your email keeps you to one spot on the board, holding your best score, and lets
+                    us reach you: the top two scorers get an automatic interview. Only your name and
+                    score appear on the board.
+                  </p>
+                  <p class="arcade-save-error" id="arcade-save-error" role="alert" hidden></p>
+                  <div class="arcade-save-actions">
+                    <button class="btn" type="submit" id="arcade-submit">Save score</button>
+                    <button class="btn btn--ghost" type="button" id="arcade-skip">Skip</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="arcade-board animate" id="arcade-board">
+              <div class="arcade-board-head">
+                <h3 class="arcade-board-title">Global leaderboard</h3>
+                <button class="arcade-board-refresh u-link" type="button" id="arcade-refresh">Refresh</button>
+              </div>
+              <ol class="arcade-board-list" id="arcade-board-list" data-lenis-prevent tabindex="0" aria-label="Leaderboard entries, scrollable"></ol>
+              <p class="arcade-board-empty" id="arcade-board-empty">Loading scores…</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============ FOOTER: one big rounded slab ============ -->
+    <footer class="ftr px">
+      <div class="ftr__slab js-animate" data-stickers>
+        <div class="ftr__container">
+          <div class="ftr__content">
+            <p class="t-l-2 animate">Applications open</p>
+            <h2 class="ftr__title animate">We're taking <span class="nowrap">9–10</span> new members</h2>
+            <p class="t-b-1 animate">We're looking for developers, designers and strategists who want to build for Hopkins.</p>
+            <div class="ftr__legal animate">
+              <p>© 2026 SWEC @ JHU · Johns Hopkins University</p>
+              <p>Company names and logos are trademarks of their owners.</p>
+            </div>
+          </div>
+
+          <nav class="ftr__nav" aria-label="Footer">
+            <ul class="ftr__list animate">
+              <li class="t-l-2 ftr__list-title">Navigation</li>
+              <li><a class="u-link" href="#projects">Projects</a></li>
+              <li><a class="u-link" href="#semester">Semester</a></li>
+              <li><a class="u-link" href="#mentors">Mentors</a></li>
+              <li><a class="u-link" href="#life">Team life</a></li>
+              <li><a class="u-link" href="#drill">Drill</a></li>
+            </ul>
+            <ul class="ftr__list animate">
+              <li class="t-l-2 ftr__list-title">Contact</li>
+              <li><a class="u-link" href="mailto:dguo10@jh.edu">Email the team</a></li>
+              <li><a class="u-link" href="https://www.instagram.com/jhuswec/" target="_blank" rel="noopener">Instagram</a></li>
+              <li><a class="u-link" href="https://github.com/JHU-SWEC" target="_blank" rel="noopener">GitHub</a></li>
+            </ul>
+          </nav>
+
+          <div class="ftr__connect">
+            <div class="ftr__apply animate">
+              <p class="t-l-2">Build for Hopkins with us.</p>
+              <div class="ftr__apply-row">
+                <span class="ftr__apply-hint">9–10 new members</span>
+                <a class="btn btn--paper" data-magnetic href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+                  <span>Apply to SWEC</span>
+                </a>
+              </div>
+            </div>
+            <div class="ftr__follow animate">
+              <p class="t-l-2">Follow us</p>
+              <ul class="ftr__social">
+                <li>
+                  <a class="btn-icon btn-icon--sm" href="https://www.instagram.com/jhuswec/" target="_blank" rel="noopener" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17" cy="7" r=".9" /></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="btn-icon btn-icon--sm" href="https://github.com/JHU-SWEC" target="_blank" rel="noopener" aria-label="GitHub">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 1.3-4-2-6-2.5M15 21v-3.2c0-1 .1-1.5-.5-2.1 2.6-.3 5.3-1.3 5.3-5.8 0-1.2-.4-2.3-1.2-3.200 .4-1 .4-2.200-.1-3.200 0 0-1-.3-3.300 1.200a11.500 11.500 0 0 0-6 0C7 3.200 6 3.500 6 3.500c-.5 1-.5 2.200-.1 3.200A4.600 4.600 0 0 0 4.700 9.900c0 4.500 2.700 5.500 5.300 5.800-.6.6-.6 1.200-.5 2.100V21" /></svg>
+                  </a>
+                </li>
+                <li>
+                  <a class="btn-icon btn-icon--sm" href="mailto:dguo10@jh.edu" aria-label="Email the team">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.500" width="18" height="13" rx="2.500" /><path d="M3.500 7.500l8.500 6 8.500-6" /></svg>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <p class="ftr__word wordmark" aria-hidden="true">SWEC@JHU</p>
+      </div>
+    </footer>
+
+    <dialog class="life-board" id="life-board" data-lenis-prevent aria-labelledby="life-board-title">
+      <header class="life-board-header">
+        <div><p class="t-l-2">Off the clock</p><h2 id="life-board-title">Life with the team</h2></div>
+        <form method="dialog"><button class="life-board-close" aria-label="Close photo board" autofocus>Close <span aria-hidden="true">&times;</span></button></form>
+      </header>
+      <div class="life-board-photos" aria-label="Team photo collection"></div>
+    </dialog>
+
+    <script type="module" src="./watts.js"></script>
+  </body>
+</html>

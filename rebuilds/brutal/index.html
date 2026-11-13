@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SWEC @ JHU — the student software team at Johns Hopkins</title>
+    <meta
+      name="description"
+      content="SWEC @ JHU is the student software team at Johns Hopkins. Teams of 6–7 build and ship apps for Hopkins students, mentored by Professor Madooei and alumni in industry."
+    />
+    <meta name="theme-color" content="#ffd60a" />
+    <meta property="og:title" content="SWEC @ JHU — the student software team at Johns Hopkins" />
+    <meta
+      property="og:description"
+      content="Teams of 6–7 build and ship apps for Hopkins students, mentored by Professor Madooei and alumni in industry."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/assets/web/team-rainier.jpg" />
+    <link rel="icon" href="../../Blue_Jay_Coding_Icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./brutal.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- ============ HEADER: loose blocks, not a bar ============ -->
+    <header class="hdr" id="nav">
+      <div class="hdr-row">
+        <a class="hdr-brand" href="#top" aria-label="SWEC @ JHU, back to top">
+          <img src="../../assets/web/swec-logo.png" alt="" width="36" height="28" />
+          <span>SWEC @ JHU</span>
+        </a>
+
+        <nav class="hdr-links" aria-label="Sections">
+          <a href="#projects" data-spy="projects"><span class="hdr-num" aria-hidden="true">01</span>Projects</a>
+          <a href="#life" data-spy="life"><span class="hdr-num" aria-hidden="true">02</span>Team life</a>
+          <a href="#semester" data-spy="semester"><span class="hdr-num" aria-hidden="true">03</span>Semester</a>
+          <a href="#mentors" data-spy="mentors"><span class="hdr-num" aria-hidden="true">04</span>Mentors</a>
+          <a href="./team.html" class="hdr-accent">Meet the team</a>
+        </nav>
+
+        <p class="hdr-status"><span class="dot" aria-hidden="true"></span>Applications open</p>
+
+        <span class="btn btn-sm hdr-apply" data-magnetic>
+          <a class="btn-face bg-pink" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener" aria-label="Apply to SWEC">Apply<span class="hdr-apply-long">&nbsp;to SWEC</span></a>
+        </span>
+
+        <button class="hdr-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet">
+          <span class="hdr-toggle-icon" aria-hidden="true"><span></span><span></span></span>
+          <span class="hdr-toggle-label">Menu</span>
+        </button>
+      </div>
+      <div class="hdr-progress" aria-hidden="true"><span></span></div>
+
+      <div class="sheet" id="nav-sheet" data-lenis-prevent hidden>
+        <nav class="sheet-links" aria-label="Sections">
+          <a href="#projects"><span aria-hidden="true">01</span>Projects</a>
+          <a href="#life"><span aria-hidden="true">02</span>Team life</a>
+          <a href="#semester"><span aria-hidden="true">03</span>Semester</a>
+          <a href="#mentors"><span aria-hidden="true">04</span>Mentors</a>
+          <a href="./team.html">Meet the team</a>
+        </nav>
+        <a class="sheet-apply" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+          <span>Applications open</span>
+          Apply to SWEC <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============ 1 · HERO ============ -->
+      <section class="hero bg-yellow" id="top">
+        <span class="shape shape-ring plx plx-slow" aria-hidden="true"></span>
+        <span class="shape shape-plus plx plx-fast" aria-hidden="true"></span>
+
+        <div class="wrap hero-grid">
+          <div class="hero-text">
+            <p class="tag bg-paper enter">
+              <span class="dot" aria-hidden="true"></span>
+              Johns Hopkins Software Engineering Club
+            </p>
+            <h1 class="hero-title enter">
+              The student <span class="hl hl-blue">software</span> team at Johns Hopkins
+            </h1>
+            <p class="hero-lead enter">
+              We build and ship apps for Hopkins students, from a campus lost and found to a
+              rideshare service. The team is low-pressure and fun, and Professor Madooei mentors it.
+            </p>
+            <div class="hero-actions enter">
+              <span class="btn btn-lg" data-magnetic>
+                <a class="btn-face bg-pink" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+                  Apply to SWEC <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+                </a>
+              </span>
+              <span class="btn btn-lg">
+                <a class="btn-face bg-paper" href="#projects">See our projects</a>
+              </span>
+            </div>
+            <dl class="hero-stats enter">
+              <div class="bg-paper"><dt>Students using our apps</dt><dd><span data-count="500">500</span>+</dd></div>
+              <div class="bg-mint"><dt>Products in flight</dt><dd><span data-count="4">4</span>+</dd></div>
+              <div class="bg-lilac"><dt>Students per team</dt><dd>6–7</dd></div>
+            </dl>
+          </div>
+
+          <div class="hero-stage enter enter-stage">
+            <span class="shape shape-slab plx plx-slow" aria-hidden="true"></span>
+            <div class="hero-terminal" data-brand="swec" role="group" aria-label="Interactive SWEC terminal — try typing 'help'">
+              <div class="term-bar">
+                <span class="term-dot"></span>
+                <span class="term-dot"></span>
+                <span class="term-dot"></span>
+                <span class="term-title">swec &mdash; zsh</span>
+              </div>
+              <div class="term-body">
+                <div class="term-lines" id="term-lines"></div>
+                <div class="term-input-row">
+                  <span class="term-prompt">swec@jhu&nbsp;%</span>
+                  <input
+                    id="term-input"
+                    type="text"
+                    autocomplete="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    aria-label="Type a terminal command, e.g. help"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="sticker sticker-live plx plx-fast" aria-hidden="true">
+              <svg class="burst" data-loop viewBox="0 0 100 100"><polygon points="50,2 59,17 75,8 77,26 95,25 88,42 98,50 88,58 95,75 77,74 75,92 59,83 50,98 41,83 25,92 23,74 5,75 12,58 2,50 12,42 5,25 23,26 25,8 41,17" /></svg>
+              <span>Lost@JHU<br />is live</span>
+            </div>
+            <div class="sticker sticker-help plx plx-mid" aria-hidden="true">try <kbd>help</kbd></div>
+            <img class="sticker-jay plx plx-mid" src="../../assets/web/swec-logo.png" alt="" width="128" height="100" />
+          </div>
+        </div>
+
+        <div class="ticker" aria-label="What SWEC does">
+          <div class="ticker-track" data-loop>
+            <ul class="ticker-row">
+              <li>Lost@JHU</li><li>JHU Rideshare</li><li>JHU Club Board</li><li>Weekly builds</li>
+              <li>Weekend demos</li><li>Demo Day</li><li>Faculty mentorship</li><li>Recruiting help</li>
+            </ul>
+            <ul class="ticker-row" aria-hidden="true">
+              <li>Lost@JHU</li><li>JHU Rideshare</li><li>JHU Club Board</li><li>Weekly builds</li>
+              <li>Weekend demos</li><li>Demo Day</li><li>Faculty mentorship</li><li>Recruiting help</li>
+            </ul>
+          </div>
+          <button class="ticker-pause" type="button" aria-pressed="false">Pause</button>
+        </div>
+      </section>
+
+      <!-- ============ 2 · STORY ============ -->
+      <section class="story bg-paper" id="story">
+        <div class="wrap">
+          <p class="tag bg-pink" data-s>Our story</p>
+          <h2 class="statement" data-s>
+            Hopkins has brilliant CS students but little software made
+            <span class="hl hl-pink">for</span> Hopkins. <span class="mark">We're building it.</span>
+          </h2>
+          <div class="story-cols">
+            <p data-s>
+              <span class="story-num" aria-hidden="true">A</span>
+              We wanted a fun, no-pressure club where we could build software for our own campus.
+              That's how SWEC @ JHU started.
+            </p>
+            <p data-s>
+              <span class="story-num" aria-hidden="true">B</span>
+              We turned JHU's Software Engineering Club into a student product team that designs and
+              ships tools to make campus life more connected and convenient.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 3 · PROJECTS ============ -->
+      <section class="projects bg-blue" id="projects">
+        <div class="bigtype" aria-hidden="true">
+          <p class="plx plx-x">Shipped for campus &bull; Shipped for campus &bull; Shipped for campus</p>
+        </div>
+        <div class="wrap">
+          <div class="head">
+            <p class="tag bg-yellow" data-s>Projects</p>
+            <h2 class="title" data-s>Apps we ship <span class="hl hl-yellow">for campus</span></h2>
+            <p class="lead" data-s>One is live and the rest are in progress. Student teams build every one.</p>
+          </div>
+
+          <div class="bento">
+            <article class="card tile tile-lost" data-s>
+              <div class="tile-art bg-orange">
+                <img class="plx plx-img" src="../../assets/web/lost-at-jhu.jpg" alt="The Lost@JHU blue jay searching with a magnifying glass" width="900" height="900" loading="lazy" />
+              </div>
+              <div class="tile-body">
+                <span class="badge bg-mint"><span class="dot" aria-hidden="true"></span>Live</span>
+                <h3>Lost@JHU</h3>
+                <p>Campus lost and found in one place, so nobody has to ask on Sidechat again.</p>
+                <a class="link" href="https://www.lostatjhu.org/" target="_blank" rel="noopener">Open lostatjhu.org <span aria-hidden="true">&nearr;</span></a>
+              </div>
+            </article>
+
+            <article class="card tile tile-ride" data-s>
+              <div class="tile-body">
+                <span class="badge bg-paper"><span class="dot dot-hollow" aria-hidden="true"></span>In progress</span>
+                <h3>JHU Rideshare</h3>
+                <p>A ride-sharing platform built only for the Hopkins community.</p>
+              </div>
+              <div class="shot">
+                <div class="shot-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div class="shot-view">
+                  <img class="plx plx-img" src="../../assets/web/jhu-rideshare.jpg" alt="JHU Rideshare screens: a trip search, a phone booking view and a route map" width="1600" height="1067" loading="lazy" />
+                </div>
+              </div>
+            </article>
+
+            <article class="card tile tile-stat bg-yellow" data-s="pop">
+              <p class="stat-num"><span data-count="500">500</span>+</p>
+              <p class="stat-label">Hopkins students use what we've shipped</p>
+            </article>
+
+            <article class="card tile tile-stat bg-pink" data-s="pop">
+              <p class="stat-num"><span data-count="4">4</span>+</p>
+              <p class="stat-label">products in flight right now</p>
+            </article>
+
+            <article class="card tile tile-clubs" data-s>
+              <div class="tile-body">
+                <span class="badge bg-paper"><span class="dot dot-hollow" aria-hidden="true"></span>In progress</span>
+                <h3>JHU Club Board</h3>
+                <p>Every Hopkins club on one board, with their events in one list.</p>
+              </div>
+              <div class="shot">
+                <div class="shot-bar" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div class="shot-view">
+                  <img class="plx plx-img" src="../../assets/web/jhu-club-board.jpg" alt="JHU Club Board: popular organizations and upcoming events on one page" width="1600" height="1067" loading="lazy" />
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 4 · TEAM LIFE ============ -->
+      <section class="life bg-orange" id="life">
+        <span class="shape shape-star plx plx-fast" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><polygon points="50,4 61,38 96,38 68,59 79,94 50,73 21,94 32,59 4,38 39,38" /></svg>
+        </span>
+        <div class="wrap life-grid">
+          <div class="life-text">
+            <p class="tag bg-paper" data-s>Team life</p>
+            <h2 class="title" data-s>It's not all <span class="hl hl-ink">commits</span></h2>
+            <p class="lead" data-s>
+              From Mount Rainier to late-night poker, the team spends time together away from the
+              keyboard. Members leave with lifelong friendships as well as shipped code.
+            </p>
+            <ul class="tags">
+              <li class="bg-yellow" data-s="pop">Hikes on Mount Rainier</li>
+              <li class="bg-mint" data-s="pop">Late-night poker</li>
+              <li class="bg-lilac" data-s="pop">Group food runs</li>
+            </ul>
+            <div class="life-actions" data-s>
+              <span class="btn btn-lg" data-magnetic>
+                <a class="btn-face bg-paper" href="./team.html">Meet our team <span class="btn-arrow" aria-hidden="true">&rarr;</span></a>
+              </span>
+            </div>
+          </div>
+          <div class="life-photo" data-s="pop">
+            <button class="polaroid life-open" type="button" aria-label="Open the Team Life photo board" aria-haspopup="dialog" aria-controls="life-board">
+              <span class="polaroid-photo">
+                <img
+                  src="../../assets/web/team-rainier.jpg"
+                  alt="Six SWEC members arm in arm on a mountain ridge above the clouds at Mount Rainier"
+                  width="1800"
+                  height="1350"
+                  loading="lazy"
+                />
+              </span>
+              <span class="polaroid-caption">Mount Rainier, off the clock</span>
+              <span class="life-invitation">click me! <span aria-hidden="true">&nearr;</span></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 5 · SEMESTER ============ -->
+      <section class="semester bg-paper" id="semester">
+        <div class="wrap">
+          <div class="head">
+            <p class="tag bg-mint" data-s>The semester</p>
+            <h2 class="title" data-s>How a semester <span class="hl hl-blue">runs</span></h2>
+            <p class="lead" data-s>You work on a small team with an experienced lead and ship something real by the end of term.</p>
+          </div>
+
+          <ol class="steps">
+            <li class="card step bg-yellow" data-s>
+              <span class="step-num" aria-hidden="true">1</span>
+              <h3>Join a team of 6–7</h3>
+              <p>Each team is led by an experienced builder who has shipped before.</p>
+            </li>
+            <li class="card step bg-mint" data-s>
+              <span class="step-num" aria-hidden="true">2</span>
+              <h3>Build every week</h3>
+              <p>Your team picks up real work on its product each week of term.</p>
+            </li>
+            <li class="card step bg-lilac" data-s>
+              <span class="step-num" aria-hidden="true">3</span>
+              <h3>Demo each weekend</h3>
+              <p>Show the club what changed that week, and use its feedback to plan the next one.</p>
+            </li>
+            <li class="card step step-final bg-pink" data-s>
+              <span class="step-num" aria-hidden="true">4</span>
+              <h3>Present at Demo Day</h3>
+              <p>The semester closes with your team presenting its product to the club and beyond.</p>
+              <span class="step-flag" aria-hidden="true">Finish</span>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ============ 6 · MENTORS ============ -->
+      <section class="mentors bg-mint" id="mentors">
+        <div class="wrap">
+          <div class="mentors-grid">
+            <div class="mentors-text">
+              <p class="tag bg-paper" data-s>Mentorship</p>
+              <h2 class="title" data-s>Mentored by <span class="hl hl-ink">Professor Madooei</span> and alumni</h2>
+              <ul class="perks">
+                <li class="card" data-s>
+                  <span class="perk-icon bg-yellow" aria-hidden="true">
+                    <svg viewBox="0 0 32 32"><path d="M16 5.5 30 11.5 16 17.5 2 11.5 16 5.5Z" /><path d="M7.5 14v6.6c0 2.1 3.8 3.8 8.5 3.8s8.5-1.7 8.5-3.8V14" /><path d="M30 11.5v7.2" /></svg>
+                  </span>
+                  <div>
+                    <h3>Faculty guidance</h3>
+                    <p>Professor Madooei, who teaches software engineering, guides every team through the whole build.</p>
+                  </div>
+                </li>
+                <li class="card" data-s>
+                  <span class="perk-icon bg-pink" aria-hidden="true">
+                    <svg viewBox="0 0 32 32"><circle cx="16" cy="7.5" r="3.2" /><circle cx="7" cy="23" r="3.2" /><circle cx="25" cy="23" r="3.2" /><path d="M13.6 10.2 9.4 19.9M18.4 10.2l4.2 9.7M10.2 23h11.6" /></svg>
+                  </span>
+                  <div>
+                    <h3>Recruiting help</h3>
+                    <p>Upperclassmen and alumni who have been through SWE and big-tech recruiting coach you through it.</p>
+                  </div>
+                </li>
+                <li class="card" data-s>
+                  <span class="perk-icon bg-lilac" aria-hidden="true">
+                    <svg viewBox="0 0 32 32"><path d="M16 3.5 28 9.2v13.6L16 28.5 4 22.8V9.2L16 3.5Z" /><path d="M4 9.2 16 15l12-5.8" /><path d="M16 15v13.5" /></svg>
+                  </span>
+                  <div>
+                    <h3>Work for your resume</h3>
+                    <p>Portfolio pieces that real students use, which stand out on a resume.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="net card" aria-hidden="true" data-loop>
+              <span class="net-ring net-ring-1"></span>
+              <span class="net-ring net-ring-2"></span>
+              <span class="net-sat s1"><span class="net-node n1 bg-yellow" data-s="pop">Professor<br />Madooei</span></span>
+              <span class="net-sat net-sat-inner s2"><span class="net-node n2 bg-pink" data-s="pop">Team lead</span></span>
+              <span class="net-sat net-sat-inner s3"><span class="net-node n3 bg-lilac" data-s="pop">Alumni</span></span>
+              <span class="net-sat s4"><span class="net-node n4 bg-orange" data-s="pop">Upperclassmen</span></span>
+              <span class="net-sat s5"><span class="net-node n5 bg-blue" data-s="pop">Industry<br />contacts</span></span>
+              <div class="net-core">
+                <img src="../../assets/web/swec-logo.png" alt="" width="128" height="100" />
+                <span>You</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="alumni card" data-s>
+            <p class="alumni-label">Where members have gone</p>
+            <ul class="alumni-logos">
+              <li><img src="../../assets/home/logos/pg-logo.png" alt="Procter &amp; Gamble" loading="lazy" /></li>
+              <li><img src="../../assets/home/logos/medtronic-logo.png" alt="Medtronic" loading="lazy" /></li>
+              <li><img src="../../assets/home/logos/ibm-logo.svg" alt="IBM" loading="lazy" /></li>
+              <li><img src="../../assets/home/logos/amazon-logo.png" alt="Amazon" loading="lazy" /></li>
+              <li><img class="logo-padded" src="../../assets/home/logos/capital-one-logo.png" alt="Capital One" loading="lazy" /></li>
+              <li><img class="logo-padded" src="../../assets/home/logos/microsoft-logo.png" alt="Microsoft" loading="lazy" /></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 7 · SPONSOR + ROLES ============ -->
+      <section class="join bg-tint" id="join">
+        <div class="wrap">
+          <div class="sponsor card bg-lilac" data-s>
+            <div class="sponsor-text">
+              <p class="tag bg-paper">Sponsor</p>
+              <h2 class="title title-sm">Sponsored by <span class="hl hl-ink">Visa</span></h2>
+              <p>
+                Visa's sponsorship gives members direct access to industry connections and the
+                chance to work on real, industry-sponsored projects.
+              </p>
+            </div>
+            <div class="sponsor-card">
+              <img src="../../assets/home/logos/visa-logo.png" alt="Visa" width="659" height="202" loading="lazy" />
+            </div>
+          </div>
+
+          <div class="head roles-head">
+            <p class="tag bg-orange" data-s>Roles</p>
+            <h2 class="title" data-s>Three roles on <span class="hl hl-pink">every</span> team</h2>
+            <p class="lead" data-s>
+              You don't need to be a coding wizard. We want people who care about technology and
+              design and will put in the work.
+            </p>
+          </div>
+          <div class="roles">
+            <article class="card role" data-s>
+              <span class="role-icon bg-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6l-5 6 5 6" /><path d="M16 6l5 6-5 6" /></svg></span>
+              <h3>Developers</h3>
+              <p>Build the products that thousands of students open.</p>
+            </article>
+            <article class="card role" data-s>
+              <span class="role-icon bg-pink" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M18 3.5L11 10.5" /><path d="M11 10.5c-2.5-.5-5.5.9-6.6 3.4-.7 1.6-.5 3.4.3 5 1.6-.6 3-1.7 3.8-3.2 1.2-2.4.9-4.4-1.5-5.2z" /><path d="M6 17.5l-2 2.5" /></svg>
+              </span>
+              <h3>Designers</h3>
+              <p>Shape how each app looks and how easy it is to use.</p>
+            </article>
+            <article class="card role" data-s>
+              <span class="role-icon bg-yellow" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M3 10v4h3l6 4V6l-6 4H3z" /><path d="M12 8.5c3-1 6.5-1 8.5 0" /><path d="M12 15.5c3 1 6.5 1 8.5 0" /><path d="M6 14v4c0 1 .8 1.5 1.7 1.2.9-.3 1.3-1.2 1-2l-.7-3.2" /></svg>
+              </span>
+              <h3>Strategists</h3>
+              <p>Drive marketing and the product decisions behind each launch.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 8 · DRILL (ids and state classes are read by js/arcade.js) ============ -->
+      <section class="drill bg-ink" id="drill">
+        <div class="wrap">
+          <div class="head">
+            <p class="tag bg-yellow" data-s>Bonus round</p>
+            <h2 class="title" data-s>Top two drill scores <span class="hl hl-yellow">earn an interview</span></h2>
+            <p class="lead" data-s>
+              The drill is thirty seconds of mental math, the same warm-up quants and engineers use.
+              There's no calculator, and each correct answer moves you to the next problem. Saving a
+              score takes an email so we can reach you. It also keeps you to one line on the board,
+              holding your best run.
+            </p>
+          </div>
+
+          <div class="arcade">
+            <div class="arcade-game" id="arcade-game" data-s>
+              <div class="arcade-hud">
+                <div class="arcade-stat">
+                  <span class="arcade-stat-label">Score</span>
+                  <span class="arcade-stat-value" id="arcade-score">0</span>
+                </div>
+                <div class="arcade-stat arcade-stat-time">
+                  <span class="arcade-stat-label">Time</span>
+                  <span class="arcade-stat-value" id="arcade-time">30</span>
+                </div>
+                <div class="arcade-stat">
+                  <span class="arcade-stat-label">Best</span>
+                  <span class="arcade-stat-value" id="arcade-best">&ndash;</span>
+                </div>
+              </div>
+
+              <div class="arcade-timer-line" aria-hidden="true">
+                <span class="arcade-timer-fill" id="arcade-timer-fill"></span>
+              </div>
+
+              <div class="arcade-stage">
+                <div class="arcade-panel" id="arcade-panel">
+                  <p class="arcade-panel-title" id="arcade-panel-title">30 seconds on the clock.</p>
+                  <p class="arcade-panel-sub" id="arcade-panel-sub">
+                    Addition and subtraction to 100, multiplication and division through the 10s.
+                  </p>
+                  <span class="btn btn-lg" data-magnetic>
+                    <button class="btn-face bg-pink" type="button" id="arcade-start">Start drill</button>
+                  </span>
+                </div>
+
+                <div class="arcade-play" id="arcade-play" hidden>
+                  <p class="arcade-problem" id="arcade-problem" aria-live="polite">2 + 2</p>
+                  <input
+                    class="arcade-input"
+                    id="arcade-input"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    aria-label="Your answer"
+                  />
+                  <p class="arcade-hint">Type the answer · Esc to stop</p>
+                </div>
+
+                <form class="arcade-save" id="arcade-save" hidden>
+                  <p class="arcade-panel-title" id="arcade-save-title">Put it on the board.</p>
+                  <p class="arcade-panel-sub">Add your name to the global leaderboard.</p>
+                  <div class="arcade-fields">
+                    <label class="arcade-field">
+                      <span>Name</span>
+                      <input class="arcade-name-input" id="arcade-name" type="text" maxlength="16" autocomplete="off" spellcheck="false" aria-label="Your name for the leaderboard" />
+                    </label>
+                    <label class="arcade-field">
+                      <span>Email</span>
+                      <input class="arcade-name-input" id="arcade-email" type="email" maxlength="254" autocomplete="email" spellcheck="false" required aria-label="Your email for the leaderboard" />
+                    </label>
+                  </div>
+                  <p class="arcade-privacy">
+                    Your email keeps you to one spot on the board, holding your best score, and lets
+                    us reach you: the top two scorers get an automatic interview. Only your name and
+                    score appear on the board.
+                  </p>
+                  <p class="arcade-save-error" id="arcade-save-error" role="alert" hidden></p>
+                  <div class="arcade-save-actions">
+                    <span class="btn">
+                      <button class="btn-face bg-pink" type="submit" id="arcade-submit">Save score</button>
+                    </span>
+                    <span class="btn">
+                      <button class="btn-face bg-paper" type="button" id="arcade-skip">Skip</button>
+                    </span>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="arcade-board" id="arcade-board" data-s>
+              <div class="arcade-board-head">
+                <h3 class="arcade-board-title">Global leaderboard</h3>
+                <button class="arcade-board-refresh" type="button" id="arcade-refresh">Refresh</button>
+              </div>
+              <ol class="arcade-board-list" id="arcade-board-list" data-lenis-prevent tabindex="0" aria-label="Leaderboard entries, scrollable"></ol>
+              <p class="arcade-board-empty" id="arcade-board-empty">Loading scores…</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 9 · CLOSING CTA ============ -->
+      <section class="cta bg-pink" id="apply">
+        <span class="shape shape-ring shape-ring-cta plx plx-slow" aria-hidden="true"></span>
+        <span class="shape shape-plus shape-plus-cta plx plx-fast" aria-hidden="true"></span>
+        <div class="wrap cta-grid">
+          <div class="cta-text">
+            <p class="tag bg-paper" data-s><span class="dot" aria-hidden="true"></span>Applications open</p>
+            <h2 class="cta-title" data-s>We're taking <span class="hl hl-yellow">9–10</span> new members</h2>
+            <p class="lead" data-s>We're looking for developers, designers and strategists who want to build for Hopkins.</p>
+          </div>
+          <div class="cta-action" data-s="pop">
+            <span class="btn btn-xl" data-magnetic>
+              <a class="btn-face bg-yellow" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+                Apply to SWEC <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============ FOOTER: three big keys, a tape strip, a wordmark ============ -->
+    <footer class="ftr bg-ink">
+      <div class="wrap">
+        <p class="ftr-kicker" data-s>Say hi. We answer.</p>
+        <nav class="ftr-keys" aria-label="Contact and social">
+          <a class="ftr-key bg-yellow" href="mailto:dguo10@jh.edu" data-s>
+            <span class="ftr-key-face">
+              <span class="ftr-key-num" aria-hidden="true">01 / Mail</span>
+              <span class="ftr-key-label">Email the team</span>
+              <span class="ftr-key-meta">dguo10@jh.edu</span>
+              <span class="ftr-key-arrow" aria-hidden="true">&nearr;</span>
+            </span>
+          </a>
+          <a class="ftr-key bg-pink" href="https://www.instagram.com/jhuswec/" target="_blank" rel="noopener" data-s>
+            <span class="ftr-key-face">
+              <span class="ftr-key-num" aria-hidden="true">02 / Photos</span>
+              <span class="ftr-key-label">Instagram</span>
+              <span class="ftr-key-meta">@jhuswec</span>
+              <span class="ftr-key-arrow" aria-hidden="true">&nearr;</span>
+            </span>
+          </a>
+          <a class="ftr-key bg-mint" href="https://github.com/JHU-SWEC" target="_blank" rel="noopener" data-s>
+            <span class="ftr-key-face">
+              <span class="ftr-key-num" aria-hidden="true">03 / Code</span>
+              <span class="ftr-key-label">GitHub</span>
+              <span class="ftr-key-meta">JHU-SWEC</span>
+              <span class="ftr-key-arrow" aria-hidden="true">&nearr;</span>
+            </span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="ftr-tape" aria-hidden="true">
+        <p class="plx plx-x">Built by students &bull; For Hopkins &bull; Baltimore, MD &bull; Built by students &bull; For Hopkins &bull; Baltimore, MD &bull; Built by students &bull; For Hopkins &bull; Baltimore, MD</p>
+      </div>
+
+      <div class="wrap">
+        <div class="ftr-row">
+          <a class="ftr-brand" href="#top" aria-label="SWEC @ JHU, back to top">
+            <img src="../../assets/web/swec-logo.png" alt="" width="36" height="28" />
+            <span>SWEC @ JHU</span>
+          </a>
+          <div class="ftr-legal">
+            <p>© 2026 SWEC @ JHU · Johns Hopkins University</p>
+            <p>Company names and logos are trademarks of their owners.</p>
+          </div>
+          <span class="btn btn-sm ftr-top" data-magnetic>
+            <a class="btn-face bg-paper" href="#top">Back to top <span aria-hidden="true">&uarr;</span></a>
+          </span>
+        </div>
+      </div>
+
+      <div class="ftr-giant" aria-hidden="true">
+        <p class="plx plx-rise">SWEC@JHU</p>
+      </div>
+    </footer>
+
+    <dialog class="life-board" id="life-board" data-lenis-prevent aria-labelledby="life-board-title">
+      <header class="life-board-header">
+        <div><p class="tag bg-pink">Off the clock</p><h2 id="life-board-title">Life with the team</h2></div>
+        <form method="dialog"><button class="life-board-close" aria-label="Close photo board" autofocus>Close <span aria-hidden="true">&times;</span></button></form>
+      </header>
+      <div class="life-board-photos" aria-label="Team photo collection"></div>
+    </dialog>
+
+    <script type="module" src="./brutal.js"></script>
+  </body>
+</html>

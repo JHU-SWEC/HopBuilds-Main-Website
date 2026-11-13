@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our team — SWEC @ JHU</title>
+    <meta
+      name="description"
+      content="The people behind SWEC @ JHU: the student developers, designers and strategists building software for Hopkins, and the faculty mentor who guides them."
+    />
+    <meta name="theme-color" content="#2b5cff" />
+    <meta property="og:title" content="Our team — SWEC @ JHU" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/assets/web/team-rainier.jpg" />
+    <link rel="icon" href="../../Blue_Jay_Coding_Icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./brutal.css" />
+    <link rel="stylesheet" href="./team.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- ============ HEADER: same blocks as the home page ============ -->
+    <header class="hdr" id="nav">
+      <div class="hdr-row">
+        <a class="hdr-brand" href="./index.html" aria-label="SWEC @ JHU home">
+          <img src="../../assets/web/swec-logo.png" alt="" width="36" height="28" />
+          <span>SWEC @ JHU</span>
+        </a>
+
+        <nav class="hdr-links" aria-label="Sections">
+          <a href="./index.html"><span class="hdr-num" aria-hidden="true">&larr;</span>Home</a>
+          <a href="#mentor" data-spy="mentor"><span class="hdr-num" aria-hidden="true">01</span>Mentor</a>
+          <a href="#teams" data-spy="teams"><span class="hdr-num" aria-hidden="true">02</span>Teams</a>
+          <a href="#photos" data-spy="photos"><span class="hdr-num" aria-hidden="true">03</span>Off the clock</a>
+          <a href="#join" data-spy="join"><span class="hdr-num" aria-hidden="true">04</span>Join</a>
+        </nav>
+
+        <p class="hdr-status"><span class="dot" aria-hidden="true"></span>Applications open</p>
+
+        <span class="btn btn-sm hdr-apply" data-magnetic>
+          <a class="btn-face bg-pink" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener" aria-label="Apply to SWEC">Apply<span class="hdr-apply-long">&nbsp;to SWEC</span></a>
+        </span>
+
+        <button class="hdr-toggle" type="button" aria-expanded="false" aria-controls="nav-sheet">
+          <span class="hdr-toggle-icon" aria-hidden="true"><span></span><span></span></span>
+          <span class="hdr-toggle-label">Menu</span>
+        </button>
+      </div>
+      <div class="hdr-progress" aria-hidden="true"><span></span></div>
+
+      <div class="sheet" id="nav-sheet" data-lenis-prevent hidden>
+        <nav class="sheet-links" aria-label="Sections">
+          <a href="./index.html"><span aria-hidden="true">&larr;</span>Home</a>
+          <a href="#mentor"><span aria-hidden="true">01</span>Mentor</a>
+          <a href="#teams"><span aria-hidden="true">02</span>Teams</a>
+          <a href="#photos"><span aria-hidden="true">03</span>Off the clock</a>
+          <a href="#join"><span aria-hidden="true">04</span>Join</a>
+        </nav>
+        <a class="sheet-apply" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+          <span>Applications open</span>
+          Apply to SWEC <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============ 1 · ROLL CALL: giant title + a pile of name tags ============ -->
+      <section class="tm-hero bg-blue" id="top">
+        <div class="wrap">
+          <div class="tm-hero-top">
+            <p class="tag bg-paper tm-enter"><span class="dot" aria-hidden="true"></span>Our team</p>
+            <p class="tm-count tm-enter" data-count-line>Roll call</p>
+          </div>
+          <h1 class="tm-title" aria-label="Meet the team">
+            <span class="tm-title-line tm-title-a" aria-hidden="true">Meet the</span>
+            <span class="tm-title-line tm-title-b" aria-hidden="true">team.</span>
+          </h1>
+          <p class="tm-hero-lead tm-enter">
+            Developers, designers and strategists who build software for Hopkins students, in
+            small teams, mentored by Professor Madooei.
+          </p>
+        </div>
+
+        <div class="tm-wall-wrap">
+          <ul class="tm-wall" data-wall aria-label="Everyone on the team"></ul>
+          <p class="tm-wall-hint" aria-hidden="true" data-wall-hint>psst: they're draggable</p>
+        </div>
+      </section>
+
+      <!-- ============ 2 · MENTOR ============ -->
+      <section class="tm-mentor bg-mint" id="mentor">
+        <div class="wrap tm-mentor-grid">
+          <div class="head tm-mentor-head">
+            <p class="tag bg-paper" data-s>Faculty mentor</p>
+            <h2 class="title" data-s>Guided by <span class="hl hl-ink">Professor Madooei</span></h2>
+          </div>
+          <div class="tm-mentors" data-mentors></div>
+        </div>
+      </section>
+
+      <!-- ============ 3 · TEAMS: filter + member cards (built from team-data.js) ============ -->
+      <section class="tm-teams bg-paper" id="teams">
+        <div class="wrap">
+          <div class="head">
+            <p class="tag bg-pink" data-s>The teams</p>
+            <h2 class="title" data-s>Five teams, <span class="hl hl-yellow">one</span> club</h2>
+            <p class="lead" data-s>
+              Every team has a lead who has shipped before, plus developers, designers and
+              strategists.<span data-filter-hint> Pick a team to see who builds it.</span>
+            </p>
+          </div>
+
+          <div class="tm-filter" role="group" aria-label="Show members of" data-filter data-s>
+            <button type="button" class="tm-chip bg-ink" data-team="all" aria-pressed="true">All teams</button>
+          </div>
+          <p class="tm-sr" aria-live="polite" data-status></p>
+
+          <ul class="tm-grid" data-members aria-label="Team members"></ul>
+          <noscript><p class="lead">The roster needs JavaScript to display.</p></noscript>
+        </div>
+      </section>
+
+      <!-- ============ 4 · OFF THE CLOCK: the team's own photos ============ -->
+      <section class="tm-photos bg-orange" id="photos">
+        <span class="shape shape-star" aria-hidden="true">
+          <svg viewBox="0 0 100 100"><polygon points="50,4 61,38 96,38 68,59 79,94 50,73 21,94 32,59 4,38 39,38" /></svg>
+        </span>
+        <div class="wrap">
+          <div class="head">
+            <p class="tag bg-paper" data-s>Off the clock</p>
+            <h2 class="title" data-s>Same people, <span class="hl hl-ink">fewer laptops</span></h2>
+          </div>
+        </div>
+        <!-- a polaroid strip that runs right to left; built by team.js from
+             every photo in assets/web/team-life/ (repeated to fill the loop) -->
+        <div class="tm-gallery" data-gallery data-loop role="region" aria-label="Team photos, moving">
+          <ul class="tm-gallery-track" data-gallery-track></ul>
+        </div>
+        <div class="wrap tm-gallery-bar">
+          <button class="tm-gallery-pause" type="button" aria-pressed="false" data-gallery-pause>Pause photos</button>
+        </div>
+      </section>
+
+      <!-- ============ 5 · JOIN ============ -->
+      <section class="cta bg-pink" id="join">
+        <span class="shape shape-ring shape-ring-cta" aria-hidden="true"></span>
+        <span class="shape shape-plus shape-plus-cta" aria-hidden="true"></span>
+        <div class="wrap cta-grid">
+          <div>
+            <p class="tag bg-paper" data-s><span class="dot" aria-hidden="true"></span>Applications open</p>
+            <h2 class="cta-title" data-s>Put your name on <span class="hl hl-yellow">this page</span></h2>
+            <p class="lead" data-s>We're taking 9–10 new developers, designers and strategists who want to build for Hopkins.</p>
+          </div>
+          <div class="cta-action" data-s="pop">
+            <span class="btn btn-xl" data-magnetic>
+              <a class="btn-face bg-yellow" href="https://docs.google.com/forms/d/e/1FAIpQLSe6RoRiIBXVkAm7XooWUKJWF9l-64u8DhUHADUEuasgLsnZww/viewform?usp=dialog" target="_blank" rel="noopener">
+                Apply to SWEC <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+              </a>
+            </span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============ FOOTER: same as the home page ============ -->
+    <footer class="ftr bg-ink">
+      <div class="wrap">
+        <p class="ftr-kicker" data-s>Say hi. We answer.</p>
+        <nav class="ftr-keys" aria-label="Contact and social">
+          <a class="ftr-key bg-yellow" href="mailto:dguo10@jh.edu" data-s>
+            <span class="ftr-key-face">
+              <span class="ftr-key-num" aria-hidden="true">01 / Mail</span>
+              <span class="ftr-key-label">Email the team</span>
+              <span class="ftr-key-meta">dguo10@jh.edu</span>
+              <span class="ftr-key-arrow" aria-hidden="true">&nearr;</span>
+            </span>
+          </a>
+          <a class="ftr-key bg-pink" href="https://www.instagram.com/jhuswec/" target="_blank" rel="noopener" data-s>
+            <span class="ftr-key-face">
+              <span class="ftr-key-num" aria-hidden="true">02 / Photos</span>
+              <span class="ftr-key-label">Instagram</span>
+              <span class="ftr-key-meta">@jhuswec</span>
+              <span class="ftr-key-arrow" aria-hidden="true">&nearr;</span>
+            </span>
+          </a>
+          <a class="ftr-key bg-mint" href="https://github.com/JHU-SWEC" target="_blank" rel="noopener" data-s>
+            <span class="ftr-key-face">
+              <span class="ftr-key-num" aria-hidden="true">03 / Code</span>
+              <span class="ftr-key-label">GitHub</span>
+              <span class="ftr-key-meta">JHU-SWEC</span>
+              <span class="ftr-key-arrow" aria-hidden="true">&nearr;</span>
+            </span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="ftr-tape" aria-hidden="true">
+        <p class="plx plx-x">Built by students &bull; For Hopkins &bull; Baltimore, MD &bull; Built by students &bull; For Hopkins &bull; Baltimore, MD &bull; Built by students &bull; For Hopkins &bull; Baltimore, MD</p>
+      </div>
+
+      <div class="wrap">
+        <div class="ftr-row">
+          <a class="ftr-brand" href="./index.html" aria-label="SWEC @ JHU home">
+            <img src="../../assets/web/swec-logo.png" alt="" width="36" height="28" />
+            <span>SWEC @ JHU</span>
+          </a>
+          <div class="ftr-legal">
+            <p>© 2026 SWEC @ JHU · Johns Hopkins University</p>
+            <p>Company names and logos are trademarks of their owners.</p>
+          </div>
+          <span class="btn btn-sm ftr-top" data-magnetic>
+            <a class="btn-face bg-paper" href="#top">Back to top <span aria-hidden="true">&uarr;</span></a>
+          </span>
+        </div>
+      </div>
+
+      <div class="ftr-giant" aria-hidden="true">
+        <p class="plx plx-rise">SWEC@JHU</p>
+      </div>
+    </footer>
+
+    <script type="module" src="./team.js"></script>
+  </body>
+</html>

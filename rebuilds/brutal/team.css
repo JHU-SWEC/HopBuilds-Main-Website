@@ -1,0 +1,315 @@
+/* ==========================================================================
+   SWEC @ JHU — "brutal" rebuild, the team page. Loaded after brutal.css and
+   built only from its tokens (ink, fills, --line, --sh-*, the named curves)
+   and components (.tag, .title, .hl, .card, .btn, .polaroid, .hero-*).
+   Motion is GSAP in team.js; nothing here hides content.
+   ========================================================================== */
+
+[hidden] { display: none !important; }
+.tm-sr {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* ---------- roll call (the page's own hero: not the home page's) ---------- */
+.tm-hero {
+  position: relative;
+  overflow: clip;
+  padding-top: clamp(116px, 12vw, 160px);
+  border-bottom: var(--line) solid var(--ink);
+}
+.tm-hero-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+.tm-count {
+  padding: 6px 14px;
+  border: var(--line) solid var(--ink);
+  background: var(--ink);
+  color: var(--yellow);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: var(--sh-1) var(--sh-1) 0 var(--paper);
+}
+.tm-title {
+  display: grid;
+  margin-top: clamp(20px, 3vw, 36px);
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 900;
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+.tm-title-line { display: block; white-space: nowrap; }
+.tm-title-a { font-size: clamp(3.2rem, 12.5vw, 11.5rem); color: #fff; }
+.tm-title-b {
+  justify-self: end;
+  font-size: clamp(4.4rem, 19vw, 17.5rem);
+  color: var(--yellow);
+  -webkit-text-stroke: var(--line) var(--ink);
+  text-shadow: var(--sh-2) var(--sh-2) 0 var(--ink);
+}
+.tm-hero-lead {
+  max-width: 46ch;
+  margin-top: clamp(18px, 2.4vw, 28px);
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* the wall: name tags in a loose pile, each tilted its own way */
+.tm-wall-wrap { position: relative; padding: clamp(36px, 5vw, 64px) var(--gutter) clamp(56px, 7vw, 96px); }
+.tm-wall {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px 10px;
+  max-width: 1320px;
+  margin-inline: auto;
+}
+.tm-nametag {
+  width: clamp(132px, 15vw, 188px);
+  margin: -4px -6px;
+  background: var(--paper);
+  color: var(--ink);
+  border: var(--line) solid var(--ink);
+  border-radius: 10px;
+  box-shadow: var(--sh-2) var(--sh-2) 0 var(--ink);
+  overflow: hidden;
+  user-select: none;
+  touch-action: pan-y;
+  container-type: inline-size;
+}
+/* each tag's tilt and offset are scattered at random by team.js when it
+   spawns; these are only the fallback if that script does not run */
+.tm-nametag:nth-child(odd) { transform: rotate(-5deg); }
+.tm-nametag:nth-child(even) { transform: rotate(4deg) translateY(10px); }
+.tm-nametag-top {
+  display: block;
+  padding: 8px 10px 6px;
+  border-bottom: var(--line) solid var(--ink);
+  text-align: center;
+  line-height: 1;
+}
+.tm-nametag-top b {
+  display: block;
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 900;
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  letter-spacing: 0.02em;
+}
+.tm-nametag-top small { font-family: var(--font-mono); font-size: 11px; font-weight: 700; }
+.tm-nametag-name {
+  display: block;
+  padding: clamp(12px, 1.6vw, 18px) 8px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  font-weight: 900;
+  /* fits the longest name on one line: about 7.5em for "JENNIFER" */
+  font-size: min(clamp(1.2rem, 2vw, 1.75rem), 12cqi);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+@media (max-width: 640px) {
+  /* two to a row, overlapping into a pile, so the roll call stays short */
+  .tm-wall { gap: 0; }
+  .tm-nametag { width: calc(50% - 2px); margin: 0 -3px 2px; }
+  .tm-nametag-name { padding-block: 10px; }
+}
+.tm-wall-hint {
+  display: none;
+  position: absolute;
+  right: var(--gutter);
+  bottom: 24px;
+  padding: 6px 12px;
+  border: var(--line) solid var(--ink);
+  border-radius: 999px;
+  background: var(--yellow);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  transform: rotate(-3deg);
+}
+/* draggable only with a mouse; the hint shows only then */
+html.tm-can-drag .tm-wall-hint { display: block; }
+html.tm-can-drag .tm-nametag { cursor: grab; touch-action: none; }
+html.tm-can-drag .tm-nametag.is-dragging { cursor: grabbing; z-index: 5; box-shadow: calc(var(--sh-3) + 4px) calc(var(--sh-3) + 4px) 0 var(--ink); }
+
+/* ---------- mentor ---------- */
+.tm-mentor { padding-block: var(--section); border-bottom: var(--line) solid var(--ink); }
+.tm-mentor-grid { display: grid; gap: clamp(32px, 4vw, 56px); align-items: center; }
+.tm-mentor-head { margin-bottom: 0; }
+.tm-mentors { display: grid; gap: 24px; }
+.tm-mentor-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 22px;
+  align-items: center;
+  padding: clamp(22px, 3vw, 34px);
+  transform: rotate(1.2deg);
+}
+.tm-mentor-card .tm-avatar { width: clamp(84px, 9vw, 120px); font-size: clamp(2.2rem, 4vw, 3.2rem); }
+.tm-mentor-card h3 {
+  font-family: var(--font-display);
+  font-stretch: 118%;
+  font-weight: 900;
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.tm-mentor-card .tm-role { margin-top: 8px; }
+.tm-mentor-card p:last-child { margin-top: 12px; max-width: 46ch; line-height: 1.5; }
+@media (min-width: 900px) {
+  .tm-mentor-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+}
+
+/* ---------- teams: filter chips ---------- */
+.tm-teams { padding-block: var(--section); border-bottom: var(--line) solid var(--ink); }
+.tm-filter { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: clamp(32px, 4vw, 48px); }
+.tm-chip {
+  min-height: 44px;
+  padding: 8px 18px;
+  border: var(--line) solid var(--ink);
+  border-radius: 999px;
+  box-shadow: var(--sh-1) var(--sh-1) 0 var(--ink);
+  font: 800 15px/1 var(--font-text);
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform 140ms var(--ease-enter),
+    box-shadow 140ms var(--ease-enter),
+    background-color 200ms ease,
+    color 200ms ease;
+}
+.tm-chip:not([aria-pressed="true"]) { background: var(--paper); color: var(--ink); }
+.tm-chip[aria-pressed="true"] { background: var(--ink); color: #fff; }
+@media (hover: hover) and (pointer: fine) {
+  .tm-chip:hover { transform: translate(-2px, -2px); box-shadow: calc(var(--sh-1) + 2px) calc(var(--sh-1) + 2px) 0 var(--ink); }
+}
+.tm-chip:active { transform: translate(var(--sh-1), var(--sh-1)); box-shadow: none; transition-duration: 0s; }
+.tm-chip:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+
+/* ---------- teams: member cards ---------- */
+.tm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: 26px 22px;
+  padding: 0 var(--sh-2) var(--sh-2) 0;
+}
+.tm-member {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 100%;
+  padding: 20px 20px 18px;
+  transition: transform 160ms var(--ease-enter), box-shadow 160ms var(--ease-enter);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tm-member:hover { transform: translate(-3px, -3px) rotate(-0.6deg); box-shadow: calc(var(--sh-2) + 3px) calc(var(--sh-2) + 3px) 0 var(--ink); }
+}
+.tm-member.is-placeholder { border-style: dashed; box-shadow: none; background: var(--tint); }
+
+.tm-avatar {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  aspect-ratio: 1;
+  border: var(--line) solid var(--ink);
+  box-shadow: var(--sh-1) var(--sh-1) 0 var(--ink);
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 900;
+  font-size: 1.9rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.tm-member:nth-child(3n + 2) .tm-avatar { transform: rotate(4deg); }
+.tm-member:nth-child(3n) .tm-avatar { transform: rotate(-3deg); }
+.is-placeholder .tm-avatar { border-style: dashed; box-shadow: none; background: var(--paper); }
+
+.tm-name {
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  font-weight: 900;
+  font-size: 1.35rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+.tm-role { font-family: var(--font-mono); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+.tm-team {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 4px 10px;
+  border: var(--line) solid var(--ink);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+}
+.tm-todo { font-size: 13px; font-weight: 700; color: #4b4b4b; }
+.tm-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.tm-links a { font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- off the clock: photo strip ---------- */
+.tm-photos { padding-block: var(--section); border-bottom: var(--line) solid var(--ink); overflow-x: clip; }
+.tm-photos .shape-star { display: block; top: 56px; right: 6%; width: 110px; }
+/* the moving gallery: one track holding the photo set twice, slid left by
+   exactly half its width, so the loop has no seam. Items carry their own
+   right margin (not a flex gap) so that half is exact. align-items: start
+   keeps every polaroid its own height: no stretched white at the bottom. */
+.tm-gallery { overflow: hidden; padding-block: 18px 40px; }
+.tm-gallery-track {
+  display: flex;
+  align-items: flex-start;
+  width: max-content;
+  animation: tm-marquee var(--tm-gallery-dur, 60s) linear infinite;
+}
+.tm-gallery.is-paused .tm-gallery-track,
+.tm-gallery.is-offscreen .tm-gallery-track { animation-play-state: paused; }
+@media (hover: hover) and (pointer: fine) {
+  .tm-gallery:hover .tm-gallery-track { animation-play-state: paused; }
+}
+@keyframes tm-marquee { to { transform: translateX(-50%); } }
+
+.tm-shot {
+  flex: none;
+  width: clamp(190px, 21vw, 290px);
+  margin-right: clamp(22px, 3vw, 40px);
+  padding: 10px 10px 30px;
+  background: var(--paper);
+  border: var(--line) solid var(--ink);
+  box-shadow: var(--sh-2) var(--sh-2) 0 var(--ink);
+}
+.tm-shot:nth-child(odd) { transform: rotate(-2.5deg); }
+.tm-shot:nth-child(even) { transform: rotate(2deg) translateY(26px); }
+.tm-shot img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; border: var(--line) solid var(--ink); }
+
+.tm-gallery-bar { display: flex; justify-content: flex-end; }
+.tm-gallery-pause {
+  min-height: 44px;
+  padding: 8px 16px;
+  border: var(--line) solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--sh-1) var(--sh-1) 0 var(--ink);
+  font: 700 14px/1 var(--font-mono);
+  text-transform: uppercase;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.tm-gallery-pause:active { transform: translate(var(--sh-1), var(--sh-1)); box-shadow: none; }
+
+/* ---------- reduced motion: the hover lifts stay as colour, no travel ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .tm-chip, .tm-member { transition-duration: 0s; }
+  /* no travel: one copy of the photos in a row you can scroll yourself */
+  .tm-gallery { overflow-x: auto; }
+  .tm-gallery-track { animation: none; padding-inline: var(--gutter); }
+  .tm-gallery [data-dup] { display: none; }
+  .tm-gallery-bar { display: none; }
+}

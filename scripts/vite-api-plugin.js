@@ -43,6 +43,28 @@ export default function apiPlugin() {
           res.statusCode = 404;
           return res.end("Not found");
         }
+        // No database configured locally (no MONGODB_URI in .env.local): show
+        // the live board instead of an error, READ-ONLY. Only GET /api/scores
+        // is forwarded; sessions and score saves still go to the local handler,
+        // which refuses them, so the drill runs as a practice round and local
+        // testing can never write to the live leaderboard. Set
+        // DEV_LEADERBOARD_MIRROR to another origin, or to "off" to disable.
+        const mirror = process.env.DEV_LEADERBOARD_MIRROR ?? "https://www.hopbuilds.org";
+        if (!process.env.MONGODB_URI && mirror !== "off" && name === "scores" && req.method === "GET") {
+          try {
+            const upstream = await fetch(new URL(`/api/scores${url.search}`, mirror), {
+              headers: { Accept: "application/json" },
+              signal: AbortSignal.timeout(8000),
+            });
+            res.statusCode = upstream.status;
+            res.setHeader("Content-Type", upstream.headers.get("content-type") || "application/json; charset=utf-8");
+            res.setHeader("X-Dev-Leaderboard", `read-only mirror of ${mirror}`);
+            return res.end(await upstream.text());
+          } catch (err) {
+            console.warn(`Leaderboard mirror ${mirror} unreachable: ${err.message}`);
+            // fall through to the local handler and its "not configured" message
+          }
+        }
         const modulePath = path.join(ROOT, "api", `${name}.js`);
         if (!existsSync(modulePath)) {
           res.statusCode = 404;

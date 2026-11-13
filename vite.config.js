@@ -7,7 +7,19 @@ dotenv.config();
 
 export default defineConfig({
   plugins: [apiPlugin()],
-  build: { outDir: "dist" },
+  build: {
+    outDir: "dist",
+    rollupOptions: {
+      // The live homepage plus the two UI rebuild candidates, each served
+      // at /rebuilds/<name>/. Drop the candidates once one is chosen.
+      input: {
+        main: "index.html",
+        watts: "rebuilds/watts/index.html",
+        brutal: "rebuilds/brutal/index.html",
+        brutalTeam: "rebuilds/brutal/team.html",
+      },
+    },
+  },
   server: {
     port: Number(process.env.PORT) || 8000, // keep the URL DEPLOY.md already documents
     strictPort: true, // fail loudly instead of silently moving to 8001+, see note below
