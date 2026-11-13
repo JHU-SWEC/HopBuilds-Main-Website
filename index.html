@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,300..800&family=Instrument+Serif:ital@0;1&family=Caveat:wght@600&family=DM+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
 
@@ -222,6 +222,38 @@
         </div>
       </section>
 
+      <!-- ============ 6 · TEAM LIFE: photo with tags ============ -->
+      <section class="life dark" id="life">
+        <div class="wrap life-grid">
+          <div class="life-text">
+            <p class="kicker reveal">Team life</p>
+            <h2 class="title reveal">It's not all <span class="serif">commits</span></h2>
+            <p class="lead reveal">
+              From Mount Rainier to late-night poker, the team spends time together away from the
+              keyboard. Members leave with lifelong friendships as well as shipped code.
+            </p>
+            <ul class="tags reveal">
+              <li>Hikes on Mount Rainier</li>
+              <li>Late-night poker</li>
+              <li>Group food runs</li>
+            </ul>
+          </div>
+          <button class="polaroid life-open reveal" type="button" aria-label="Open the Team Life photo board" aria-haspopup="dialog" aria-controls="life-board">
+            <span class="tape" aria-hidden="true"></span>
+            <span class="polaroid-photo">
+              <img
+                src="./assets/web/team-rainier.jpg"
+                alt="Six HopBuilds members arm in arm on a mountain ridge above the clouds at Mount Rainier"
+                width="1800"
+                height="1350"
+                loading="lazy"
+              />
+            </span>
+            <span class="life-invitation">click me! <span aria-hidden="true">&nearr;</span></span>
+          </button>
+        </div>
+      </section>
+
       <!-- ============ 4 · SEMESTER: glowing timeline on night ============ -->
       <section class="semester dark" id="semester">
         <div class="glow glow-left" aria-hidden="true"></div>
@@ -323,37 +355,6 @@
               <li><img class="logo-padded" src="./assets/home/logos/microsoft-logo.png" alt="Microsoft" loading="lazy" /></li>
             </ul>
           </div>
-        </div>
-      </section>
-
-      <!-- ============ 6 · TEAM LIFE: photo with tags ============ -->
-      <section class="life dark" id="life">
-        <div class="wrap life-grid">
-          <div class="life-text">
-            <p class="kicker reveal">Team life</p>
-            <h2 class="title reveal">It's not all <span class="serif">commits</span></h2>
-            <p class="lead reveal">
-              From Mount Rainier to late-night poker, the team spends time together away from the
-              keyboard. Members leave with lifelong friendships as well as shipped code.
-            </p>
-            <ul class="tags reveal">
-              <li>Hikes on Mount Rainier</li>
-              <li>Late-night poker</li>
-              <li>Group food runs</li>
-            </ul>
-          </div>
-          <figure class="polaroid reveal">
-            <span class="tape" aria-hidden="true"></span>
-            <div class="polaroid-photo">
-              <img
-                src="./assets/web/team-rainier.jpg"
-                alt="Six HopBuilds members arm in arm on a mountain ridge above the clouds at Mount Rainier"
-                width="1800"
-                height="1350"
-                loading="lazy"
-              />
-            </div>
-          </figure>
         </div>
       </section>
 
@@ -540,6 +541,14 @@
         </div>
       </div>
     </footer>
+
+    <dialog class="life-board" id="life-board" aria-labelledby="life-board-title">
+      <header class="life-board-header">
+        <div><p class="kicker">Off the clock</p><h2 id="life-board-title">Life with the team</h2></div>
+        <form method="dialog"><button class="life-board-close" aria-label="Close photo board" autofocus>Close <span aria-hidden="true">&times;</span></button></form>
+      </header>
+      <div class="life-board-photos" aria-label="Team photo collection"></div>
+    </dialog>
 
     <script type="module" src="./js/main.js"></script>
   </body>

@@ -2638,3 +2638,27 @@ section {
     translate: none;
   }
 }
+
+/* Team Life photo button and its felt-board dialog. */
+.life-open { display: block; width: 100%; border: 0; cursor: pointer; color: var(--night); }
+.life-open:focus-visible { outline: 3px solid var(--accent); outline-offset: 8px; }
+.life-open .polaroid-photo { display: block; }
+.life-invitation { position: absolute; bottom: 8px; left: 0; width: 100%; text-align: center; font: 600 34px/1.2 'Caveat', 'Segoe Print', cursive; }
+.life-board-open { overflow: hidden; }
+.life-board { width: min(1200px, calc(100% - 40px)); max-height: calc(100dvh - 40px); margin: auto; padding: 0; border: 10px solid #6c94b0; border-radius: 6px; color: #142a43; background-color: #b9d9ed; background-image: repeating-linear-gradient(23deg, #ffffff14 0 1px, transparent 1px 3px), repeating-linear-gradient(113deg, #416f8d12 0 1px, transparent 1px 4px); background-size: 5px 7px, 7px 5px; box-shadow: 0 24px 100px #0008, inset 0 0 35px #416f8d40; overflow: auto; overscroll-behavior: contain; }
+.life-board::backdrop { background: #00152bd9; backdrop-filter: blur(8px); }
+.life-board-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 28px 32px 0; }
+.life-board-header h2 { font: 600 clamp(28px, 4vw, 44px)/1.15 'Caveat', 'Segoe Print', cursive; }
+.life-board-header .kicker { color: #35516e; margin-bottom: 6px; }
+.life-board-close { min-height: 44px; padding: 8px 16px; border: 1px solid #142a4333; border-radius: 6px; background: transparent; color: #142a43; cursor: pointer; font: inherit; white-space: nowrap; }
+.life-board-close:hover { background: #ffffff40; }
+.life-board-close:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.life-board-photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 38px 30px; padding: 42px 36px; }
+.board-photo { position: relative; margin: 0; padding: 10px 10px 30px; background: #fff; box-shadow: 2px 8px 12px #40281855; transform: rotate(-2deg); }
+.board-photo:nth-child(3n + 2) { transform: rotate(2deg); margin-top: 15px; }
+.board-photo:nth-child(3n) { transform: rotate(-1deg); }
+.board-photo img { display: block; width: 100%; height: auto; }
+.board-photo::before { content: ''; position: absolute; z-index: 1; top: -13px; left: calc(50% - 36px); width: 72px; height: 28px; background: #dce9efd9; transform: rotate(-8deg); box-shadow: 0 1px 2px #40281822; }
+.board-photo:nth-child(even)::before { top: -5px; left: calc(50% - 7px); width: 14px; height: 14px; border-radius: 50%; background: #0077bd; box-shadow: inset -3px -3px 2px #002d7266, 1px 3px 3px #40281888; }
+@media (max-width: 799px) { .life-board-photos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 539px) { .life-board { width: calc(100% - 16px); max-height: calc(100dvh - 16px); border-width: 6px; } .life-board-header { padding: 18px 16px 0; gap: 12px; } .life-board-photos { grid-template-columns: 1fr; padding: 32px 24px; } .life-open { padding-bottom: 54px; } }

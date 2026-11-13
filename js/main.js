@@ -7,3 +7,6 @@ initNav();
 initTerminal();
 initArcade();
 initEffects();
+
+import initLifeBoard from "./life-board.js";
+initLifeBoard();
