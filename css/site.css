@@ -1801,7 +1801,7 @@ section {
 
 .alumni-logos {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: 24px;
   align-items: center;
   margin-top: 18px;
@@ -1840,7 +1840,7 @@ section {
   }
 
   .alumni-logos {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
