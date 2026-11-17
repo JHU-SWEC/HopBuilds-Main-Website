@@ -22,10 +22,8 @@ export const MENTORS = [
 /* Colours are the page's own fills: yellow, pink, mint, orange, lilac, blue. */
 export const TEAMS = [
   { name: "Lost@JHU", status: "Live", color: "mint" },
-  { name: "JHU Rideshare", status: "In progress", color: "yellow" },
-  { name: "JHU Club Board", status: "In progress", color: "lilac" },
-  { name: "Barkoff", status: "In progress", color: "pink" },
   { name: "Slopkins", status: "In progress", color: "orange" },
+  { name: "Bark Off", status: "In progress", color: "pink" },
 ];
 
 /* Teams and roles are not assigned yet. Add `team` (a name from TEAMS) and

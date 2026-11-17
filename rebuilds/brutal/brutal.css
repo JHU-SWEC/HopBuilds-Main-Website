@@ -946,6 +946,38 @@ section.bg-blue { --focus: var(--yellow); }
 .shot-bar span { width: 12px; height: 12px; border: 2px solid var(--ink); border-radius: 50%; background: var(--paper); }
 .shot-view { overflow: hidden; aspect-ratio: 16 / 10; }
 .shot-view img { width: 100%; height: 100%; object-fit: cover; scale: 1.08; }
+.shot-view-wide { aspect-ratio: 16 / 9; }
+
+/* Slopkins: two of its phone screens, the second tilted and tucked behind */
+.phones {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(12px, 2vw, 22px);
+  padding: 4px clamp(20px, 2.6vw, 30px) clamp(40px, 4vw, 52px);
+}
+.phone {
+  flex: 0 1 44%;
+  max-width: 230px;
+  padding: 6px;
+  background: var(--ink);
+  border: var(--line) solid var(--ink);
+  border-radius: 26px;
+  box-shadow: var(--sh-2) var(--sh-2) 0 var(--ink);
+  transform: rotate(-3deg);
+}
+.phone-back { transform: rotate(4deg) translateY(28px); }
+.phone img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 780 / 1180;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 19px;
+  scale: 1.06;
+}
+.phone { overflow: hidden; }
 
 /* Stat tiles: number and label centred in the box. The tile is a size
    container so the number can never be wider than the tile: "500+" is about
@@ -981,6 +1013,7 @@ section.bg-blue { --focus: var(--yellow); }
   .tile-clubs, .tile-ride { flex-direction: row; align-items: center; }
   .tile-clubs .tile-body, .tile-ride .tile-body { flex: 0 0 40%; }
   .tile-clubs .shot, .tile-ride .shot { flex: 1; min-width: 0; margin: clamp(20px, 2.6vw, 30px); margin-left: 0; }
+  .tile-ride .phones { flex: 1; min-width: 0; }
 }
 @media (min-width: 1040px) {
   .bento { grid-template-columns: repeat(12, minmax(0, 1fr)); }

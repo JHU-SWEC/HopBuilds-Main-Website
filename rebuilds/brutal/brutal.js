@@ -130,7 +130,6 @@ startChrome();
 
 const initProjectTerminal = () =>
   initTerminal({
-    extraProjects: [["barkoff", "in progress"], ["slopkins", "in progress"]],
     extraCommands: {
       "our team": {
         help: "meet the people",
