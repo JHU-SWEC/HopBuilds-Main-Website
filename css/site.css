@@ -1204,7 +1204,7 @@ section {
   grid-column: span 4;
 }
 
-/* stats sit beside Rideshare's row end and under it */
+/* stats sit beside Slopkins' row end and under it */
 .bento .tile-stat-blue {
   grid-column: 6 / span 3;
 }
@@ -1271,59 +1271,79 @@ section {
   align-items: end;
 }
 
+.tile-ride {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+
 .tile-clubs {
-  grid-template-columns: minmax(0, 0.55fr) minmax(0, 1.45fr);
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   align-items: center;
 }
 
-.tile-clubs .browser {
-  margin: 36px 0 0;
-  border-radius: 14px 0 0 0;
-  align-self: end;
+/* Slopkins: two phone screens, the second tucked behind */
+.phones {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  min-height: 340px;
+  padding: 28px 20px 0;
 }
 
-.browser {
+.phone {
   position: relative;
-  margin: 28px 0 0;
-  border-radius: 14px 0 0 0;
-  background: #fff;
+  z-index: 1;
+  width: 46%;
+  max-width: 190px;
+  max-height: 300px; /* the screen is cut at the bottom, never at the sides */
+  border: 6px solid #0b0f1a;
+  border-bottom: 0;
+  border-radius: 26px 26px 0 0;
+  background: #0b0b0d;
+  overflow: hidden;
+  box-shadow: 0 24px 50px -24px rgba(6, 20, 51, 0.6);
+  transition: transform 0.5s var(--ease);
+}
+
+.phone img {
+  width: 100%;
+  height: auto;
+}
+
+.phone-back {
+  z-index: 0;
+  margin-left: -28px;
+  transform: translateY(26px) rotate(5deg);
+}
+
+.tile:hover .phone {
+  transform: translateY(-6px);
+}
+
+.tile:hover .phone-back {
+  transform: translateY(18px) rotate(6deg);
+}
+
+/* Bark Off: the duel screen, the game's Dog Park stage */
+.duel-shot {
+  margin: 24px 24px 24px 0;
+  border-radius: var(--r-md);
+  overflow: hidden;
   box-shadow:
     0 0 0 1px var(--hair),
-    -20px 20px 50px -30px rgba(10, 22, 51, 0.5);
-  overflow: hidden;
-  transform: translate(0, 0);
+    0 24px 50px -30px rgba(6, 20, 51, 0.55);
+}
+
+.duel-shot img {
+  width: 100%;
   transition: transform 0.6s var(--ease);
 }
 
-.tile:hover .browser {
-  transform: translate(-6px, -6px);
+.tile:hover .duel-shot img {
+  transform: scale(1.02);
 }
 
-.browser-bar {
-  display: flex;
-  gap: 6px;
-  padding: 10px 12px;
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--hair);
-}
-
-.browser-bar span {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--surface-2);
-}
-
-.browser-bar span:first-child {
-  background: var(--accent);
-}
-
-.browser img {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  object-position: left top;
-}
 
 .badge {
   display: inline-flex;
@@ -1431,8 +1451,13 @@ section {
     grid-column: 1 / -1;
   }
 
-  .browser {
-    margin: 0 0 0 20px;
+  .phones {
+    min-height: 280px;
+    padding-top: 8px;
+  }
+
+  .duel-shot {
+    margin: 0 20px 20px;
   }
 }
 

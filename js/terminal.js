@@ -55,8 +55,8 @@ export default function initTerminal({ extraProjects = [], extraCommands = {} } 
     ],
     projects: () => [
       "lost@jhu       · live · lostatjhu.org",
-      "jhu-rideshare  · in progress",
-      "club-board     · in progress",
+      "slopkins       · in progress",
+      "bark-off       · in progress",
       ...extraProjects.map(([name, status]) => `${name.padEnd(15)}· ${status}`),
     ],
     join: () => {
